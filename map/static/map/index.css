@@ -1,0 +1,21 @@
+#map {
+    height: 100%;
+    width: 99%;
+    z-index: 0;
+}
+#posInfo {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 30%;
+    z-index: 1;
+    background-color: lightblue;
+    font-size: larger;
+}
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}

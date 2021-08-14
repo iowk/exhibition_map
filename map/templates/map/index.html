@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" href="{% static 'map/index.css' %}">
+<html>
+<head>
+  <title>Google Map Test</title>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+  function myMap(){
+    const mapProp = {
+      center: new google.maps.LatLng({{mapDisplayInfo.centerx}}, {{mapDisplayInfo.centery}}),
+      zoom: {{mapDisplayInfo.zoom}},
+      styles: [
+        {
+          featureType: 'poi',
+          stylers: [{ visibility: 'off' }]  // Turn off points of interest.
+        },
+        {
+          featureType: 'landscape',
+          stylers: [{ visibility: 'off' }]  // Turn off landscapes.
+        },
+        {
+          featureType: 'road',
+          elementType: 'labels.icon',
+          stylers: [{ visibility: 'off' }]  // Turn off landscapes.
+        },
+      ],
+      disableDoubleClickZoom: true,
+      mapTypeControl: false,
+      streetViewControl: false,
+    };
+    const map = new google.maps.Map(document.getElementById("map"), mapProp);
+    const markerInfos = {{mapMarkers|safe}};
+    setMarkers(map, markerInfos);
+  }
+  
+  function setMarkers(map, markerInfos){
+    for (let i = 0; i < markerInfos.length; i++) {
+      const markerInfo = markerInfos[i];
+      const marker = new google.maps.Marker({
+        position: { lat: markerInfo[1], lng: markerInfo[2] },
+        map,
+        title: markerInfo[0],
+        zIndex: markerInfo[3],
+        label: {text: markerInfo[4].toString(), color: "white", fontWeight: 'bold'},
+      });
+      marker.addListener("click", () => {
+        document.getElementById("posInfo").innerHTML = "Clicking on " + markerInfo[0]
+      });
+    }
+  }
+</script>
+<script id="mapDisplay"></script>
+<script >
+  const API = "{{ mapAPI }}";
+  document.getElementById("mapDisplay").src = "https://maps.googleapis.com/maps/api/js?key=" + "{{mapAPI}}" + "&callback=myMap";
+</script>
+
+<div id="posInfo">
+  div: posInfo
+</div>
+
+</body>
+</html>
