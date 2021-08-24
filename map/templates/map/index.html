@@ -8,11 +8,14 @@
 <body>
 
 <div id="map"></div>
+<div id="infoBlock">
+  div: infoBlock testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
+</div>
 
 <script>
   function myMap(){
     const mapProp = {
-      center: new google.maps.LatLng({{mapDisplayInfo.centerx}}, {{mapDisplayInfo.centery}}),
+      center: new google.maps.LatLng({{mapDisplayInfo.lat}}, {{mapDisplayInfo.lng}}),
       zoom: {{mapDisplayInfo.zoom}},
       styles: [
         {
@@ -34,35 +37,78 @@
       streetViewControl: false,
     };
     const map = new google.maps.Map(document.getElementById("map"), mapProp);
-    const markerInfos = {{mapMarkers|safe}};
-    setMarkers(map, markerInfos);
+    setMarkers(map);
   }
   
-  function setMarkers(map, markerInfos){
-    for (let i = 0; i < markerInfos.length; i++) {
-      const markerInfo = markerInfos[i];
-      const marker = new google.maps.Marker({
-        position: { lat: markerInfo[1], lng: markerInfo[2] },
-        map,
-        title: markerInfo[0],
-        zIndex: markerInfo[3],
-        label: {text: markerInfo[4].toString(), color: "white", fontWeight: 'bold'},
-      });
+  function setMarkers(map){
+    {% for landmark in landmarks %}
+      var contentCount = 0;
+      {% for content in landmark.content_set.all %}
+        if("{{content.isGoing}}" == "True") contentCount+=1;
+      {% endfor %}
+      var marker = new google.maps.Marker({
+        position: {
+          lat: {{landmark.lat}}, lng: {{landmark.lng}}
+        },
+        map: map,
+        title: "{{landmark.name}}",
+        zIndex: {{landmark.zIndex}},
+        label: {
+          text: contentCount.toString(), color: "white", fontWeight: 'bold',
+        }
+      });      
       marker.addListener("click", () => {
-        document.getElementById("posInfo").innerHTML = "Clicking on " + markerInfo[0]
-      });
-    }
+        document.getElementById("infoBlock").innerHTML = "";
+        var divLandmark = document.createElement("div");
+        divLandmark.className = "landmarkInfo";
+        divLandmark.innerHTML = "<h1>" + "{{landmark.name}}" + "</h1>";
+        divLandmark.appendChild(setImage('/media/' + "{{landmark.coverImageSrc}}", "Image not found", "landmarkCoverImage"));
+        if("{{landmark.link}}"){
+          divLandmark.appendChild(setLink("{{landmark.link}}", "landmarkLink"));
+        }        
+        document.getElementById("infoBlock").appendChild(divLandmark);
+        {% for content in landmark.content_set.all %}
+          if("{{content.isGoing}}" == "True"){
+            var divContent = document.createElement("div");
+            divContent.className = "contentInfo";
+            divContent.appendChild(setImage('/media/' + "{{content.coverImageSrc}}", "Image not found", "contentCoverImage"));
+            divContent.appendChild(setContentDes("{{content.name}}", "{{content.strDateInterval}}", "{{content.link}}",));
+            document.getElementById("infoBlock").appendChild(divContent);
+          }
+        {% endfor %}
+      });     
+    {% endfor %}
+  }
+  function setImage(src, alt, cls){
+    let img = document.createElement("img");
+    img.src = src;
+    img.alt = alt;
+    img.className = cls;
+    return img;
+  }
+  function setLink(link, cls){
+    let ablock = document.createElement("a");
+    ablock.href = link;
+    let div = document.createElement("div");
+    div.className = cls;
+    div.innerHTML = link;
+    ablock.appendChild(div);
+    return ablock;
+  }
+  function setContentDes(name, strDateInterval, link){
+    let div = document.createElement("div");
+    div.className = "contentDes";
+    div.innerHTML = "<h2>" + name + "</h2>";
+    div.innerHTML += "<p>" + strDateInterval + "</p>";
+    if(link){
+      div.appendChild(setLink(link, "contentLink"));
+    }   
+    return div;
   }
 </script>
 <script id="mapDisplay"></script>
 <script >
-  const API = "{{ mapAPI }}";
   document.getElementById("mapDisplay").src = "https://maps.googleapis.com/maps/api/js?key=" + "{{mapAPI}}" + "&callback=myMap";
 </script>
-
-<div id="posInfo">
-  div: posInfo
-</div>
-
 </body>
 </html>
