@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
 import datetime
 from django.utils import timezone
 
@@ -9,6 +10,8 @@ class Image(models.Model): #Landmark and content images
     created = models.DateTimeField(editable=False)
     name = models.CharField(max_length=100, blank=True)
     src = models.ImageField(upload_to='images/', default='images/empty.jpg')
+    class Meta:
+        abstract = True
     def save(self, *args, **kwargs):
         self.created = timezone.now()
         return super(Image, self).save(*args, **kwargs)
@@ -21,6 +24,8 @@ class Comment(models.Model): #Landmark and content comments
             MaxValueValidator(5),
             MinValueValidator(1)
         ])
+    class Meta:
+        abstract = True
     def save(self, *args, **kwargs):
         if not self.id:
             self.created = timezone.now()
@@ -38,13 +43,13 @@ class Landmark(models.Model): #museums
         return self.name
 
 class LandmarkImage(Image):
-    landmark = models.ForeignKey(Landmark, on_delete=models.CASCADE)
+    landmark = models.ForeignKey(Landmark, related_name='images', on_delete=models.CASCADE)
 
 class LandmarkComment(Comment):
-    landmark = models.ForeignKey(Landmark, on_delete=models.CASCADE)
+    landmark = models.ForeignKey(Landmark, related_name='comments', on_delete=models.CASCADE)
 
 class Content(models.Model): #expositions, key from landmarks
-    landmark = models.ForeignKey(Landmark, on_delete=models.CASCADE)
+    landmark = models.ForeignKey(Landmark, related_name='contents', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     startDate = models.DateField(blank=True)
     endDate = models.DateField(blank=True)
@@ -56,6 +61,9 @@ class Content(models.Model): #expositions, key from landmarks
 
     def __str__(self):
         return self.name
+    def clean(self):
+        if self.endDate < self.startDate:
+            raise ValidationError({"endDate": "End date should be later than start date"})
     def isGoing(self):
         curTime = datetime.date.today()
         if self.startDate and self.startDate > curTime:
@@ -64,10 +72,10 @@ class Content(models.Model): #expositions, key from landmarks
             return False
         return True     
     def strDateInterval(self):
-        return self.startDate.strftime('%B %d %Y') + " ~ " + self.endDate.strftime('%B %d %Y')
+        return self.startDate.strftime('%B %d %Y') + " ~ " + self.endDate.strftime('%B %d %Y')    
 
 class ContentImage(Image):
-    content = models.ForeignKey(Content, on_delete=models.CASCADE)
+    content = models.ForeignKey(Content, related_name='images', on_delete=models.CASCADE)
 
 class ContentComment(Comment):
-    content = models.ForeignKey(Content, on_delete=models.CASCADE)
+    content = models.ForeignKey(Content, related_name='comments', on_delete=models.CASCADE)

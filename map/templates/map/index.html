@@ -43,7 +43,7 @@
   function setMarkers(map){
     {% for landmark in landmarks %}
       var contentCount = 0;
-      {% for content in landmark.content_set.all %}
+      {% for content in landmark.contents.all %}
         if("{{content.isGoing}}" == "True") contentCount+=1;
       {% endfor %}
       var marker = new google.maps.Marker({
@@ -67,7 +67,7 @@
           divLandmark.appendChild(setLink("{{landmark.link}}", "landmarkLink"));
         }        
         document.getElementById("infoBlock").appendChild(divLandmark);
-        {% for content in landmark.content_set.all %}
+        {% for content in landmark.contents.all %}
           if("{{content.isGoing}}" == "True"){
             var divContent = document.createElement("div");
             divContent.className = "contentInfo";
