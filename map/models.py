@@ -18,7 +18,7 @@ class Image(models.Model): #Landmark and content images
 
 class Comment(models.Model): #Landmark and content comments
     created = models.DateTimeField(editable=False)
-    modified = models.DateTimeField()
+    modified = models.DateTimeField(editable=False)
     text = models.CharField(max_length=500, blank=True)
     rating = models.IntegerField(default = 5, validators=[
             MaxValueValidator(5),
@@ -30,7 +30,7 @@ class Comment(models.Model): #Landmark and content comments
         if not self.id:
             self.created = timezone.now()
         self.modified = timezone.now()
-        return super(LandmarkComment, self).save(*args, **kwargs)
+        return super(Comment, self).save(*args, **kwargs)
 
 class Landmark(models.Model): #museums
     name = models.CharField(max_length=100)
@@ -61,9 +61,6 @@ class Content(models.Model): #expositions, key from landmarks
 
     def __str__(self):
         return self.name
-    def clean(self):
-        if self.endDate < self.startDate:
-            raise ValidationError({"endDate": "End date should be later than start date"})
     def isGoing(self):
         curTime = datetime.date.today()
         if self.startDate and self.startDate > curTime:
