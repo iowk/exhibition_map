@@ -42,6 +42,13 @@ class Landmark(models.Model): #museums
     def __str__(self):
         return self.name
 
+    def contentCount(self):
+        cnt = 0
+        for content in self.contents.all():
+            if content.isGoing():
+                cnt += 1
+        return cnt
+
 class LandmarkImage(Image):
     landmark = models.ForeignKey(Landmark, related_name='images', on_delete=models.CASCADE)
 

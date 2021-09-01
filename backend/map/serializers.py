@@ -4,7 +4,7 @@ from map.models import Landmark, LandmarkImage, LandmarkComment, Content, Conten
 class LandmarkSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Landmark
-        fields = ['id', 'name', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc']
+        fields = ['id', 'name', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc', 'contentCount']
 
 class LandmarkImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -19,7 +19,7 @@ class LandmarkCommentSerializer(serializers.HyperlinkedModelSerializer):
 class ContentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Content
-        fields = ['id', 'name', 'startDate', 'endDate', 'link', 'coverImageSrc']
+        fields = ['id', 'name', 'startDate', 'endDate', 'link', 'coverImageSrc', 'isGoing']
 
     def validate(self, data):
         if data['startDate'] > data['endDate']:
