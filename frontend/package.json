@@ -2,7 +2,10 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+<<<<<<< HEAD
   "proxy": "http://localhost:8000", 
+=======
+>>>>>>> ffe6b4d25c50654392893386a4eea29638fca240
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
