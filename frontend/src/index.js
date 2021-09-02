@@ -13,6 +13,27 @@ const center = {
     lng: -0.48110166784168
 };
 
+const mapOptions = {
+    styles: [
+        {
+            featureType: 'poi',
+            stylers: [{ visibility: 'off' }]  // Turn off points of interest.
+        },
+        {
+            featureType: 'landscape',
+            stylers: [{ visibility: 'off' }]  // Turn off landscapes.
+        },
+        {
+            featureType: 'road',
+            elementType: 'labels.icon',
+            stylers: [{ visibility: 'off' }]  // Turn off landscapes.
+        },
+    ],
+    disableDoubleClickZoom: true,
+    mapTypeControl: false,
+    streetViewControl: false,
+}
+
 const zoom = 15;
 class Index extends Component {
     constructor(props) {
@@ -152,6 +173,7 @@ class Map extends Component {
                     mapContainerStyle={containerStyle}
                     center={center}
                     zoom={zoom}
+                    options={mapOptions}
                     addChild={this.props.landmarks.length}
                 >
                     {children}
