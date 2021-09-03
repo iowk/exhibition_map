@@ -1,15 +1,14 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
-from map.models import Landmark, LandmarkImage, LandmarkComment, Content, ContentImage, ContentComment
+from map.models import CustomUser, Landmark, LandmarkImage, LandmarkComment, Content, ContentImage, ContentComment
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = CustomUser
         fields = ['id', 'email', 'username', 'is_staff', 'landmarkImages', 'contentImages', 'landmarkComments', 'contentComments']
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = CustomUser
         fields = ['id', 'email', 'username', 'password']
 
 class LandmarkSerializer(serializers.ModelSerializer):

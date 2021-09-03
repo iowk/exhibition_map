@@ -10,7 +10,7 @@ from rest_framework import status
 from rest_framework import generics
 from rest_framework import permissions
 
-from .models import Landmark, Content
+from .models import Landmark, Content, CustomUser
 
 # Create your views here.
 class MapInfo:
@@ -35,14 +35,14 @@ class UserList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                       permissions.IsAdminUser]
     def get_queryset(self):
-        return User.objects.all()
+        return CustomUser.objects.all()
 
 class UserDetail(generics.RetrieveDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                       permissions.IsAdminUser]
     def get_queryset(self):
-        return User.objects.all()
+        return CustomUser.objects.all()
     def get_object(self):
         queryset = self.get_queryset()
         filter = {'pk': self.kwargs['pk_user']}
@@ -51,11 +51,11 @@ class UserDetail(generics.RetrieveDestroyAPIView):
 class UserRegister(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
     def get_queryset(self):
-        return User.objects.all()
+        return CustomUser.objects.all()
     def post(self, request, format=None):        
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
-            User.objects.create_user(                
+            CustomUser.objects.create_user(                
                 serializer.data['username'],
                 serializer.data['email'],
                 serializer.data['password']

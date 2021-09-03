@@ -5,6 +5,11 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
 import datetime
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
+
+class CustomUser(AbstractUser):
+    username = models.CharField(max_length=20, unique=True)
+    email = models.EmailField(unique=True)
 
 # Create your models here.
 class Image(models.Model): #Landmark and content images
@@ -54,11 +59,11 @@ class Landmark(models.Model): #museums
         return list(self.comments.all().aggregate(Avg('rating')).values())[0]
 
 class LandmarkImage(Image):
-    owner = models.ForeignKey('auth.User', related_name='landmarkImages', on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, related_name='landmarkImages', on_delete=models.CASCADE)
     landmark = models.ForeignKey(Landmark, related_name='images', on_delete=models.CASCADE)
 
 class LandmarkComment(Comment):
-    owner = models.ForeignKey('auth.User', related_name='landmarkComments', on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, related_name='landmarkComments', on_delete=models.CASCADE)
     landmark = models.ForeignKey(Landmark, related_name='comments', on_delete=models.CASCADE)
 
 class Content(models.Model): #expositions, key from landmarks
@@ -87,9 +92,9 @@ class Content(models.Model): #expositions, key from landmarks
         return list(self.comments.all().aggregate(Avg('rating')).values())[0]
 
 class ContentImage(Image):
-    owner = models.ForeignKey('auth.User', related_name='contentImages', on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, related_name='contentImages', on_delete=models.CASCADE)
     content = models.ForeignKey(Content, related_name='images', on_delete=models.CASCADE)
 
 class ContentComment(Comment):
-    owner = models.ForeignKey('auth.User', related_name='contentComments', on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, related_name='contentComments', on_delete=models.CASCADE)
     content = models.ForeignKey(Content, related_name='comments', on_delete=models.CASCADE)
