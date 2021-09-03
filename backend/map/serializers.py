@@ -11,6 +11,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['id', 'email', 'username', 'password']
 
+class UserChangePasswordSerializer(serializers.Serializer):
+    model = CustomUser
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
 class LandmarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Landmark

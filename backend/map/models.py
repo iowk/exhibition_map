@@ -63,7 +63,7 @@ class LandmarkImage(Image):
     landmark = models.ForeignKey(Landmark, related_name='images', on_delete=models.CASCADE)
 
 class LandmarkComment(Comment):
-    owner = models.ForeignKey(CustomUser, related_name='landmarkComments', on_delete=models.CASCADE)
+    owner = models.OneToOneField(CustomUser, related_name='landmarkComments', on_delete=models.CASCADE)
     landmark = models.ForeignKey(Landmark, related_name='comments', on_delete=models.CASCADE)
 
 class Content(models.Model): #expositions, key from landmarks
@@ -96,5 +96,5 @@ class ContentImage(Image):
     content = models.ForeignKey(Content, related_name='images', on_delete=models.CASCADE)
 
 class ContentComment(Comment):
-    owner = models.ForeignKey(CustomUser, related_name='contentComments', on_delete=models.CASCADE)
+    owner = models.OneToOneField(CustomUser, related_name='contentComments', on_delete=models.CASCADE)
     content = models.ForeignKey(Content, related_name='comments', on_delete=models.CASCADE)
