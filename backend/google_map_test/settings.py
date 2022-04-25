@@ -86,6 +86,7 @@ DATABASES = {
         'USER': 'iowk',
         'PASSWORD': 'sdfjklkjfds',
         'HOST': 'localhost',
+        'PORT': '3306',
         'TIME_ZONE': 'Europe/Madrid'
     }
 }
