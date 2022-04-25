@@ -100,6 +100,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -136,6 +139,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTH_USER_MODEL = 'map.CustomUser'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [ 
+        'rest_framework.permissions.IsAdminUser',
+    ],
+}
+
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000'
 ]
+

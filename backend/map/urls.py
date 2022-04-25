@@ -5,6 +5,10 @@ from . import views
 app_name = 'map'
 urlpatterns = format_suffix_patterns([
     path('', views.index, name = 'index'),
+    path('users/', views.UserList.as_view(), name='user_list'),    
+    path('users/<int:pk_user>/', views.UserDetail.as_view(), name='user_detail'),
+    path('users/register/', views.UserRegister.as_view(), name='user_register'),
+    path('users/change_password/', views.UserChangePassword.as_view(), name='user_change_password'),
     path('landmarks/', views.LandmarkList.as_view(), name='landmark_list'),
     path('landmarks/<int:pk_lm>/', views.LandmarkDetail.as_view(), name='landmark_detail'),
     path('landmarks/<int:pk_lm>/images/', views.LandmarkImageList.as_view(), name='landmark_image_list'),
