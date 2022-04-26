@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import './index.css';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 const containerStyle = {
     width: '98vw',
@@ -107,6 +109,7 @@ class InfoBlock extends Component {
             name={landmark['name']}
             link={landmark['link']}
             coverImageSrc={landmark['coverImageSrc']}
+            avgRating={landmark['avgRating']}
         />;
     }
     setContentBox(content) {
@@ -117,6 +120,7 @@ class InfoBlock extends Component {
             endDate={content['endDate']}
             link={content['link']}
             coverImageSrc={content['coverImageSrc']}
+            avgRating={content['avgRating']}
         />;
     }
     render() {
@@ -182,6 +186,7 @@ class Map extends Component {
         );
     }
 }
+
 class Landmark extends Component{
     render() {
         return (
@@ -191,6 +196,44 @@ class Landmark extends Component{
                 <a href={this.props.link}>
                     <div className="link">{this.props.link}</div>
                 </a>
+                <div className='rating'>
+                    <p>Rating: {this.props.avgRating}</p>
+                    <Popup trigger={<button className='addCommentButton'>Add comment</button>}
+                    position="right center"
+                    modal>
+                        {close => (
+                        <div className="modal">
+                            <button className="close" onClick={close}> 
+                                &times; 
+                            </button>
+                            <div className="writeRating">
+                                <div className='commentBlockTitle'>Rating</div>
+                                <div //TODO
+                                ></div>
+                            </div>
+                            <div className="writeComment">
+                                <div className='commentBlockTitle'>Comment</div>
+                                <div //TODO
+                                ></div>
+                            </div>
+                            <div className="submitButton">
+                            <button 
+                                className="button"
+                                // TODO
+                                onClick={() => {close();}}>
+                                Submit
+                            </button>
+                            </div>
+                            <div className="closeButton">
+                            <button 
+                                className="button"
+                                onClick={() => {close();}}>
+                                Close
+                            </button>
+                            </div>
+                        </div>)}
+                    </Popup>
+                </div>
             </div>
         );        
     }
@@ -205,7 +248,8 @@ class Content extends Component {
                     <p>{this.props.startDate} ~ {this.props.endDate}</p>
                     <a href={this.props.link}>
                         <div className="link">{this.props.link}</div>
-                    </a>
+                    </a>      
+                    <p>Rating: {this.props.avgRating}</p>
                 </div>
             </div>
         );        
