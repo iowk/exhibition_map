@@ -148,6 +148,94 @@ class InfoBlock extends Component {
          
     }
 }
+class WriteRatingBlock extends Component {
+    constructor(props) {
+        super(props);
+    }
+    setRatingBox() {
+        var children = [];
+        children.push(<div className='ratingTitle' key='ratingTitle'>Rating</div>)
+        for(var i = 1 ; i <= this.props.rating ; ++i){
+            let cur=i;
+            children.push(<div className='button' key={cur}><button 
+            onClick={() => this.props.handleClickRating(cur)}
+            className='filledRating'>
+                </button></div>)
+        }
+        for(var i = this.props.rating+1 ; i <= this.props.maxRating ; ++i){
+            let cur=i;
+            children.push(<div className='button' key={cur}><button 
+            onClick={() => this.props.handleClickRating(cur)}
+            className='emptyRating'>
+                </button></div>)
+        }
+        return (
+            <div className='ratingBox'>{children}</div>
+        );
+    }
+    render() {
+        return(
+            this.setRatingBox()
+        )
+    }
+}
+class WriteCommentBlock extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            rating: 0,
+            maxRating: 5
+        };
+    }
+    handleClickRating = (rating) => {
+        console.log("Rating:", rating);
+        this.setState({rating: rating});
+    }
+    render() {
+        return(
+        <Popup trigger={<button className='addCommentButton'>Add comment</button>}
+        position="right center"
+        modal>
+            {close => (
+            <div className="modal">
+                <button className="close" onClick={close}> 
+                    &times; 
+                </button>
+                <div className="title">
+                    {this.props.name}
+                </div>
+                <WriteRatingBlock
+                    rating={this.state.rating}
+                    maxRating={this.state.maxRating}
+                    handleClickRating={this.handleClickRating}
+                />
+                <div className="writeComment">
+                    <div //TODO
+                    ></div>
+                </div>
+                <div className='buttons'>
+                    <div className="submitButton">
+                    <button 
+                        className="button"
+                        // TODO
+                        onClick={() => {close();}}>
+                        Submit
+                    </button>
+                    </div>
+                    <div className="closeButton">
+                    <button 
+                        className="button"
+                        onClick={() => {close();}}>
+                        Close
+                    </button>
+                </div>
+                </div>
+            </div>)}
+        </Popup>
+        );
+    }
+}
 class Map extends Component {
     setMarker(landmark) {
         const onClickMarker = (e) => {
@@ -198,41 +286,8 @@ class Landmark extends Component{
                 </a>
                 <div className='rating'>
                     <p>Rating: {this.props.avgRating}</p>
-                    <Popup trigger={<button className='addCommentButton'>Add comment</button>}
-                    position="right center"
-                    modal>
-                        {close => (
-                        <div className="modal">
-                            <button className="close" onClick={close}> 
-                                &times; 
-                            </button>
-                            <div className="writeRating">
-                                <div className='commentBlockTitle'>Rating</div>
-                                <div //TODO
-                                ></div>
-                            </div>
-                            <div className="writeComment">
-                                <div className='commentBlockTitle'>Comment</div>
-                                <div //TODO
-                                ></div>
-                            </div>
-                            <div className="submitButton">
-                            <button 
-                                className="button"
-                                // TODO
-                                onClick={() => {close();}}>
-                                Submit
-                            </button>
-                            </div>
-                            <div className="closeButton">
-                            <button 
-                                className="button"
-                                onClick={() => {close();}}>
-                                Close
-                            </button>
-                            </div>
-                        </div>)}
-                    </Popup>
+                    <div><WriteCommentBlock
+                    name={this.props.name}/></div>
                 </div>
             </div>
         );        

@@ -125,39 +125,56 @@
     border: 1px solid #cfcece;
 }
 .popup-content {
-    height: 60%;
+    height: 80%;
     width: 60%;
 }
-.modal .writeRating {
-    height: 20%;
-    width: 100%;
-}
-.modal .writeRating .commentBlockTitle{
-    padding: 10px;
-    font-size: 24px;
+.modal .title {
+    height: 50px;
+    line-height: 50px;
+    font-size: 36px;
     position: relative;
-    top: 50%;
-    width: 15%;
-    clear: left;
-    float: left;
+    text-align: center;
+    border-style: outset;
 }
 .modal .writeComment {
-    height: 70%;
-    width: 100%;
+    height: calc(100% - 210px);
 }
-.modal .writeComment .commentBlockTitle{
-    padding: 10px;
-    font-size: 24px;
-    position: relative;
-    top: 10%;
+.modal .buttons {
+    height: 50px;
 }
 .modal .submitButton{
     position: relative;
     left: 25%;
+    clear: left;
     float: left;
 }
 .modal .closeButton{
     position: relative;
     left: 55%;
     float: left;
+}
+.ratingBox {
+    height: 50px;
+    padding: 20px;
+}
+.ratingTitle {
+    position: relative;
+    padding: 10px;
+    font-size: 24px;
+    clear: left;
+    float: left;
+}
+.ratingBox .button {
+    padding: 10px;
+    float: left;
+}
+.filledRating {
+    height: 30px;
+    width: 60px;
+    background-color: yellow;
+}
+.emptyRating {
+    height: 30px;
+    width: 60px;
+    background-color: white;
 }
