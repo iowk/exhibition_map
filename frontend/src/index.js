@@ -26,7 +26,7 @@ const mapOptions = {
         {
             featureType: 'road',
             elementType: 'labels.icon',
-            stylers: [{ visibility: 'off' }]  // Turn off landscapes.
+            stylers: [{ visibility: 'off' }]  // Turn off roads.
         },
     ],
     disableDoubleClickZoom: true,
