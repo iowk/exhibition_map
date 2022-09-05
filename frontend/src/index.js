@@ -9,8 +9,8 @@ const containerStyle = {
 };
 
 const center = {
-    lat: 38.702153249882926,
-    lng: -0.48110166784168
+    lat: 25.0444028220627,
+    lng: 121.52932689105789
 };
 
 const mapOptions = {
