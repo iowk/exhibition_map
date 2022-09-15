@@ -70,10 +70,123 @@
     margin-bottom: 0px;
 }
 .contentInfo .des .link{
-    text-align: center;
+    text-align: left;
     padding-top: 5px;
     padding-bottom: 5px; 
 }
 .contentInfo .des .link:hover{
     background-color: lightgray;
+}
+.rating{
+    margin-left: 5px;
+}
+.rating > p{
+    clear: left;
+    float: left;
+    margin-top: 10px;
+}
+.rating .addCommentButton{
+    float: left;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.modal {
+    font-size: 12px;
+    height: 100%;
+}
+.modal > .header {
+    width: 100%;  
+    border-bottom: 1px solid gray;  
+    font-size: 18px;  
+    text-align: center;  
+    padding: 5px;
+}
+.modal > .content {  
+    width: 100%;  
+    padding: 10px 5px;
+}
+.modal > .actions {  
+    width: 100%;  
+    padding: 10px 5px;  
+    margin: auto;  
+    text-align: center;
+}
+.modal > .close {  
+    cursor: pointer;  
+    position: absolute;  
+    display: block;  
+    padding: 2px 5px;  
+    line-height: 20px;  
+    right: -10px;  
+    top: -10px;  
+    font-size: 24px;  
+    background: #ffffff;
+    border-radius: 18px;  
+    border: 1px solid #cfcece;
+}
+.popup-content {
+    height: 80%;
+    width: 60%;
+}
+.modal .title {
+    height: 50px;
+    line-height: 50px;
+    font-size: 36px;
+    position: relative;
+    text-align: center;
+    border-style: outset;
+}
+.modal .buttons {
+    padding-top: 15px;
+    height: 40px;
+}
+.modal .submitButton{
+    position: relative;
+    left: 25%;
+    clear: left;
+    float: left;
+}
+.modal .closeButton{
+    position: relative;
+    left: 55%;
+    float: left;
+}
+.ratingBox {
+    height: 50px;
+    padding: 20px;
+}
+.ratingTitle {
+    position: relative;
+    padding: 10px;
+    font-size: 24px;
+    clear: left;
+    float: left;
+}
+.ratingBox .button {
+    padding: 10px;
+    float: left;
+}
+.filledRating {
+    height: 30px;
+    width: 60px;
+    background-color: yellow;
+}
+.emptyRating {
+    height: 30px;
+    width: 60px;
+    background-color: white;
+}
+.commentBox {
+    margin-left: 5%;
+    height: calc(100% - 170px);
+    width: 90%;
+}
+.popupForm {
+    height: calc(100% - 50px);
+}
+.popupSubmitButton {
+    position: relative;
+    top: 10px;
+    left: 50%;
+    transform: translate(-50%);
 }
