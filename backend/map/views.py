@@ -32,15 +32,13 @@ def index(request):
 
 class UserList(generics.ListAPIView):
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      permissions.IsAdminUser]
+    permission_classes = [permissions.IsAdminUser]
     def get_queryset(self):
         return CustomUser.objects.all()
 
 class UserDetail(generics.RetrieveDestroyAPIView):
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      permissions.IsAdminUser]
+    permission_classes = [permissions.IsAdminUser]
     def get_queryset(self):
         return CustomUser.objects.all()
     def get_object(self):
@@ -65,8 +63,7 @@ class UserRegister(generics.CreateAPIView):
 
 class UserChangePassword(generics.UpdateAPIView):
     serializer_class = UserChangePasswordSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      (IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_object(self):
         return self.request.user
     def update(self, request, format=None):
@@ -82,15 +79,13 @@ class UserChangePassword(generics.UpdateAPIView):
 
 class LandmarkList(generics.ListCreateAPIView):
     serializer_class = LandmarkSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      IsAdminUserOrReadOnly]
+    permission_classes = [IsAdminUserOrReadOnly]
     def get_queryset(self):
         return Landmark.objects.all()
 
 class LandmarkDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LandmarkSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      IsAdminUserOrReadOnly]
+    permission_classes = [IsAdminUserOrReadOnly]
     def get_queryset(self):
         return Landmark.objects.all()
     def get_object(self):
@@ -115,8 +110,7 @@ class LandmarkImageList(generics.ListCreateAPIView):
 
 class LandmarkImageDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LandmarkImageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      (IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).images
@@ -144,8 +138,7 @@ class LandmarkCommentList(generics.ListCreateAPIView):
 
 class LandmarkCommentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LandmarkCommentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      (IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).comments
@@ -158,8 +151,7 @@ class LandmarkCommentDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class ContentList(generics.ListCreateAPIView):
     serializer_class = ContentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
@@ -174,8 +166,7 @@ class ContentList(generics.ListCreateAPIView):
 
 class ContentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ContentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      IsAdminUserOrReadOnly]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
@@ -207,8 +198,7 @@ class ContentImageList(generics.ListCreateAPIView):
 
 class ContentImageDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ContentImageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      (IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     def get_queryset(self):
         try:
             contents = Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
@@ -244,8 +234,7 @@ class ContentCommentList(generics.ListCreateAPIView):
 
 class ContentCommentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ContentCommentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      (IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             contents = Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
