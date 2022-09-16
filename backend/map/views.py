@@ -48,6 +48,7 @@ class UserDetail(generics.RetrieveDestroyAPIView):
 
 class UserRegister(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
+    permission_classes = [permissions.AllowAny]
     def get_queryset(self):
         return CustomUser.objects.all()
     def post(self, request, format=None):        

@@ -1,0 +1,18 @@
+*{
+    font-family: Sans-serif;
+}
+#register{
+    margin-top: 30px;
+    margin-left: 30px;
+}
+.taDiv{
+    position: relative;
+    height: 50px;
+    padding: 5px;
+}
+.taBox{
+    float: left;
+}
+#submitButton{
+    
+}
