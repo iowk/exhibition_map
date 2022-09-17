@@ -12,36 +12,41 @@ class Register extends Component {
             email: '',
             password: '',
             passwordConf: '',
-            regSuccess: false,
             err: {
                 username: '',
                 email: '',
                 password: '',
                 passwordConf: '',
             },
+            buttomMessage: '',
         };
     }
-    handleWriteUsername = (event) => {
-        this.setState({username: event.target.value});
-        //console.log("UserName:",this.state.username);
-    }
-    handleWriteEmail = (event) => {
-        this.setState({email: event.target.value});
-        //console.log("Email:",this.state.email);
-    }
-    handleWritePassword = (event) => {
-        this.setState({password: event.target.value});
-    }
-    handleWritePasswordConf = (event) => {
-        this.setState({passwordConf: event.target.value});
-    }
-    checkPasswordConf(){
-        if(this.state.password===this.state.passwordConf) return true;
+    handleOnChangePassword = (e) => {
         let errCopy = this.state.err;
-        errCopy.passwordConf = "Confirm password incorrect";
-        this.setState({err:errCopy});
-        return false;
-    }
+        if(this.state.passwordConf===e.target.value || this.state.passwordConf===''){
+            errCopy.passwordConf = '';
+            this.setState({err:errCopy});
+            this.setState({password:e.target.value});
+        }
+        else{
+            errCopy.passwordConf = 'Confirm password incorrect';
+            this.setState({err:errCopy});
+            this.setState({password:e.target.value});
+        }
+    }    
+    handleOnChangePasswordConf = (e) => {
+        let errCopy = this.state.err;
+        if(this.state.password===e.target.value){
+            errCopy.passwordConf = '';
+            this.setState({err:errCopy});
+            this.setState({passwordConf:e.target.value});
+        }
+        else{
+            errCopy.passwordConf = 'Confirm password incorrect';
+            this.setState({err:errCopy});
+            this.setState({passwordConf:e.target.value});
+        }
+    }    
     clearErr(){
         let err_cpy = {};
         for(var key in this.state.err){
@@ -49,38 +54,44 @@ class Register extends Component {
         }
         this.setState({err: err_cpy});
     }
+    clearInput(){
+        this.setState({username: ''});
+        this.setState({email: ''});
+        this.setState({password: ''});
+        this.setState({passwordConf: ''});
+    }
     handleSubmit = (event) => {
         // POST username, email and password
-        // TODO: email verification 
-        fetch(backendPath+'/map/users/register/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: this.state.username,
-                email: this.state.email,
-                password: this.state.password,
-            })
-        })
-        .then(res => {
-            if(!res.ok){
-                return res.json()
-                .then(res_json => {
-                    this.setState({err:res_json});
-                    this.checkPasswordConf();
+        if(this.state.password===this.state.passwordConf){
+            fetch(backendPath+'/map/users/register/', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: this.state.username,
+                    email: this.state.email,
+                    password: this.state.password,
                 })
-                .catch(err => {
-                    alert(err);
-                });;
-            }
-            else{
-                if(this.checkPasswordConf()) this.setState({regSuccess: true});
-                this.clearErr();
-                console.log('Registration success'); // TODO: redirect page
-            }
-        })
+            })
+            .then(res => {
+                if(!res.ok){
+                    return res.json()
+                    .then(res_json => {
+                        this.setState({err:res_json});
+                    })
+                    .catch(err => {
+                        alert(err);
+                    });
+                }
+                else{
+                    this.clearErr();                  
+                    this.setState({buttomMessage: 'Registration success. Verification e-mail is sent to ' + this.state.email});
+                    this.clearInput();
+                }
+            })
+        }
         event.preventDefault();
     }
     render() {
@@ -91,7 +102,8 @@ class Register extends Component {
                     <span>Username</span>
                     <input
                         type='text'
-                        onChange={this.handleWriteUsername}
+                        value={this.state.username}
+                        onChange={(e) => this.setState({username: e.target.value})}
                         className='inpBox'
                     />
                 </div>
@@ -100,7 +112,8 @@ class Register extends Component {
                     <span>Email</span>
                     <input
                         type='text'
-                        onChange={this.handleWriteEmail}
+                        value={this.state.email}                     
+                        onChange={(e) => this.setState({email: e.target.value})}
                         className='inpBox'
                     />
                 </div>
@@ -109,7 +122,8 @@ class Register extends Component {
                     <span>Password</span>
                     <input
                         type='password'
-                        onChange={this.handleWritePassword}
+                        value={this.state.password} 
+                        onChange={this.handleOnChangePassword}
                         className='inpBox'
                     />
                 </div>
@@ -118,7 +132,8 @@ class Register extends Component {
                     <span>Confirm Password</span>
                     <input
                         type='password'
-                        onChange={this.handleWritePasswordConf}
+                        value={this.state.passwordConf} 
+                        onChange={this.handleOnChangePasswordConf}
                         className='inpBox'
                     />
                 </div>
@@ -127,6 +142,7 @@ class Register extends Component {
                     Register
                 </button>
                 </form>
+                <div className='buttomMessage'>{this.state.buttomMessage}</div>
             </div>);
     }
 }

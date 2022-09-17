@@ -3,11 +3,14 @@
 }
 #register{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 form{
-    height: 300px;
+    display: flex;
+    flex-direction: column;
+    height: auto;
     width: 400px;
     padding-top: 200px;
 }
@@ -31,6 +34,14 @@ span{
     width: 150px;
 }
 .submitButton{
-    margin-left: 170px;
+    width: 100px;
+    margin-left: 150px;
     margin-top: 10px;
+}
+.buttomMessage{
+    clear: left;
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
