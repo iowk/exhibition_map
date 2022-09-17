@@ -54,12 +54,13 @@ class UserRegister(generics.CreateAPIView):
     def post(self, request, format=None):        
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
-            CustomUser.objects.create_user(                
+            CustomUser.objects.create_user(   
                 serializer.data['username'],
                 serializer.data['email'],
                 serializer.data['password']
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserChangePassword(generics.UpdateAPIView):

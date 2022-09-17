@@ -10,12 +10,8 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=20, unique=True)
     email = models.EmailField(unique=True)
-    password = models.CharField(
-        max_length=20,
-    )
 
-# Create your models here.
-class Image(models.Model): #Landmark and content images
+class Image(models.Model): # Landmark and content images
     created = models.DateTimeField(editable=False)
     name = models.CharField(max_length=100, blank=True)
     src = models.ImageField(upload_to='images/', default='images/empty.jpg')
@@ -25,7 +21,7 @@ class Image(models.Model): #Landmark and content images
         self.created = timezone.now()
         return super(Image, self).save(*args, **kwargs)
 
-class Comment(models.Model): #Landmark and content comments    
+class Comment(models.Model): # Landmark and content comments    
     created = models.DateTimeField(editable=False)
     modified = models.DateTimeField(editable=False)
     text = models.CharField(max_length=500, blank=True)
@@ -41,7 +37,7 @@ class Comment(models.Model): #Landmark and content comments
         self.modified = timezone.now()
         return super(Comment, self).save(*args, **kwargs)
 
-class Landmark(models.Model): #museums
+class Landmark(models.Model): 
     name = models.CharField(max_length=100)
     lat = models.FloatField(default = 0.0)
     lng = models.FloatField(default = 0.0)
@@ -69,7 +65,7 @@ class LandmarkComment(Comment):
     owner = models.OneToOneField(CustomUser, related_name='landmarkComments', on_delete=models.CASCADE)
     landmark = models.ForeignKey(Landmark, related_name='comments', on_delete=models.CASCADE)
 
-class Content(models.Model): #expositions, key from landmarks
+class Content(models.Model): 
     landmark = models.ForeignKey(Landmark, related_name='contents', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     startDate = models.DateField(blank=True)

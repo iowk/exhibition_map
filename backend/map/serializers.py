@@ -1,15 +1,23 @@
 from rest_framework import serializers
 from map.models import CustomUser, Landmark, LandmarkImage, LandmarkComment, Content, ContentImage, ContentComment
+from django.core import exceptions
+import django.contrib.auth.password_validation as validators
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'username', 'is_staff', 'landmarkImages', 'contentImages', 'landmarkComments', 'contentComments']
+        fields = ['id', 'username', 'email', 'is_staff', 'landmarkImages', 'contentImages', 'landmarkComments', 'contentComments']
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'username', 'password']
+        fields = ['id', 'username', 'email', 'password']
+    def validate_password(self, value): 
+        try:
+            validators.validate_password(value)
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError(list(e.messages))          
+        return value
 
 class UserChangePasswordSerializer(serializers.Serializer):
     model = CustomUser
