@@ -11,6 +11,14 @@ class Register extends Component {
             username: '',
             email: '',
             password: '',
+            passwordConf: '',
+            regSuccess: false,
+            err: {
+                username: '',
+                email: '',
+                password: '',
+                passwordConf: '',
+            },
         };
     }
     handleWriteUsername = (event) => {
@@ -24,10 +32,26 @@ class Register extends Component {
     handleWritePassword = (event) => {
         this.setState({password: event.target.value});
     }
-    _handleSubmit = (event) => {
+    handleWritePasswordConf = (event) => {
+        this.setState({passwordConf: event.target.value});
+    }
+    checkPasswordConf(){
+        if(this.state.password===this.state.passwordConf) return true;
+        let errCopy = this.state.err;
+        errCopy.passwordConf = "Confirm password incorrect";
+        this.setState({err:errCopy});
+        return false;
+    }
+    clearErr(){
+        let err_cpy = {};
+        for(var key in this.state.err){
+            err_cpy[key] = '';
+        }
+        this.setState({err: err_cpy});
+    }
+    handleSubmit = (event) => {
         // POST username, email and password
-        console.log("UserName:",this.state.username);
-        console.log("Email:",this.state.email);
+        // TODO: email verification 
         fetch(backendPath+'/map/users/register/', {
             method: 'POST',
             headers: {
@@ -39,44 +63,66 @@ class Register extends Component {
                 email: this.state.email,
                 password: this.state.password,
             })
-        }).then(res => {
+        })
+        .then(res => {
             if(!res.ok){
-                console.log(res.text());
+                return res.json()
+                .then(res_json => {
+                    this.setState({err:res_json});
+                    this.checkPasswordConf();
+                })
+                .catch(err => {
+                    alert(err);
+                });;
             }
-        }).catch(err => {
-            console.log(err);
-        });
+            else{
+                if(this.checkPasswordConf()) this.setState({regSuccess: true});
+                this.clearErr();
+                console.log('Registration success'); // TODO: redirect page
+            }
+        })
         event.preventDefault();
-        console.log("Registered");
     }
     render() {
         return(
             <div id="register">
-                <form onSubmit={this._handleSubmit.bind(this)}>
-                <div className='taDiv'>
-                    <textarea
-                        placeholder='Username'
-                        value={this.state.username}
+                <form onSubmit={this.handleSubmit.bind(this)}>
+                <div className='inpDiv'>
+                    <span>Username</span>
+                    <input
+                        type='text'
                         onChange={this.handleWriteUsername}
-                        className='taBox'
+                        className='inpBox'
                     />
                 </div>
-                <div className='taDiv'>
-                    <textarea
-                        placeholder='Email'
-                        value={this.state.email}
+                <div className='errDiv'>{this.state.err.username}</div>
+                <div className='inpDiv'>
+                    <span>Email</span>
+                    <input
+                        type='text'
                         onChange={this.handleWriteEmail}
-                        className='taBox'
+                        className='inpBox'
                     />
                 </div>
-                <div className='taDiv'>
-                    <textarea
-                        placeholder='Password'
-                        value={this.state.password}
+                <div className='errDiv'>{this.state.err.email}</div>
+                <div className='inpDiv'>
+                    <span>Password</span>
+                    <input
+                        type='password'
                         onChange={this.handleWritePassword}
-                        className='taBox'
+                        className='inpBox'
                     />
                 </div>
+                <div className='errDiv'>{this.state.err.password}</div>
+                <div className='inpDiv'>
+                    <span>Confirm Password</span>
+                    <input
+                        type='password'
+                        onChange={this.handleWritePasswordConf}
+                        className='inpBox'
+                    />
+                </div>
+                <div className='errDiv'>{this.state.err.passwordConf}</div>
                 <button type="submit" className='submitButton'>
                     Register
                 </button>

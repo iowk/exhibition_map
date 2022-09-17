@@ -2,17 +2,35 @@
     font-family: Sans-serif;
 }
 #register{
-    margin-top: 30px;
-    margin-left: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.taDiv{
-    position: relative;
-    height: 50px;
+form{
+    height: 300px;
+    width: 400px;
+    padding-top: 200px;
+}
+.inpDiv{
+    clear: left;
+    height: 30px;
+    padding: 5px;
+    margin-top:20px;
+    display: flex;
+    align-items: center;
+}
+.errDiv{
+    color:red;
+    height: 30px;
     padding: 5px;
 }
-.taBox{
+.inpBox{
     float: left;
 }
-#submitButton{
-    
+span{   
+    width: 150px;
+}
+.submitButton{
+    margin-left: 170px;
+    margin-top: 10px;
 }
