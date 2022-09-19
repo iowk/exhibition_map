@@ -60,7 +60,6 @@ class UserRegister(generics.CreateAPIView):
                 serializer.data['password']
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserChangePassword(generics.UpdateAPIView):
