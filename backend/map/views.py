@@ -1,5 +1,7 @@
-from map.serializers import UserSerializer, UserRegisterSerializer, UserChangePasswordSerializer, LandmarkSerializer, LandmarkCommentSerializer, LandmarkImageSerializer, ContentSerializer, ContentImageSerializer, ContentCommentSerializer
-from map.permissions import IsOwnerOrReadOnly, IsAdminUserOrReadOnly
+from map.serializers import UserSerializer, UserRegisterSerializer, UserActivateSerializer, UserChangePasswordSerializer, \
+LandmarkSerializer, LandmarkImageSerializer,  LandmarkCommentSerializer, \
+ContentSerializer, ContentImageSerializer, ContentCommentSerializer
+from map.permissions import ReadOnly, IsOwnerOrReadOnly, IsAdminUserOrReadOnly, IsActivatedOrReadOnly
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.http import Http404
@@ -9,8 +11,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
 from rest_framework import permissions
-
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode  
 from .models import Landmark, Content, CustomUser
+from .mail import SendAccActiveEmail
+from .token import account_activation_token
 
 # Create your views here.
 class MapInfo:
@@ -49,18 +55,42 @@ class UserDetail(generics.RetrieveDestroyAPIView):
 class UserRegister(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
     permission_classes = [permissions.AllowAny]
-    def get_queryset(self):
-        return CustomUser.objects.all()
     def post(self, request, format=None):        
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
-            CustomUser.objects.create_user(   
+            user = CustomUser.objects.create_user(   
                 serializer.data['username'],
                 serializer.data['email'],
                 serializer.data['password']
             )
+            current_site = get_current_site(request)
+            SendAccActiveEmail(user, current_site)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SendUserActivationMail(generics.RetrieveAPIView):
+    def get_object(self, request, format=None):
+        user = self.request.user
+        current_site = get_current_site(request)
+        usermail = CustomUser.objects.get(pk=user.id).email
+        SendAccActiveEmail(user, usermail, user.id, current_site)
+        return user
+
+class UserActivate(generics.RetrieveAPIView):
+    serializer_class = UserActivateSerializer
+    permission_classes = [permissions.AllowAny]
+    def get_object(self):
+        try:  
+            uid = force_str(urlsafe_base64_decode(self.kwargs['uidb64']))  
+            user = CustomUser.objects.get(pk=uid)  
+        except(TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):  
+            user = None
+        if user is not None and account_activation_token.check_token(user, self.kwargs['token']):  
+            user.is_active = True  
+            user.save()  
+            return Response(status=status.HTTP_200_OK)
+        else:  
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class UserChangePassword(generics.UpdateAPIView):
     serializer_class = UserChangePasswordSerializer
@@ -76,7 +106,7 @@ class UserChangePassword(generics.UpdateAPIView):
             return Response({"old_password": ["Wrong password"]}, status=status.HTTP_400_BAD_REQUEST)
         self.object.set_password(serializer.data.get("new_password"))
         self.object.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LandmarkList(generics.ListCreateAPIView):
     serializer_class = LandmarkSerializer
@@ -86,7 +116,7 @@ class LandmarkList(generics.ListCreateAPIView):
 
 class LandmarkDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LandmarkSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         return Landmark.objects.all()
     def get_object(self):
@@ -96,7 +126,7 @@ class LandmarkDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class LandmarkImageList(generics.ListCreateAPIView):
     serializer_class = LandmarkImageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).images
@@ -111,7 +141,7 @@ class LandmarkImageList(generics.ListCreateAPIView):
 
 class LandmarkImageDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LandmarkImageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).images
@@ -124,7 +154,7 @@ class LandmarkImageDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class LandmarkCommentList(generics.ListCreateAPIView):
     serializer_class = LandmarkCommentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).comments
@@ -152,7 +182,7 @@ class LandmarkCommentDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class ContentList(generics.ListCreateAPIView):
     serializer_class = ContentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
@@ -180,7 +210,7 @@ class ContentDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class ContentImageList(generics.ListCreateAPIView):
     serializer_class = ContentImageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
             contents = Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
@@ -199,7 +229,7 @@ class ContentImageList(generics.ListCreateAPIView):
 
 class ContentImageDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ContentImageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             contents = Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
@@ -216,7 +246,7 @@ class ContentImageDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class ContentCommentList(generics.ListCreateAPIView):
     serializer_class = ContentCommentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
             contents = Landmark.objects.get(pk=self.kwargs['pk_lm']).contents

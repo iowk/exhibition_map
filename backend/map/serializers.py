@@ -19,6 +19,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(list(e.messages))          
         return value
 
+class UserActivateSerializer(serializers.Serializer):
+    model = CustomUser
+
 class UserChangePasswordSerializer(serializers.Serializer):
     model = CustomUser
     old_password = serializers.CharField(required=True)

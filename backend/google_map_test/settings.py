@@ -60,7 +60,7 @@ ROOT_URLCONF = 'google_map_test.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['map/templates/map'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -151,3 +151,6 @@ CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000'
 ]
 
+
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025

@@ -15,8 +15,8 @@ class LandmarkAdmin(admin.ModelAdmin):
 	inlines = [ContentInline, LandmarkImageInline]
 
 class UserAdmin(admin.ModelAdmin):
-	fields = ['username', 'email', 'password', 'is_staff']
-	list_display = ['username', 'email', 'password', 'is_staff']
+	fields = ['username', 'email', 'password', 'is_staff', 'is_active']
+	list_display = ['username', 'email', 'password', 'is_staff', 'is_active']
 
 admin.site.register(Landmark, LandmarkAdmin)
 admin.site.register(CustomUser, UserAdmin)
