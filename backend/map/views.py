@@ -87,10 +87,8 @@ class UserActivate(generics.RetrieveAPIView):
             user = None
         if user is not None and account_activation_token.check_token(user, self.kwargs['token']):  
             user.is_active = True  
-            user.save()  
-            return Response(status=status.HTTP_200_OK)
-        else:  
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            user.save()
+        return {'is_active': user.is_active}
 
 class UserChangePassword(generics.UpdateAPIView):
     serializer_class = UserChangePasswordSerializer
