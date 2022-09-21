@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './register.css';
-
-const backendPath = 'http://localhost:8000'
+import {backendPath} from './settings';
 
 class Register extends Component {
     // Full register page
@@ -63,34 +62,38 @@ class Register extends Component {
     handleSubmit = (event) => {
         // POST username, email and password
         if(this.state.password===this.state.passwordConf){
-            fetch(backendPath+'/map/users/register/', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: this.state.username,
-                    email: this.state.email,
-                    password: this.state.password,
-                })
-            })
-            .then(res => {
-                if(!res.ok){
-                    return res.json()
-                    .then(res_json => {
-                        this.setState({err:res_json});
+            try{
+                fetch(backendPath+'/map/users/register/', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: this.state.username,
+                        email: this.state.email,
+                        password: this.state.password,
                     })
-                    .catch(err => {
-                        alert(err);
-                    });
-                }
-                else{
-                    this.clearErr();                  
-                    this.setState({buttomMessage: 'Registration success. Verification e-mail is sent to ' + this.state.email});
-                    this.clearInput();
-                }
-            })
+                })
+                .then(res => {
+                    if(!res.ok){
+                        return res.json()
+                        .then(res_json => {
+                            this.setState({err:res_json});
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+                    }
+                    else{
+                        this.clearErr();                  
+                        this.setState({buttomMessage: 'Registration success. Verification e-mail is sent to ' + this.state.email});
+                        this.clearInput();
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+            }
         }
         event.preventDefault();
     }

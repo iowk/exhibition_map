@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import './main.css';
 import Popup from 'reactjs-popup';
+import {backendPath} from './settings';
 
-const backendPath = 'http://localhost:8000'
 const containerStyle = {
     // Map container style
     width: '98vw',
