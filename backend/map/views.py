@@ -1,7 +1,3 @@
-from map.serializers import UserSerializer, UserRegisterSerializer, UserActivateSerializer, UserChangePasswordSerializer, \
-LandmarkSerializer, LandmarkImageSerializer,  LandmarkCommentSerializer, \
-ContentSerializer, ContentImageSerializer, ContentCommentSerializer
-from map.permissions import ReadOnly, IsOwnerOrReadOnly, IsAdminUserOrReadOnly, IsActivatedOrReadOnly
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.http import Http404
@@ -11,12 +7,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode  
 from .models import Landmark, Content, CustomUser
 from .mail import SendAccActiveEmail
 from .token import account_activation_token
+from .serializers import UserSerializer, UserRegisterSerializer, UserActivateSerializer, UserChangePasswordSerializer, MyTokenObtainPairSerializer, \
+LandmarkSerializer, LandmarkImageSerializer,  LandmarkCommentSerializer, \
+ContentSerializer, ContentImageSerializer, ContentCommentSerializer
+from .permissions import ReadOnly, IsOwnerOrReadOnly, IsAdminUserOrReadOnly, IsActivatedOrReadOnly
 
 # Create your views here.
 class MapInfo:
@@ -57,6 +58,7 @@ class UserRegister(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
     def post(self, request, format=None):        
         serializer = UserRegisterSerializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
             user = CustomUser.objects.create_user(   
                 serializer.data['username'],
@@ -66,6 +68,7 @@ class UserRegister(generics.CreateAPIView):
             current_site = get_current_site(request)
             SendAccActiveEmail(user, current_site)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SendUserActivationMail(generics.RetrieveAPIView):
@@ -105,6 +108,10 @@ class UserChangePassword(generics.UpdateAPIView):
         self.object.set_password(serializer.data.get("new_password"))
         self.object.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+    permission_classes = [permissions.AllowAny]
 
 class LandmarkList(generics.ListCreateAPIView):
     serializer_class = LandmarkSerializer

@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from map.models import CustomUser, Landmark, LandmarkImage, LandmarkComment, Content, ContentImage, ContentComment
+from .models import CustomUser, Landmark, LandmarkImage, LandmarkComment, Content, ContentImage, ContentComment
 from django.core import exceptions
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 import django.contrib.auth.password_validation as validators
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,6 +29,17 @@ class UserChangePasswordSerializer(serializers.Serializer):
     model = CustomUser
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['name'] = user.username
+        # ...
+
+        return token
 
 class LandmarkSerializer(serializers.ModelSerializer):
     class Meta:
