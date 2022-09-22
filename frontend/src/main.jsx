@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import './main.css';
 import Popup from 'reactjs-popup';
-import {backendPath} from './settings';
+import axios from './axios';
 
 const containerStyle = {
     // Map container style
@@ -51,8 +51,8 @@ class Main extends Component {
     async componentDidMount() {
         // GET all landmarks on the map
         try{
-            const res = await fetch(backendPath+'/map/landmarks/');            
-            const landmarks = await res.json();
+            const res = await axios.get('/map/landmarks/');  
+            const landmarks = await res.data;
             this.setState({landmarks: landmarks});
         } catch (e) {
             console.log(e);
@@ -98,11 +98,11 @@ class InfoBlock extends Component {
         try{
             if(!(this.props.isInitial) && this.state.curLandmarkId!==this.props.curLandmarkId){
                 // GET landmarks
-                const res_lm = await fetch(backendPath+'/map/landmarks/'+this.props.curLandmarkId.toString()+'/');            
-                const landmark = await res_lm.json();
+                const res_lm = await axios.get('/map/landmarks/'+this.props.curLandmarkId.toString()+'/');            
+                const landmark = await res_lm.data;
                 // GET contents
-                const res_cons = await fetch(backendPath+'/map/landmarks/'+this.props.curLandmarkId.toString()+'/contents/');            
-                const contents = await res_cons.json();
+                const res_cons = await axios.get('/map/landmarks/'+this.props.curLandmarkId.toString()+'/contents/');            
+                const contents = await res_cons.data;
                 // Set state for InfoBlock
                 this.setState({curLandmarkId: this.props.curLandmarkId});
                 this.setState({isInitial: false});
@@ -310,16 +310,15 @@ class PopupBlock extends Component {
     }
     _handleSubmit = (event) => {
         // POST rating and comment
-        fetch(backendPath+'/map/landmarks/'+this.props.lmid+'/comments/', {
-            method: 'POST',
+        axios.post('/map/landmarks/'+this.props.lmid+'/comments/', JSON.stringify({
+            rating: this.state.rating,
+            comment: this.state.comment
+        }),
+        {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                rating: this.state.rating,
-                comment: this.state.comment
-            })
         });
         event.preventDefault();
         console.log("Submit");
