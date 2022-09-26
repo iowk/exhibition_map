@@ -6,7 +6,8 @@ from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 app_name = 'map'
 urlpatterns = format_suffix_patterns([
     path('', views.index, name = 'index'),
-    path('users/', views.UserList.as_view(), name='user_list'),    
+    path('current_user/', views.CurrentUser.as_view(), name='current_user'),    
+    path('users/', views.UserList.as_view(), name='user_list'),
     path('users/<int:pk_user>/', views.UserDetail.as_view(), name='user_detail'),
     path('users/register/', views.UserRegister.as_view(), name='user_register'),
     path('users/change_password/', views.UserChangePassword.as_view(), name='user_change_password'),

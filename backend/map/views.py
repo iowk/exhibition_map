@@ -4,19 +4,16 @@ from django.http import Http404
 from django.contrib.auth.models import User
 import os
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import generics
-from rest_framework import permissions
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework import status, generics, permissions
+from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenVerifyView
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode  
+from django.utils.http import urlsafe_base64_decode
 from .models import Landmark, Content, CustomUser
 from .mail import SendAccActiveEmail
 from .token import account_activation_token
-from .serializers import UserSerializer, UserRegisterSerializer, UserActivateSerializer, UserChangePasswordSerializer, MyTokenObtainPairSerializer, \
-LandmarkSerializer, LandmarkImageSerializer,  LandmarkCommentSerializer, \
-ContentSerializer, ContentImageSerializer, ContentCommentSerializer
+from . import serializers
 from .permissions import ReadOnly, IsOwnerOrReadOnly, IsAdminUserOrReadOnly, IsActivatedOrReadOnly
 
 # Create your views here.
@@ -37,14 +34,20 @@ def index(request):
         'landmarks': landmarks,
     })
 
+class CurrentUser(generics.RetrieveAPIView):
+    serializer_class = serializers.UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_object(self):
+        return self.request.user
+
 class UserList(generics.ListAPIView):
-    serializer_class = UserSerializer
+    serializer_class = serializers.UserSerializer
     permission_classes = [permissions.IsAdminUser]
     def get_queryset(self):
         return CustomUser.objects.all()
 
 class UserDetail(generics.RetrieveDestroyAPIView):
-    serializer_class = UserSerializer
+    serializer_class = serializers.UserSerializer
     permission_classes = [permissions.IsAdminUser]
     def get_queryset(self):
         return CustomUser.objects.all()
@@ -54,11 +57,11 @@ class UserDetail(generics.RetrieveDestroyAPIView):
         return get_object_or_404(queryset, **filter)
 
 class UserRegister(generics.CreateAPIView):
-    serializer_class = UserRegisterSerializer
+    serializer_class = serializers.UserRegisterSerializer
     permission_classes = [permissions.AllowAny]
-    def post(self, request, format=None):        
-        serializer = UserRegisterSerializer(data=request.data)
-        print(request.data)
+    authentication_classes = []
+    def post(self, request, format=None): 
+        serializer = serializers.UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = CustomUser.objects.create_user(   
                 serializer.data['username'],
@@ -66,22 +69,24 @@ class UserRegister(generics.CreateAPIView):
                 serializer.data['password']
             )
             current_site = get_current_site(request)
-            SendAccActiveEmail(user, current_site)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class SendUserActivationMail(generics.RetrieveAPIView):
-    def get_object(self, request, format=None):
-        user = self.request.user
+class SendUserActivationMail(APIView):
+    permission_classes = [permissions.AllowAny]
+    def get(self, request):
         current_site = get_current_site(request)
-        usermail = CustomUser.objects.get(pk=user.id).email
-        SendAccActiveEmail(user, usermail, user.id, current_site)
-        return user
+        SendAccActiveEmail(request.user, current_site)
+        try:            
+            SendAccActiveEmail(request.user, current_site)
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
 class UserActivate(generics.RetrieveAPIView):
-    serializer_class = UserActivateSerializer
+    serializer_class = serializers.UserActivateSerializer
     permission_classes = [permissions.AllowAny]
+    authentication_classes = []
     def get_object(self):
         try:  
             uid = force_str(urlsafe_base64_decode(self.kwargs['uidb64']))  
@@ -89,18 +94,18 @@ class UserActivate(generics.RetrieveAPIView):
         except(TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):  
             user = None
         if user is not None and account_activation_token.check_token(user, self.kwargs['token']):  
-            user.is_active = True  
+            user.is_verified = True  
             user.save()
-        return {'is_active': user.is_active}
+        return {'is_verified': user.is_verified}
 
 class UserChangePassword(generics.UpdateAPIView):
-    serializer_class = UserChangePasswordSerializer
+    serializer_class = serializers.UserChangePasswordSerializer
     permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_object(self):
         return self.request.user
     def update(self, request, format=None):
         self.object = self.get_object()
-        serializer = UserChangePasswordSerializer(data=request.data)
+        serializer = serializers.UserChangePasswordSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         if not self.object.check_password(serializer.data.get("old_password")):
@@ -110,17 +115,18 @@ class UserChangePassword(generics.UpdateAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+    serializer_class = serializers.MyTokenObtainPairSerializer
     permission_classes = [permissions.AllowAny]
+    authentication_classes = []     
 
 class LandmarkList(generics.ListCreateAPIView):
-    serializer_class = LandmarkSerializer
+    serializer_class = serializers.LandmarkSerializer
     permission_classes = [IsAdminUserOrReadOnly]
     def get_queryset(self):
         return Landmark.objects.all()
 
 class LandmarkDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = LandmarkSerializer
+    serializer_class = serializers.LandmarkSerializer
     permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         return Landmark.objects.all()
@@ -130,7 +136,7 @@ class LandmarkDetail(generics.RetrieveUpdateDestroyAPIView):
         return get_object_or_404(queryset, **filter)
 
 class LandmarkImageList(generics.ListCreateAPIView):
-    serializer_class = LandmarkImageSerializer
+    serializer_class = serializers.LandmarkImageSerializer
     permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
@@ -138,14 +144,14 @@ class LandmarkImageList(generics.ListCreateAPIView):
         except Landmark.DoesNotExist:
             raise Http404
     def post(self, request, pk_lm, format=None):        
-        serializer = LandmarkImageSerializer(data=request.data)
+        serializer = serializers.LandmarkImageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(landmark_id=pk_lm, owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LandmarkImageDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = LandmarkImageSerializer
+    serializer_class = serializers.LandmarkImageSerializer
     permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
@@ -158,7 +164,7 @@ class LandmarkImageDetail(generics.RetrieveUpdateDestroyAPIView):
         return get_object_or_404(queryset, **filter)
 
 class LandmarkCommentList(generics.ListCreateAPIView):
-    serializer_class = LandmarkCommentSerializer
+    serializer_class = serializers.LandmarkCommentSerializer
     permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
@@ -166,14 +172,14 @@ class LandmarkCommentList(generics.ListCreateAPIView):
         except Landmark.DoesNotExist:
             raise Http404
     def post(self, request, pk_lm, format=None):        
-        serializer = LandmarkCommentSerializer(data=request.data)
+        serializer = serializers.LandmarkCommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(landmark_id=pk_lm, owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LandmarkCommentDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = LandmarkCommentSerializer
+    serializer_class = serializers.LandmarkCommentSerializer
     permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
@@ -186,7 +192,7 @@ class LandmarkCommentDetail(generics.RetrieveUpdateDestroyAPIView):
         return get_object_or_404(queryset, **filter)
 
 class ContentList(generics.ListCreateAPIView):
-    serializer_class = ContentSerializer
+    serializer_class = serializers.ContentSerializer
     permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
@@ -194,14 +200,14 @@ class ContentList(generics.ListCreateAPIView):
         except Landmark.DoesNotExist:
             raise Http404
     def post(self, request, pk_lm, format=None):        
-        serializer = ContentSerializer(data=request.data)
+        serializer = serializers.ContentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(landmark_id=pk_lm)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ContentDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ContentSerializer
+    serializer_class = serializers.ContentSerializer
     permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
@@ -214,7 +220,7 @@ class ContentDetail(generics.RetrieveUpdateDestroyAPIView):
         return get_object_or_404(queryset, **filter)
 
 class ContentImageList(generics.ListCreateAPIView):
-    serializer_class = ContentImageSerializer
+    serializer_class = serializers.ContentImageSerializer
     permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
@@ -226,14 +232,14 @@ class ContentImageList(generics.ListCreateAPIView):
         except Landmark.DoesNotExist:
             raise Http404    
     def post(self, request, pk_lm, pk_ct, format=None):        
-        serializer = ContentImageSerializer(data=request.data)
+        serializer = serializers.ContentImageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(content_id=pk_ct, owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ContentImageDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ContentImageSerializer
+    serializer_class = serializers.ContentImageSerializer
     permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
@@ -250,7 +256,7 @@ class ContentImageDetail(generics.RetrieveUpdateDestroyAPIView):
         return get_object_or_404(queryset, **filter)
 
 class ContentCommentList(generics.ListCreateAPIView):
-    serializer_class = ContentCommentSerializer
+    serializer_class = serializers.ContentCommentSerializer
     permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
@@ -262,14 +268,14 @@ class ContentCommentList(generics.ListCreateAPIView):
         except Landmark.DoesNotExist:
             raise Http404
     def post(self, request, pk_lm, pk_ct, format=None):        
-        serializer = ContentCommentSerializer(data=request.data)
+        serializer = serializers.ContentCommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(content_id=pk_ct, owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ContentCommentDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ContentCommentSerializer
+    serializer_class = serializers.ContentCommentSerializer
     permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
