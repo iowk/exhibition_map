@@ -3,9 +3,9 @@ import axios from './axios';
 
 function Activate(){
     const { uidb64, token } = useParams();
-    axios.get('/map/activate/'+uidb64+'/'+token+'/')
+    axios().get('/map/activate/'+uidb64+'/'+token+'/')
     .then(res=> {
-        if(res.data['is_active']) alert("Activation success");
+        if(res.data['is_verified']) alert("Activation success");
         else alert("Activation fail");
     })
     .catch(e => {

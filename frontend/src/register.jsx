@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './register.css';
 import axios from './axios';
+import {login} from './auth';
 
 class Register extends Component {
     // Full register page
@@ -62,7 +63,7 @@ class Register extends Component {
     handleSubmit = (event) => {
         // POST username, email and password
         if(this.state.password===this.state.passwordConf){
-            axios.post('/map/users/register/', JSON.stringify({
+            axios().post('/map/users/register/', JSON.stringify({
                 username: this.state.username,
                 email: this.state.email,
                 password: this.state.password,
@@ -73,12 +74,29 @@ class Register extends Component {
                     'Content-Type': 'application/json'
                 },
             })
-            .then(res => {
-                this.clearErr();                  
-                this.setState({buttomMessage: 'Registration success. Verification e-mail is sent to ' + this.state.email});
-                this.clearInput();
+            .then(() => {
+                this.clearErr();
+                login(this.state.username, this.state.password)
+                .then(() => {
+                    axios(localStorage.getItem('access_jwt')).get('/map/users/send_acc_email/')
+                    .then(() => {
+                        this.setState({buttomMessage: "Registration success. Activation mail is sent to " + this.state.email});
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.setState({buttomMessage: "Registration success. Activation mail is not sent due to server error."});
+                    })
+                    .finally(() => {
+                        this.clearInput();
+                    })  
+                })
+                .catch(e => {
+                    console.log(e);
+                    this.clearInput();                 
+                })                         
             })
             .catch(e => {
+                console.log(e);
                 this.setState({err: e.response.data});
             })
         }
@@ -128,7 +146,7 @@ class Register extends Component {
                     />
                 </div>
                 <div className='errDiv'>{this.state.err.passwordConf}</div>
-                <button type="submit" className='submitButton'>
+                <button type="submit">
                     Register
                 </button>
                 </form>

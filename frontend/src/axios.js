@@ -1,10 +1,11 @@
 import _axios from "axios"
 
-const axios = (baseURL) => {
+
+const axios = (token) => {
+    if(token) _axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     return _axios.create({
-        baseURL: baseURL || 'http://localhost:8000',
+        baseURL: 'http://localhost:8000',
         timeout: 1000,
     })
 }
-export {axios};
-export default axios();
+export default axios;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './register.css';
 import { login, jwtVerify } from './auth';
+import { Link, Navigate } from "react-router-dom";
 
 class Login extends Component {
     constructor(props){
@@ -9,6 +10,7 @@ class Login extends Component {
             username: '',
             password: '',
             message: '',
+            login: '',
         };
     }
     handleSubmit = async (event) => {
@@ -16,8 +18,11 @@ class Login extends Component {
         .then(res => {
             jwtVerify()
             .then(is_valid => {
-                if(is_valid) this.setState({message: "Login success"});
-                else this.setState({message: "Login fail"}); 
+                if(is_valid){
+                    this.setState({login: 'success'});
+                    <Navigate to = '/'/>;
+                }
+                else this.setState({login: 'fail'});
             })
             .catch(e => {
                 console.log(e);
@@ -52,9 +57,17 @@ class Login extends Component {
                     </div>
                     <button type="submit" className='submitButton'>
                         Login
-                    </button>                    
+                    </button>
+                    <Link to="/register">
+                        <button>
+                            Register
+                        </button>
+                    </Link>                   
                 </form>
-                <div className='errDiv'>{this.state.message}</div>
+                <div className='errDiv'>{this.state.login==='fail' && 'Login fail'}</div>
+                {this.state.login==='success' && (
+                    <Navigate to="/" replace={true} />
+                )}
             </div>
         );
     }

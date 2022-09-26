@@ -20,6 +20,11 @@ form{
     width: 400px;
     padding-top: 200px;
 }
+button{
+    width: 100px;
+    margin-left: 150px;
+    margin-top: 10px;
+}
 .inpDiv{
     clear: left;
     height: 30px;
@@ -38,11 +43,6 @@ form{
 }
 span{   
     width: 150px;
-}
-.submitButton{
-    width: 100px;
-    margin-left: 150px;
-    margin-top: 10px;
 }
 .buttomMessage{
     clear: left;
