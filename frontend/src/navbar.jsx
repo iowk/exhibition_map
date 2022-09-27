@@ -1,6 +1,6 @@
 import {React, Component} from "react";
 import { Link } from "react-router-dom";
-import {jwtVerify} from './auth';
+import {jwtVerify, getLSItem} from './auth';
 import './navbar.css'
 
 class NavBar extends Component {
@@ -14,7 +14,7 @@ class NavBar extends Component {
         let isMounted = true;
         jwtVerify()
         .then(res => {
-            if(isMounted) this.setState({username: localStorage.getItem('username')});
+            if(isMounted) this.setState({username: getLSItem('user', 'username')});
         });
         return () => {
             isMounted = false;
@@ -25,7 +25,7 @@ class NavBar extends Component {
             return(
                 <div className="navbar">
                     <Link to="/user">
-                        <button>
+                        <button className="navbutton">
                             {this.state.username}
                         </button>
                     </Link>
@@ -36,17 +36,17 @@ class NavBar extends Component {
             return(
                 <div className="navbar">
                     <Link to="/">
-                        <button>
+                        <button className="navbutton">
                             Map
                         </button>
                     </Link>
                     <Link to="/login">
-                        <button>
+                        <button className="navbutton">
                             Login
                         </button>
                     </Link>
                     <Link to="/register">
-                        <button>
+                        <button className="navbutton">
                             Register
                         </button>
                     </Link>

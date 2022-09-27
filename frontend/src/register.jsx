@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './register.css';
 import axios from './axios';
-import {login} from './auth';
+import {login, getLSItem} from './auth';
 
 class Register extends Component {
     // Full register page
@@ -78,7 +78,7 @@ class Register extends Component {
                 this.clearErr();
                 login(this.state.username, this.state.password)
                 .then(() => {
-                    axios(localStorage.getItem('access_jwt')).get('/map/users/send_acc_email/')
+                    axios(getLSItem('jwt','access')).get('/map/users/send_acc_email/')
                     .then(() => {
                         this.setState({buttomMessage: "Registration success. Activation mail is sent to " + this.state.email});
                     })
@@ -106,9 +106,9 @@ class Register extends Component {
     render() {
         return(
             <div id="register">
-                <form onSubmit={this.handleSubmit.bind(this)}>
+                <form className='regform' onSubmit={this.handleSubmit.bind(this)}>
                 <div className='inpDiv'>
-                    <span>Username</span>
+                    <span className='regspan'>Username</span>
                     <input
                         type='text'
                         value={this.state.username}
@@ -118,7 +118,7 @@ class Register extends Component {
                 </div>
                 <div className='errDiv'>{this.state.err.username}</div>
                 <div className='inpDiv'>
-                    <span>Email</span>
+                    <span className='regspan'>Email</span>
                     <input
                         type='text'
                         value={this.state.email}                     
@@ -128,7 +128,7 @@ class Register extends Component {
                 </div>
                 <div className='errDiv'>{this.state.err.email}</div>
                 <div className='inpDiv'>
-                    <span>Password</span>
+                    <span className='regspan'>Password</span>
                     <input
                         type='password'
                         value={this.state.password} 
@@ -138,7 +138,7 @@ class Register extends Component {
                 </div>
                 <div className='errDiv'>{this.state.err.password}</div>
                 <div className='inpDiv'>
-                    <span>Confirm Password</span>
+                    <span className='regspan'>Confirm Password</span>
                     <input
                         type='password'
                         value={this.state.passwordConf} 
@@ -147,7 +147,7 @@ class Register extends Component {
                     />
                 </div>
                 <div className='errDiv'>{this.state.err.passwordConf}</div>
-                <button type="submit">
+                <button className='regbutton' type="submit">
                     Register
                 </button>
                 </form>

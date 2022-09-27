@@ -4,6 +4,8 @@ import './main.css';
 import Popup from 'reactjs-popup';
 import axios from './axios';
 import NavBar from './navbar'
+import { getLSItem, jwtVerify } from './auth';
+import { Navigate } from "react-router-dom";
 
 const containerStyle = {
     // Map container style
@@ -45,6 +47,7 @@ class Main extends Component {
         super(props);
         this.state = {
             isInitial: true, // Initial main page without landmark clicked
+            isVerified: true,
             landmarks: {}, // All landmarks on the map
             curLandmarkId: 0, // ID of currently clicked landmark
         };
@@ -52,6 +55,8 @@ class Main extends Component {
     async componentDidMount() {
         // GET all landmarks on the map
         try{
+            await jwtVerify();
+            this.setState({isVerified: true});
             const res = await axios().get('/map/landmarks/');  
             const landmarks = await res.data;
             this.setState({landmarks: landmarks});
@@ -66,7 +71,7 @@ class Main extends Component {
     render() {
         return(            
             <div>    
-                <NavBar></NavBar>            
+                {this.state.isVerified && <NavBar></NavBar>}            
                 <div id="infoBlock">
                     {/* Block containing landmark information */}
                     <InfoBlock
@@ -214,11 +219,14 @@ class Landmark extends Component{
                     <div className="link">{this.props.link}</div>
                 </a>
                 <div className='rating'>
-                    <p>Rating: {this.props.avgRating}</p>
-                    <div><PopupBlock
-                    lmid={this.props.lmid}
-                    name={this.props.name}
-                    /></div>
+                    <p>Rating: {this.props.avgRating}</p>                                      
+                    {getLSItem('user','is_verified') && (
+                        // Comment button for activated user 
+                        <div><PopupBlock
+                        lmid={this.props.lmid}
+                        name={this.props.name}
+                        /></div>
+                    )}
                 </div>
             </div>
         );        
@@ -295,6 +303,7 @@ class PopupBlock extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isPatch: false,
             name: '',
             lmid: 0,
             rating: 0,
@@ -302,28 +311,77 @@ class PopupBlock extends Component {
             comment: ''
         };
     }
+    componentDidMount = () => {
+        jwtVerify()
+        .then(is_valid => {
+            if(is_valid){
+                axios(getLSItem('jwt','access'))
+                .get('/map/landmarks/'+this.props.lmid+'/comments/'+getLSItem('user','id')+'/')
+                .then(res => {
+                    // This user already had a comment
+                    this.setState({isPatch: true});
+                    this.setState({rating: res.data['rating']});
+                    this.setState({comment: res.data['text']});
+                })
+                .catch(e => {
+                    // New comment
+                    this.setState({isPatch: false});
+                })
+            }
+            else{
+                <Navigate to = '/login/'/>;
+            }
+        })
+        .catch(e => {
+            console.log(e);
+            alert(e);
+        })
+    }
     handleClickRating = (rating) => {
-        console.log("Rating:", rating);
         this.setState({rating: rating});
     }
     handleWriteComment = (event) => {
-        console.log(event.target.value);
         this.setState({comment: event.target.value});
     }
     _handleSubmit = (event) => {
-        // POST rating and comment
-        axios(localStorage.getItem('access_jwt')).post('/map/landmarks/'+this.props.lmid+'/comments/', JSON.stringify({
-            rating: this.state.rating,
-            comment: this.state.comment
-        }),
-        {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        });
-        event.preventDefault();
-        console.log("Submit");
+        jwtVerify()
+        .then(is_valid => {
+            if(is_valid){
+                if(this.state.isPatch){
+                    axios(getLSItem('jwt','access')).patch('/map/landmarks/'+this.props.lmid+'/comments/'+getLSItem('user','id')+'/', JSON.stringify({
+                        rating: this.state.rating,
+                        text: this.state.comment
+                    }),
+                    {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                    });
+                    alert("Comment updated");
+                }
+                else{
+                    axios(getLSItem('jwt','access')).post('/map/landmarks/'+this.props.lmid+'/comments/', JSON.stringify({
+                        rating: this.state.rating,
+                        comment: this.state.comment
+                    }),
+                    {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                    });
+                    alert("Comment submitted");
+                }                
+            }
+            else{
+                <Navigate to = '/login/'/>;
+            }
+        })
+        .catch(e => {
+            console.log(e);
+            alert(e);
+        })
     }
     render() {
         return(
@@ -338,21 +396,20 @@ class PopupBlock extends Component {
                 <div className="title">
                     {this.props.name}
                 </div>
-                <form onSubmit={this._handleSubmit.bind(this)}
-                className='popupForm'>
-                <WriteRatingBlock
-                    rating={this.state.rating}
-                    maxRating={this.state.maxRating}
-                    handleClickRating={this.handleClickRating}
-                />
-                <WriteCommentBlock
-                    comment={this.state.comment}
-                    handleWriteComment={this.handleWriteComment}
-                />
-                <button type="submit" className='popupSubmitButton'>
-                    Submit
-                </button>
-                </form>
+                <div className='popupForm'>
+                    <WriteRatingBlock
+                        rating={this.state.rating}
+                        maxRating={this.state.maxRating}
+                        handleClickRating={this.handleClickRating}
+                    />
+                    <WriteCommentBlock
+                        comment={this.state.comment}
+                        handleWriteComment={this.handleWriteComment}
+                    />
+                    <button onClick={this._handleSubmit} className='popupSubmitButton'>
+                        Submit
+                    </button>
+                </div>
             </div>)}
         </Popup>
         );

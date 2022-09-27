@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Navigate } from "react-router-dom";
 import './user.css';
-import {jwtVerify, logout} from './auth';
+import {jwtVerify, logout, getLSItem} from './auth';
 
 class User extends Component {
     constructor(props){
@@ -17,7 +17,7 @@ class User extends Component {
         jwtVerify()
         .then(res => {
             if(this.state.isMounted){                
-                this.setState({username: localStorage.getItem('username')});
+                this.setState({username: getLSItem('user','username')});
                 this.setState({verified: true});
             }
         });
@@ -34,7 +34,7 @@ class User extends Component {
             return(
                 <div className='userInfo'>
                     <span>User: {this.state.username}</span>
-                    <button onClick={this.logoutOnClick.bind(this)}>
+                    <button className='logoutButton' onClick={this.logoutOnClick.bind(this)}>
                         Logout
                     </button>
                 </div>

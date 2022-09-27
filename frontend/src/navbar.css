@@ -1,3 +1,8 @@
 .navbar{
     float:right;
 }
+.navbutton{
+    width: 100px;
+    margin-left: 150px;
+    margin-top: 10px;
+}

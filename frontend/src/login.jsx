@@ -38,9 +38,9 @@ class Login extends Component {
     render(){
         return(
             <div id='login'>
-                <form onSubmit={this.handleSubmit}>
+                <form className='regform' onSubmit={this.handleSubmit}>
                     <div className='inpDiv'>
-                        <span>Username</span>
+                        <span  className='regspan'>Username</span>
                         <input 
                             type='text'
                             value={this.state.username}
@@ -49,7 +49,7 @@ class Login extends Component {
                         />
                     </div>
                     <div className='inpDiv'>
-                        <span>Password</span>
+                        <span  className='regspan'>Password</span>
                         <input 
                             type='password'
                             value={this.state.password}
@@ -57,11 +57,11 @@ class Login extends Component {
                             className='inpBox'
                         />
                     </div>
-                    <button type="submit" className='submitButton'>
+                    <button type="submit" className='regbutton'>
                         Login
                     </button>
-                    <Link to="/register">
-                        <button>
+                    <Link to="/register" className='regbutton'>
+                        <button  className='regbutton'>
                             Register
                         </button>
                     </Link>                   

@@ -15,14 +15,14 @@
     justify-content: center;
     align-items: center;
 }
-form{
+.regform{
     display: flex;
     flex-direction: column;
     height: auto;
     width: 400px;
     padding-top: 200px;
 }
-button{
+.regbutton{
     width: 100px;
     margin-left: 150px;
     margin-top: 10px;
@@ -43,7 +43,7 @@ button{
 .inpBox{
     float: left;
 }
-span{   
+.regspan{   
     width: 150px;
 }
 .buttomMessage{

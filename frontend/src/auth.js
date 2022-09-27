@@ -13,11 +13,18 @@ export async function login(username, password){
                 'Content-Type': 'application/json'
             }
         })
-        .then(res => {         
-            localStorage.setItem('access_jwt', res.data['access']);
-            localStorage.setItem('refresh_jwt', res.data['refresh']);
-            localStorage.setItem('username', username);    
-            resolve();
+        .then(res => {        
+            localStorage.setItem('jwt', JSON.stringify(res.data));
+            axios(res.data['access']).get('/map/current_user/')
+            .then(res => {
+                localStorage.setItem('user', JSON.stringify(res.data));
+                resolve();
+            })
+            .catch(e => {
+                console.log(e);
+                alert(e);
+                reject();
+            })
         })
         .catch (e => {
             reject();
@@ -26,15 +33,16 @@ export async function login(username, password){
 }
 
 export function logout(){
-    localStorage.setItem('access_jwt', '');
-    localStorage.setItem('refresh_jwt', '');
-    localStorage.setItem('username', '');
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('user');
 }
-
+export function getLSItem(key1, key2){
+    return JSON.parse(localStorage.getItem(key1))[key2];
+}
 export async function jwtRefresh(){
     console.log("Refresh");
     return new Promise((resolve) => {        
-        let r_jwt = localStorage.getItem('refresh_jwt');
+        let r_jwt = getLSItem('jwt', 'refresh');
         if(!r_jwt) resolve(false);
         axios().post('/map/token/refresh/', JSON.stringify({
             refresh: r_jwt,
@@ -47,7 +55,7 @@ export async function jwtRefresh(){
         })
         .then(res => {
             console.log("Refresh success");
-            localStorage.setItem('access_jwt', res.data['access']);            
+            localStorage.setItem('jwt', JSON.stringify(res.data));            
             resolve(true);
         })
         .catch (e => {
@@ -59,7 +67,7 @@ export async function jwtRefresh(){
 }
 export async function jwtVerify(){
     return new Promise((resolve) => {
-        let a_jwt = localStorage.getItem('access_jwt');
+        let a_jwt = getLSItem('jwt', 'access');
         if(!a_jwt) resolve(false);
         axios(a_jwt).post('/map/token/verify/', JSON.stringify({
             token: a_jwt,
