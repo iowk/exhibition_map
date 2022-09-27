@@ -6,6 +6,8 @@ import Register from './register'
 import Activate from './activate'
 import Login from './login'
 import User from './user'
+import NavBar from './navbar'
+
 
 ReactDOM.render(
     <BrowserRouter>

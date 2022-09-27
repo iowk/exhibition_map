@@ -35,6 +35,11 @@ class NavBar extends Component {
         else{
             return(
                 <div className="navbar">
+                    <Link to="/">
+                        <button>
+                            Map
+                        </button>
+                    </Link>
                     <Link to="/login">
                         <button>
                             Login

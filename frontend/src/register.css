@@ -2,12 +2,14 @@
     font-family: Sans-serif;
 }
 #register{
+    clear: right;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 #login{
+    clear: right;
     display: flex;
     flex-direction: column;
     justify-content: center;

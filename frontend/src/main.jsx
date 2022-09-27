@@ -65,8 +65,8 @@ class Main extends Component {
     }
     render() {
         return(            
-            <div>
-                <NavBar></NavBar>
+            <div>    
+                <NavBar></NavBar>            
                 <div id="infoBlock">
                     {/* Block containing landmark information */}
                     <InfoBlock
