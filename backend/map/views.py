@@ -36,7 +36,7 @@ def index(request):
 
 class CurrentUser(generics.RetrieveAPIView):
     serializer_class = serializers.UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     def get_object(self):
         return self.request.user
 
@@ -59,7 +59,6 @@ class UserDetail(generics.RetrieveDestroyAPIView):
 class UserRegister(generics.CreateAPIView):
     serializer_class = serializers.UserRegisterSerializer
     permission_classes = [permissions.AllowAny]
-    authentication_classes = []
     def post(self, request, format=None): 
         serializer = serializers.UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
@@ -86,7 +85,6 @@ class SendUserActivationMail(APIView):
 class UserActivate(generics.RetrieveAPIView):
     serializer_class = serializers.UserActivateSerializer
     permission_classes = [permissions.AllowAny]
-    authentication_classes = []
     def get_object(self):
         try:  
             uid = force_str(urlsafe_base64_decode(self.kwargs['uidb64']))  
@@ -117,7 +115,6 @@ class UserChangePassword(generics.UpdateAPIView):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = serializers.MyTokenObtainPairSerializer
     permission_classes = [permissions.AllowAny]
-    authentication_classes = []     
 
 class LandmarkList(generics.ListCreateAPIView):
     serializer_class = serializers.LandmarkSerializer
@@ -188,7 +185,7 @@ class LandmarkCommentDetail(generics.RetrieveUpdateDestroyAPIView):
             raise Http404
     def get_object(self):
         queryset = self.get_queryset()
-        filter = {'pk': self.kwargs['pk_comment']}
+        filter = {'owner': self.kwargs['pk_user']}
         return get_object_or_404(queryset, **filter)
 
 class ContentList(generics.ListCreateAPIView):
