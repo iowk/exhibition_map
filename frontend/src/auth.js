@@ -37,7 +37,9 @@ export function logout(){
     localStorage.removeItem('user');
 }
 export function getLSItem(key1, key2){
-    return JSON.parse(localStorage.getItem(key1))[key2];
+    const dict = localStorage.getItem(key1);
+    if(dict === null) return null;
+    return JSON.parse(dict)[key2];
 }
 export async function jwtRefresh(){
     console.log("Refresh");
