@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import './landmark.css'
-import CommentPostPopup from './comment'
+import './landmark.css';
+import CommentPostPopup from './comment';
+import { ImageListPopup, ImagePostPopup } from './image';
 import { getLSItem } from './../auth';
 
 class Landmark extends Component{
@@ -18,19 +19,19 @@ class Landmark extends Component{
                         // Comment button for activated user                         
                         <div><CommentPostPopup
                             lmid={this.props.lmid}
-                            ctid={this.props.ctid}
                             name={this.props.name}
                         /></div>
                     )}
                 </div>
-                {/*<div><ImageListPopup
-                    lmid={this.props.lmid}
-                    ctid={this.props.ctid}
-                    name={this.props.name}
-                /></div>
+                <div className='image'>
+                    <div><ImageListPopup
+                        lmid={this.props.lmid}
+                        name={this.props.name}
+                    /></div>
+                </div>
+                {/*
                 <div><ImagePostPopup
                     lmid={this.props.lmid}
-                    ctid={this.props.ctid}
                     name={this.props.name}
                 /></div>
                     <button></button>*/}

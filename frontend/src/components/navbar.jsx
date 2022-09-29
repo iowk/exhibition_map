@@ -1,7 +1,7 @@
 import {React, Component} from "react";
 import { Link } from "react-router-dom";
 import {jwtVerify, getLSItem} from './../auth';
-import './navbar.css'
+import './navbar.css';
 
 class NavBar extends Component {
     constructor(props){

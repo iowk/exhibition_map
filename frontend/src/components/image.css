@@ -1,0 +1,18 @@
+.slide-container{
+    height: 600px;
+    width: 800px;
+}
+.each-slide{
+    height: 600px;
+    width: 800px;
+}
+.image-container{
+    height: 600px;
+    width: 800px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: black;
+}
+.image-name{
+    background-color: white;
+}

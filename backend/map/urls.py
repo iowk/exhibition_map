@@ -27,5 +27,5 @@ urlpatterns = format_suffix_patterns([
     path('landmarks/<int:pk_lm>/contents/<int:pk_ct>/images/', views.ContentImageList.as_view(), name='content_image_list'),
     path('landmarks/<int:pk_lm>/contents/<int:pk_ct>/images/<int:pk_image>/', views.ContentImageDetail.as_view(), name='content_image_detail'),
     path('landmarks/<int:pk_lm>/contents/<int:pk_ct>/comments/', views.ContentCommentList.as_view(), name='content_comment_list'),
-    path('landmarks/<int:pk_lm>/contents/<int:pk_ct>/comments/<int:pk_comment>/', views.ContentCommentDetail.as_view(), name='content_comment_detail'),
+    path('landmarks/<int:pk_lm>/contents/<int:pk_ct>/comments/<int:pk_user>/', views.ContentCommentDetail.as_view(), name='content_comment_detail'),
 ])

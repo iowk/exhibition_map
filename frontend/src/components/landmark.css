@@ -22,3 +22,24 @@
     margin-bottom: 0%;
     width: 100%;
 }
+.link {
+    margin: 10px;
+}
+.rating{
+    height: 50px;
+    padding: 10px;
+}
+.image{
+    height: 50px;
+    padding: 10px;
+}
+.rating > p{
+    clear: left;
+    float: left;
+    margin-top: 10px;
+}
+.rating .addCommentButton{
+    float: left;
+    margin-top: 10px;
+    margin-left: 10px;
+}

@@ -142,33 +142,33 @@ class CommentPostPopup extends Component {
     }
     render() {
         return(
-        <Popup trigger={<button className='addCommentButton'>Write comment</button>}
-        position="right center"
-        modal>
-            {close => (
-            <div className="modal">
-                <button className="close" onClick={close}> 
-                    &times; 
-                </button>
-                <div className="title">
-                    {this.props.name}
-                </div>
-                <div className='popupForm'>
-                    <WriteRatingBlock
-                        rating={this.state.rating}
-                        maxRating={this.state.maxRating}
-                        handleClickRating={this.handleClickRating}
-                    />
-                    <WriteCommentBlock
-                        comment={this.state.comment}
-                        handleWriteComment={this.handleWriteComment}
-                    />
-                    <button onClick={this._handleSubmit} className='popupSubmitButton'>
-                        Submit
+            <Popup trigger={<button className='addCommentButton'>Write comment</button>}
+            position="right center"
+            modal>
+                {close => (
+                <div className="modal">
+                    <button className="close" onClick={close}> 
+                        &times; 
                     </button>
-                </div>
-            </div>)}
-        </Popup>
+                    <div className="title">
+                        {this.props.name}
+                    </div>
+                    <div className='popupForm'>
+                        <WriteRatingBlock
+                            rating={this.state.rating}
+                            maxRating={this.state.maxRating}
+                            handleClickRating={this.handleClickRating}
+                        />
+                        <WriteCommentBlock
+                            comment={this.state.comment}
+                            handleWriteComment={this.handleWriteComment}
+                        />
+                        <button onClick={this._handleSubmit} className='popupSubmitButton'>
+                            Submit
+                        </button>
+                    </div>
+                </div>)}
+            </Popup>
         );
     }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import './map.css'
+import './map.css';
 
 const zoom = 15;
 
