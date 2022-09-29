@@ -16,3 +16,16 @@
 .image-name{
     background-color: white;
 }
+.post-container{
+    height: 600px;
+    width: 800px;
+    background-color: white;
+}
+.popupSubmitButton {
+    position: relative;
+    width: 100px;
+    margin-top: 15px;
+    top: 10px;
+    left: 50%;
+    transform: translate(-50%);
+}

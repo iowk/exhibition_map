@@ -26,15 +26,12 @@ class Landmark extends Component{
                 <div className='image'>
                     <div><ImageListPopup
                         lmid={this.props.lmid}
-                        name={this.props.name}
                     /></div>
-                </div>
-                {/*
-                <div><ImagePostPopup
-                    lmid={this.props.lmid}
-                    name={this.props.name}
-                /></div>
-                    <button></button>*/}
+                    {getLSItem('user','is_verified') &&      
+                    <div><ImagePostPopup
+                        lmid={this.props.lmid}
+                    /></div>}
+                </div>  
             </div>
         );        
     }

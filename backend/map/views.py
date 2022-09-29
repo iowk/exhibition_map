@@ -140,7 +140,8 @@ class LandmarkImageList(generics.ListCreateAPIView):
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).images
         except Landmark.DoesNotExist:
             raise Http404
-    def post(self, request, pk_lm, format=None):        
+    def post(self, request, pk_lm, format=None):
+        print("Data:",request.data)
         serializer = serializers.LandmarkImageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(landmark_id=pk_lm, owner=request.user)
