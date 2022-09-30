@@ -43,7 +43,7 @@ function Map(props) {
             props.handleClickLandmark(landmark['id']);
         };
         return <Marker
-            key={landmark['name']}
+            key={landmark['id']}
             position={{lat: landmark['lat'], lng: landmark['lng']}}
             title={landmark['name']}
             zIndex={landmark['zIndex']}
@@ -53,13 +53,16 @@ function Map(props) {
             onClick={onClickMarker}
         />;
     }
+    function handleClick(e){
+        props.handleAddLandmark(e.latLng);
+    }
     var children = [];
     for(var key in props.landmarks) {
         children.push(setMarker(props.landmarks[key]));
-    }        
+    }
     return (
         <LoadScript
-            googleMapsApiKey="AIzaSyCD6M5vVw8HLQ0O-xk2uqIbKYYlgoCicpI"
+            googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_API_KEY}
         >
             <GoogleMap
                 mapContainerStyle={containerStyle}
@@ -67,6 +70,7 @@ function Map(props) {
                 zoom={zoom}
                 options={mapOptions}
                 addChild={props.landmarks.length}
+                onClick={(e)=>{handleClick(e)}}
             >
                 {children}
             </GoogleMap>

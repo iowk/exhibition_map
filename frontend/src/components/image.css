@@ -1,6 +1,10 @@
+.popup-content {
+    height: 80%;
+    width: 60%;
+}
 .slide-container{
-    height: 600px;
-    width: 800px;
+    height: 100%;
+    width: 100%;
     background-color: black;
 }
 .each-slide{
@@ -8,8 +12,8 @@
     width: 800px;
 }
 .image-container{
-    height: 600px;
-    width: 800px;
+    height: 100%;
+    width: 100%;
     background-size: 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -19,8 +23,8 @@
     background-color: white;
 }
 .post-container{
-    height: 600px;
-    width: 800px;
+    height: 100%;
+    width: 100%;
     background-color: white;
 }
 .popupSubmitButton {
@@ -30,4 +34,18 @@
     top: 10px;
     left: 50%;
     transform: translate(-50%);
+}
+.close {  
+    cursor: pointer;  
+    position: absolute;  
+    display: block;  
+    padding: 2px 5px;  
+    line-height: 20px;  
+    right: -10px;  
+    top: -10px;  
+    font-size: 24px;  
+    background: #ffffff;
+    border-radius: 18px;  
+    border: 1px solid #cfcece;
+    z-index: 1;
 }

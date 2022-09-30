@@ -8,7 +8,8 @@ import { jwtVerify } from './auth';
 
 function Main(props) {
     // Full main page
-    const [isInitial, setIsInitial] = useState(true);
+    const [phase, setPhase] = useState('initial');
+    const [addedMarker, setAddedMarker] = useState(null);
     const [isVerified, setIsVerified] = useState(true);
     const [landmarks, setLandmarks] = useState({});
     const [curLandmarkId, setCurLandmarkId] = useState(0);
@@ -31,7 +32,19 @@ function Main(props) {
     function handleClickLandmark(landmarkId){
         // Landmark is clicked on
         setCurLandmarkId(landmarkId);
-        setIsInitial(false);    
+        setPhase('landmark');
+    }
+    function handleAddLandmark(latlng){
+        jwtVerify()
+        .then(is_valid => {
+            if(is_valid){
+                setAddedMarker(latlng);
+                setPhase('add');
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        })
     }
     return(            
         <div>    
@@ -39,8 +52,9 @@ function Main(props) {
             <div id="infoBlock">
                 {/* Block containing landmark information */}
                 <InfoBlock
-                    isInitial = {isInitial}
+                    phase = {phase}
                     curLandmarkId = {curLandmarkId}
+                    addedMarker = {addedMarker}
                 />
             </div>
             <div id="map">
@@ -48,6 +62,7 @@ function Main(props) {
                 <Map 
                     landmarks = {landmarks}
                     handleClickLandmark = {handleClickLandmark}
+                    handleAddLandmark = {handleAddLandmark}
                 />
             </div>
         </div>

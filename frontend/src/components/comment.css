@@ -46,21 +46,6 @@
     text-align: center;
     border-style: outset;
 }
-.modal .buttons {
-    padding-top: 15px;
-    height: 40px;
-}
-.modal .submitButton{
-    position: relative;
-    left: 25%;
-    clear: left;
-    float: left;
-}
-.modal .closeButton{
-    position: relative;
-    left: 55%;
-    float: left;
-}
 .ratingBox {
     height: 50px;
     padding: 0px;

@@ -124,7 +124,7 @@ class LandmarkList(generics.ListCreateAPIView):
 
 class LandmarkDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.LandmarkSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         return Landmark.objects.all()
     def get_object(self):
@@ -150,7 +150,7 @@ class LandmarkImageList(generics.ListCreateAPIView):
 
 class LandmarkImageDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.LandmarkImageSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).images
@@ -206,7 +206,7 @@ class ContentList(generics.ListCreateAPIView):
 
 class ContentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ContentSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
@@ -238,7 +238,7 @@ class ContentImageList(generics.ListCreateAPIView):
 
 class ContentImageDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ContentImageSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             contents = Landmark.objects.get(pk=self.kwargs['pk_lm']).contents

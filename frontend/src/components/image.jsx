@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Navigate } from "react-router-dom";
 import Popup from 'reactjs-popup';
 import { Slide } from 'react-slideshow-image';
-import axios from './../axios';
+import axios from '../axios';
 import { jwtVerify, getLSItem } from '../auth';
+import { createImageEntry } from '../utils';
 import 'react-slideshow-image/dist/styles.css';
 import './image.css'
 
@@ -31,6 +32,9 @@ function ImageListPopup(props){
         modal>
             {close => (
             <div className="slide-container">
+                <button className="close" onClick={close}> 
+                    &times; 
+                </button>
                 <Slide>
                 {images.map((slideImage, index)=>(
                     <div className="each-slide" key={index}>
@@ -58,17 +62,11 @@ function ImagePostPopup(props) {
     function onImageTitleChange(e) {
         setImageTitle(e.target.value);
     }
-    function createImageEntry(){
-        let form_data = new FormData();
-        form_data.append('src', image, image.name);
-        form_data.append('name', imageTitle);
-        return form_data;
-    }
     function handleSubmit(){
         jwtVerify()
         .then(is_valid => {
             if(is_valid){
-                axios(getLSItem('jwt','access')).post(apiPath, createImageEntry(image),
+                axios(getLSItem('jwt','access')).post(apiPath, createImageEntry(image, imageTitle),
                 {
                     headers: {
                         'Content-type':'multipart/form-data',
@@ -92,6 +90,9 @@ function ImagePostPopup(props) {
         modal>
             {close => (
             <div className="post-container">
+                <button className="close" onClick={close}> 
+                    &times; 
+                </button>
                 <div>
                     <textarea
                         placeholder='Title'

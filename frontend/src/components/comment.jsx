@@ -2,8 +2,8 @@ import React, { useState ,useEffect } from 'react';
 import Popup from 'reactjs-popup';
 import { Navigate } from "react-router-dom";
 import './comment.css';
-import axios from './../axios';
-import { jwtVerify, getLSItem } from './../auth';
+import axios from '../axios';
+import { jwtVerify, getLSItem } from '../auth';
 
 function WriteRatingBlock(props) {
     // Inside PopupBlock
@@ -74,6 +74,9 @@ function CommentListPopup(props){
         modal>
             {close => (
             <div className="modal">
+                <button className="close" onClick={close}> 
+                    &times; 
+                </button>
                 {comments.map((comment, index)=>(
                     <div className="each-comment" key={index}>
                         <div className='comment-owner'>Owner: {comment.owner}</div>

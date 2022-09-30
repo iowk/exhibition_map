@@ -2,7 +2,7 @@ import React from 'react';
 import './landmark.css';
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
-import { getLSItem } from './../auth';
+import { getLSItem } from '../auth';
 
 function Landmark(props){
     return (

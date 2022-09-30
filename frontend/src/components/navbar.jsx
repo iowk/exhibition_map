@@ -1,6 +1,6 @@
 import {React, useState, useEffect} from "react";
 import { Link } from "react-router-dom";
-import {jwtVerify, getLSItem} from './../auth';
+import {jwtVerify, getLSItem} from '../auth';
 import './navbar.css';
 
 function NavBar(props){
