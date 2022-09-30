@@ -178,7 +178,7 @@ class LandmarkCommentList(generics.ListCreateAPIView):
 
 class LandmarkCommentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.LandmarkCommentSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).comments
@@ -274,7 +274,7 @@ class ContentCommentList(generics.ListCreateAPIView):
 
 class ContentCommentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ContentCommentSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             contents = Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
