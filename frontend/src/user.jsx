@@ -1,50 +1,40 @@
-import React, { Component } from 'react';
-import { Navigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 import './user.css';
+import { Navigate } from "react-router-dom";
 import {jwtVerify, logout, getLSItem} from './auth';
 
-class User extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            isMounted: false,
-            verified: false,
-            username: '',
-        };
-    }
-    componentDidMount(){
-        this.setState({isMounted: true});
+function User(props){
+    const [verified, setVerified] = useState(false);
+    const [username, setUsername] = useState('');
+    useEffect(() =>{
         jwtVerify()
-        .then(res => {
-            if(this.state.isMounted){                
-                this.setState({username: getLSItem('user','username')});
-                this.setState({verified: true});
-            }
-        });
-        return () => {
-            this.setState({isMounted: false});
-        }        
-    }
-    logoutOnClick() {
+        .then(() => {             
+            setUsername(getLSItem('user','username'));
+            setVerified(true);
+        })
+        .catch(e => {
+            console.log(e);
+            setUsername('');
+        });    
+    }, [props])
+    function logoutOnClick() {
         logout();
-        this.setState({username: ''});
+        setUsername('');
     }
-    render() {
-        if(this.state.username || !this.state.verified) {
-            return(
-                <div className='userInfo'>
-                    <span>User: {this.state.username}</span>
-                    <button className='logoutButton' onClick={this.logoutOnClick.bind(this)}>
-                        Logout
-                    </button>
-                </div>
-            );
-        }
-        else{
-            return(
-                <Navigate to="/login/" replace={true} />
-            );
-        }
+    if(username || !verified) {
+        return(
+            <div className='userInfo'>
+                <span>User: {username}</span>
+                <button className='logoutButton' onClick={logoutOnClick}>
+                    Logout
+                </button>
+            </div>
+        );
+    }
+    else{
+        return(
+            <Navigate to="/login/" replace={true} />
+        );
     }
 }
 export default User;

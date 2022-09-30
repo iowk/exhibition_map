@@ -1,7 +1,7 @@
 .modal {
     font-size: 12px;
-    height: 600px;
-    width: 600px;
+    height: 100%;
+    width: 100%;
     background-color: white;
 }
 .modal > .header {

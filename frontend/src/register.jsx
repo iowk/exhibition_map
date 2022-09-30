@@ -1,72 +1,63 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './register.css';
 import axios from './axios';
 import {login, getLSItem} from './auth';
 
-class Register extends Component {
+function Register(props){
     // Full register page
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: '',
-            email: '',
-            password: '',
-            passwordConf: '',
-            err: {
-                username: '',
-                email: '',
-                password: '',
-                passwordConf: '',
-            },
-            buttomMessage: '',
-        };
-    }
-    handleOnChangePassword = (e) => {
-        let errCopy = this.state.err;
-        if(this.state.passwordConf===e.target.value || this.state.passwordConf===''){
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordConf, setPasswordConf] = useState('');
+    const [err, setErr] = useState({
+        username: '',
+        email: '',
+        password: '',
+        passwordConf: '',
+    });
+    const [buttomMessage, setButtomMessage] = useState('');
+    function handleOnChangePassword(e){
+        let errCopy = err;
+        if(passwordConf===e.target.value || passwordConf===''){
             errCopy.passwordConf = '';
-            this.setState({err:errCopy});
-            this.setState({password:e.target.value});
         }
         else{
             errCopy.passwordConf = 'Confirm password incorrect';
-            this.setState({err:errCopy});
-            this.setState({password:e.target.value});
         }
+        setErr(errCopy);
+        setPassword(e.target.value);
     }    
-    handleOnChangePasswordConf = (e) => {
-        let errCopy = this.state.err;
-        if(this.state.password===e.target.value){
+    function handleOnChangePasswordConf(e){
+        let errCopy = err;
+        if(password===e.target.value){
             errCopy.passwordConf = '';
-            this.setState({err:errCopy});
-            this.setState({passwordConf:e.target.value});
         }
         else{
             errCopy.passwordConf = 'Confirm password incorrect';
-            this.setState({err:errCopy});
-            this.setState({passwordConf:e.target.value});
         }
+        setErr(errCopy);
+        setPasswordConf(e.target.value);
     }    
-    clearErr(){
+    function clearErr(){
         let err_cpy = {};
-        for(var key in this.state.err){
+        for(var key in err){
             err_cpy[key] = '';
         }
-        this.setState({err: err_cpy});
+        setErr(err_cpy);
     }
-    clearInput(){
-        this.setState({username: ''});
-        this.setState({email: ''});
-        this.setState({password: ''});
-        this.setState({passwordConf: ''});
+    function clearInput(){
+        setUsername('');
+        setEmail('');
+        setPassword('');
+        setPasswordConf('');
     }
-    handleSubmit = (event) => {
+    function handleSubmit(event){
         // POST username, email and password
-        if(this.state.password===this.state.passwordConf){
+        if(password===passwordConf){
             axios().post('/map/users/register/', JSON.stringify({
-                username: this.state.username,
-                email: this.state.email,
-                password: this.state.password,
+                username: username,
+                email: email,
+                password: password,
             }),
             {
                 headers: {
@@ -75,84 +66,82 @@ class Register extends Component {
                 },
             })
             .then(() => {
-                this.clearErr();
-                login(this.state.username, this.state.password)
+                clearErr();
+                login(username, password)
                 .then(() => {
                     axios(getLSItem('jwt','access')).get('/map/users/send_acc_email/')
                     .then(() => {
-                        this.setState({buttomMessage: "Registration success. Activation mail is sent to " + this.state.email});
+                        setButtomMessage("Registration success. Activation mail is sent to " + email);
                     })
                     .catch(e => {
                         console.log(e);
-                        this.setState({buttomMessage: "Registration success. Activation mail is not sent due to server error."});
+                        setButtomMessage("Registration success. Activation mail is not sent due to server error.");
                     })
                     .finally(() => {
-                        this.clearInput();
+                        clearInput();
                     })  
                 })
                 .catch(e => {
                     console.log(e);
                     alert(e);
-                    this.clearInput();                 
+                    clearInput();                 
                 })                         
             })
             .catch(e => {
                 console.log(e);
-                this.setState({err: e.response.data});
+                setErr(e.response.data);
             })
         }
         event.preventDefault();
     }
-    render() {
-        return(
-            <div id="register">
-                <form className='regform' onSubmit={this.handleSubmit.bind(this)}>
-                <div className='inpDiv'>
-                    <span className='regspan'>Username</span>
-                    <input
-                        type='text'
-                        value={this.state.username}
-                        onChange={(e) => this.setState({username: e.target.value})}
-                        className='inpBox'
-                    />
-                </div>
-                <div className='errDiv'>{this.state.err.username}</div>
-                <div className='inpDiv'>
-                    <span className='regspan'>Email</span>
-                    <input
-                        type='text'
-                        value={this.state.email}                     
-                        onChange={(e) => this.setState({email: e.target.value})}
-                        className='inpBox'
-                    />
-                </div>
-                <div className='errDiv'>{this.state.err.email}</div>
-                <div className='inpDiv'>
-                    <span className='regspan'>Password</span>
-                    <input
-                        type='password'
-                        value={this.state.password} 
-                        onChange={this.handleOnChangePassword}
-                        className='inpBox'
-                    />
-                </div>
-                <div className='errDiv'>{this.state.err.password}</div>
-                <div className='inpDiv'>
-                    <span className='regspan'>Confirm Password</span>
-                    <input
-                        type='password'
-                        value={this.state.passwordConf} 
-                        onChange={this.handleOnChangePasswordConf}
-                        className='inpBox'
-                    />
-                </div>
-                <div className='errDiv'>{this.state.err.passwordConf}</div>
-                <button className='regbutton' type="submit">
-                    Register
-                </button>
-                </form>
-                <div className='buttomMessage'>{this.state.buttomMessage}</div>
-            </div>);
-    }
+    return(
+        <div id="register">
+            <form className='regform' onSubmit={handleSubmit}>
+            <div className='inpDiv'>
+                <span className='regspan'>Username</span>
+                <input
+                    type='text'
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className='inpBox'
+                />
+            </div>
+            <div className='errDiv'>{err.username}</div>
+            <div className='inpDiv'>
+                <span className='regspan'>Email</span>
+                <input
+                    type='text'
+                    value={email}                     
+                    onChange={(e) => setEmail(e.target.value)}
+                    className='inpBox'
+                />
+            </div>
+            <div className='errDiv'>{err.email}</div>
+            <div className='inpDiv'>
+                <span className='regspan'>Password</span>
+                <input
+                    type='password'
+                    value={password} 
+                    onChange={handleOnChangePassword}
+                    className='inpBox'
+                />
+            </div>
+            <div className='errDiv'>{err.password}</div>
+            <div className='inpDiv'>
+                <span className='regspan'>Confirm Password</span>
+                <input
+                    type='password'
+                    value={passwordConf} 
+                    onChange={handleOnChangePasswordConf}
+                    className='inpBox'
+                />
+            </div>
+            <div className='errDiv'>{err.passwordConf}</div>
+            <button className='regbutton' type="submit">
+                Register
+            </button>
+            </form>
+            <div className='buttomMessage'>{buttomMessage}</div>
+        </div>);
 }
 export default Register;

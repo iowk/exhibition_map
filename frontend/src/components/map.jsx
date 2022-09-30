@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import './map.css';
 
@@ -37,10 +37,10 @@ const mapOptions = {
     streetViewControl: false,
 }
 
-class Map extends Component {
-    setMarker(landmark) {
+function Map(props) {
+    function setMarker(landmark) {
         const onClickMarker = (e) => {
-            this.props.handleClickLandmark(landmark['id']);
+            props.handleClickLandmark(landmark['id']);
         };
         return <Marker
             key={landmark['name']}
@@ -53,27 +53,25 @@ class Map extends Component {
             onClick={onClickMarker}
         />;
     }
-    render() {
-        var children = [];
-        for(var key in this.props.landmarks) {
-            children.push(this.setMarker(this.props.landmarks[key]));
-        }        
-        return (
-            <LoadScript
-                googleMapsApiKey="AIzaSyCD6M5vVw8HLQ0O-xk2uqIbKYYlgoCicpI"
+    var children = [];
+    for(var key in props.landmarks) {
+        children.push(setMarker(props.landmarks[key]));
+    }        
+    return (
+        <LoadScript
+            googleMapsApiKey="AIzaSyCD6M5vVw8HLQ0O-xk2uqIbKYYlgoCicpI"
+        >
+            <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={center}
+                zoom={zoom}
+                options={mapOptions}
+                addChild={props.landmarks.length}
             >
-                <GoogleMap
-                    mapContainerStyle={containerStyle}
-                    center={center}
-                    zoom={zoom}
-                    options={mapOptions}
-                    addChild={this.props.landmarks.length}
-                >
-                    {children}
-                </GoogleMap>
-            </LoadScript>
-        );
-    }
+                {children}
+            </GoogleMap>
+        </LoadScript>
+    );
 }
 
 export default Map;

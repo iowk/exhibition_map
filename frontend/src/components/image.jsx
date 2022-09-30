@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigate } from "react-router-dom";
 import Popup from 'reactjs-popup';
 import { Slide } from 'react-slideshow-image';
@@ -7,44 +7,42 @@ import { jwtVerify, getLSItem } from '../auth';
 import 'react-slideshow-image/dist/styles.css';
 import './image.css'
 
-class ImageListPopup extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            images: [],          
-        };
-    }
-    async componentDidMount(){
-        var res;
-        if(this.props.ctid){
-            res = await axios().get('/map/landmarks/'+this.props.lmid+'/contents/'+this.props.ctid+'/images/');            
+function ImageListPopup(props){
+    const [images, setImages] = useState([]);
+    useEffect(() => {
+        var apiPath = '';
+        if(props.ctid) apiPath = '/map/landmarks/'+props.lmid+'/contents/'+props.ctid+'/images/';
+        else apiPath = '/map/landmarks/'+props.lmid+'/images/';
+        const fetchData = async () => {            
+            try{
+                const res = await axios().get(apiPath);
+                const res_images = await res.data;
+                setImages(res_images);
+            }
+            catch(e){
+                console.log(e);
+            }
         }
-        else{
-            res = await axios().get('/map/landmarks/'+this.props.lmid+'/images/');
-        }
-        const images = await res.data;
-        this.setState({images: images});
-    }
-    render() {
-        return(
-            <Popup trigger={<button className='defaultButton'>Show photos</button>}
-            position="right center"
-            modal>
-                {close => (
-                <div className="slide-container">
-                    <Slide>
-                    {this.state.images.map((slideImage, index)=>(
-                        <div className="each-slide" key={index}>
-                        <div className="image-container" style={{'backgroundImage': `url(${slideImage.src})`}}>
-                            <span className='image-name'>{slideImage.name}</span>
-                        </div>
-                        </div>
-                    ))}
-                    </Slide>
-                </div>)}
-            </Popup>
-        );
-    }
+        fetchData();
+    }, [props])
+    return(
+        <Popup trigger={<button className='defaultButton'>Show photos</button>}
+        position="right center"
+        modal>
+            {close => (
+            <div className="slide-container">
+                <Slide>
+                {images.map((slideImage, index)=>(
+                    <div className="each-slide" key={index}>
+                    <div className="image-container" style={{'backgroundImage': `url(${slideImage.src})`}}>
+                        <span className='image-name'>{slideImage.name}</span>
+                    </div>
+                    </div>
+                ))}
+                </Slide>
+            </div>)}
+        </Popup>
+    );
 }
 function ImagePostPopup(props) {
     const [apiPath, setApiPath] = useState(null);
