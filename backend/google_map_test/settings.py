@@ -27,7 +27,7 @@ GOOGLE_MAP_API_KEY = os.environ['GOOGLE_MAP_API_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -81,13 +81,13 @@ WSGI_APPLICATION = 'google_map_test.wsgi.application'
 
 DATABASES = {
     'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
-        }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'exhibition_map',
+        'USER': 'root',
+        'PASSWORD': 'sdfjklkjfds',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+    }  
 }
 
 
