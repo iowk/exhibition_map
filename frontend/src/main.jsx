@@ -32,19 +32,12 @@ function Main(props) {
     function handleClickLandmark(landmarkId){
         // Landmark is clicked on
         setCurLandmarkId(landmarkId);
+        setAddedMarker(null);
         setPhase('landmark');
     }
-    function handleAddLandmark(latlng){
-        jwtVerify()
-        .then(is_valid => {
-            if(is_valid){
-                setAddedMarker(latlng);
-                setPhase('add');
-            }
-        })
-        .catch((e) => {
-            console.log(e);
-        })
+    function handleAddLandmark(latlng){        
+        setAddedMarker(latlng);
+        setPhase('add');
     }
     return(            
         <div>    
@@ -61,6 +54,7 @@ function Main(props) {
                 {/* Map */}
                 <Map 
                     landmarks = {landmarks}
+                    addedMarker = {addedMarker}
                     handleClickLandmark = {handleClickLandmark}
                     handleAddLandmark = {handleAddLandmark}
                 />

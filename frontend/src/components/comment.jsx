@@ -53,6 +53,7 @@ function WriteCommentBlock(props){
 function CommentListPopup(props){
     const [comments, setComments] = useState([]);
     useEffect(() => {
+        let isMounted = true;
         var apiPath = '';
         if(props.ctid) apiPath = '/map/landmarks/'+props.lmid+'/contents/'+props.ctid+'/comments/';
         else apiPath = '/map/landmarks/'+props.lmid+'/comments/';
@@ -60,13 +61,16 @@ function CommentListPopup(props){
             try{
                 const res = await axios().get(apiPath);
                 const res_comments = await res.data;
-                setComments(res_comments);
+                if(isMounted) setComments(res_comments);
             }
             catch(e){
                 console.log(e);
             }
         }
         fetchData();
+        return () => {
+            isMounted = false;
+        };
     }, [props])
     return(
         <Popup trigger={<button className='defaultButton'>Show comments</button>}
@@ -145,6 +149,7 @@ function CommentPostPopup(props){
                     })
                     .then(() => {
                         alert("Comment updated");
+                        window.location.reload(false);
                     })
                     .catch((e) =>{
                         console.log(e);
@@ -163,6 +168,7 @@ function CommentPostPopup(props){
                     })
                     .then(() => {
                         alert("Comment submitted");
+                        window.location.reload(false);
                     })
                     .catch((e) =>{
                         console.log(e);

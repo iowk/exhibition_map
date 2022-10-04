@@ -38,6 +38,12 @@ const mapOptions = {
 }
 
 function Map(props) {
+    function setAddedMarker(latlng) {
+        return <Marker
+            key='-1'
+            position={{lat: latlng.lat(), lng:latlng.lng()}}
+        />;
+    }
     function setMarker(landmark) {
         const onClickMarker = (e) => {
             props.handleClickLandmark(landmark['id']);
@@ -57,6 +63,9 @@ function Map(props) {
         props.handleAddLandmark(e.latLng);
     }
     var children = [];
+    if(props.addedMarker) {
+        children.push(setAddedMarker(props.addedMarker));
+    }
     for(var key in props.landmarks) {
         children.push(setMarker(props.landmarks[key]));
     }

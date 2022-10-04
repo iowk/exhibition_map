@@ -11,6 +11,7 @@ import './image.css'
 function ImageListPopup(props){
     const [images, setImages] = useState([]);
     useEffect(() => {
+        let isMounted = true;
         var apiPath = '';
         if(props.ctid) apiPath = '/map/landmarks/'+props.lmid+'/contents/'+props.ctid+'/images/';
         else apiPath = '/map/landmarks/'+props.lmid+'/images/';
@@ -18,13 +19,16 @@ function ImageListPopup(props){
             try{
                 const res = await axios().get(apiPath);
                 const res_images = await res.data;
-                setImages(res_images);
+                if(isMounted) setImages(res_images);
             }
             catch(e){
                 console.log(e);
             }
         }
         fetchData();
+        return () => {
+            isMounted = false;
+        };
     }, [props])
     return(
         <Popup trigger={<button className='defaultButton'>Show photos</button>}
@@ -72,7 +76,10 @@ function ImagePostPopup(props) {
                         'Content-type':'multipart/form-data',
                     },
                 })
-                .then(() => {alert("Uploaded");})
+                .then(() => {
+                    alert("Image uploaded");
+                    window.location.reload(false);
+                })
                 .catch((e) => alert(e));                            
             }
             else{

@@ -38,6 +38,7 @@ function AddLandmark(props) {
                                 })
                                 .then(() => {
                                     alert("Landmark added");
+                                    window.location.reload(false);
                                 })
                                 .catch((e) => {
                                     alert(e);
@@ -67,29 +68,44 @@ function AddLandmark(props) {
             alert(e);
         })
     }
-    return(
-        <div>
-            <textarea
-                placeholder='Name'
-                value={name}
-                onChange={(e) => {setName(e.target.value)}}
-                className='nameBox'
-            />
-            <textarea
-                placeholder='Link'
-                value={link}
-                onChange={(e) => {setLink(e.target.value)}}
-                className='linkBox'
-            />
-            <input type="file" name="image_url"
-                accept="image/jpeg,image/png,image/gif" onChange={(e) => {setImage(e.target.files[0])}} />
-            <div className='buttonDiv'>
-                <button onClick={handleSubmit} className='submitButton'>
-                    Upload
-                </button>
-            </div>
-        </div>
-    );
+    if(getLSItem('jwt','access')){
+        if(getLSItem('user','is_verified')){
+            return(
+                <div>
+                    <div>Add a new landmark</div>
+                    <textarea
+                        placeholder='Name'
+                        value={name}
+                        onChange={(e) => {setName(e.target.value)}}
+                        className='nameBox'
+                    />
+                    <textarea
+                        placeholder='Link'
+                        value={link}
+                        onChange={(e) => {setLink(e.target.value)}}
+                        className='linkBox'
+                    />
+                    <input type="file" name="image_url"
+                        accept="image/jpeg,image/png,image/gif" onChange={(e) => {setImage(e.target.files[0])}} />
+                    <div className='buttonDiv'>
+                        <button onClick={handleSubmit} className='submitButton'>
+                            Upload
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+        else{
+            return(
+                <div>Please activate your account to add a landmark</div>
+            );
+        }            
+    }
+    else{
+        return(
+            <div>Please login to add a landmark</div>
+        );
+    }
 }
 
 export default AddLandmark;

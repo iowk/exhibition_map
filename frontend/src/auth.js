@@ -41,30 +41,32 @@ export function getLSItem(key1, key2){
     if(dict === null) return null;
     return JSON.parse(dict)[key2];
 }
-export async function jwtRefresh(){
-    console.log("Refresh");
+export async function jwtRefresh(){    
     return new Promise((resolve) => {        
         let r_jwt = getLSItem('jwt', 'refresh');
         if(!r_jwt) resolve(false);
-        axios().post('/map/token/refresh/', JSON.stringify({
-            refresh: r_jwt,
-        }),
-        {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(res => {
-            console.log("Refresh success");
-            localStorage.setItem('jwt', JSON.stringify(res.data));            
-            resolve(true);
-        })
-        .catch (e => {
-            console.log("Refresh fail");
-            logout();
-            resolve(false);
-        })
+        else{
+            console.log("Refresh");
+            axios().post('/map/token/refresh/', JSON.stringify({
+                refresh: r_jwt,
+            }),
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => {
+                console.log("Refresh success");
+                localStorage.setItem('jwt', JSON.stringify(res.data));            
+                resolve(true);
+            })
+            .catch (e => {
+                console.log("Refresh fail");
+                logout();
+                resolve(false);
+            })
+        }        
     });
 }
 export async function jwtVerify(){
