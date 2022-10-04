@@ -38,7 +38,8 @@ class Comment(models.Model): # Landmark and content comments
         self.modified = timezone.now()
         return super(Comment, self).save(*args, **kwargs)
 
-class Landmark(models.Model): 
+class Landmark(models.Model):
+    owner = models.ForeignKey(CustomUser, related_name='landmark', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     lat = models.FloatField(default = 0.0)
     lng = models.FloatField(default = 0.0)
@@ -63,8 +64,11 @@ class LandmarkImage(Image):
     landmark = models.ForeignKey(Landmark, related_name='images', on_delete=models.CASCADE)
 
 class LandmarkComment(Comment):
-    owner = models.OneToOneField(CustomUser, related_name='landmarkComments', on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, related_name='landmarkComments', on_delete=models.CASCADE)
     landmark = models.ForeignKey(Landmark, related_name='comments', on_delete=models.CASCADE)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["owner", "landmark"], name='unique_owner_landmark_comment')]
 
 class Content(models.Model): 
     landmark = models.ForeignKey(Landmark, related_name='contents', on_delete=models.CASCADE)
@@ -96,5 +100,8 @@ class ContentImage(Image):
     content = models.ForeignKey(Content, related_name='images', on_delete=models.CASCADE)
 
 class ContentComment(Comment):
-    owner = models.OneToOneField(CustomUser, related_name='contentComments', on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, related_name='contentComments', on_delete=models.CASCADE)
     content = models.ForeignKey(Content, related_name='comments', on_delete=models.CASCADE)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["owner", "content"], name='unique_owner_content_comment')]

@@ -121,6 +121,12 @@ class LandmarkList(generics.ListCreateAPIView):
     permission_classes = [IsActivatedOrReadOnly] # Might be changed
     def get_queryset(self):
         return Landmark.objects.all()
+    def post(self, request, pk_lm, format=None):
+        serializer = serializers.LandmarkSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(landmark_id=pk_lm, owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LandmarkDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.LandmarkSerializer
@@ -141,7 +147,6 @@ class LandmarkImageList(generics.ListCreateAPIView):
         except Landmark.DoesNotExist:
             raise Http404
     def post(self, request, pk_lm, format=None):
-        print("Data:",request.data)
         serializer = serializers.LandmarkImageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(landmark_id=pk_lm, owner=request.user)
