@@ -71,7 +71,7 @@ function CommentListPopup(props){
         return () => {
             isMounted = false;
         };
-    }, [props])
+    }, [props.lmid, props.ctid])
     return(
         <Popup trigger={<button className='defaultButton'>Show comments</button>}
         position="right center"
@@ -96,37 +96,43 @@ function CommentPostPopup(props){
     // Pop up when user clicks the comment button for landmark or content
     const maxRating = 5;
     const [isPatch, setIsPatch] = useState(false);
-    const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
     const [apiPath, setApiPath] = useState('');
-    useEffect(() => {
+    useEffect(() => {        
         if(props.ctid) setApiPath('/map/landmarks/'+props.lmid+'/contents/'+props.ctid+'/comments/');
         else setApiPath('/map/landmarks/'+props.lmid+'/comments/');
-        jwtVerify()
-        .then(is_valid => {
-            if(is_valid){                
-                axios(getLSItem('jwt','access'))
-                .get(apiPath+getLSItem('user','id')+'/')
-                .then(res => {
-                    // This user already had a comment
-                    setIsPatch(true);
-                    setRating(res.data['rating']);
-                    setComment(res.data['text']);
-                })
-                .catch(e => {
-                    // New comment
-                    setIsPatch(false);
-                })
-            }
-            else{
-                <Navigate to = '/login/'/>;
-            }
-        })
-        .catch(e => {
-            console.log(e);
-            alert(e);
-        })
-    }, [props, apiPath])
+        setRating(5);
+        setComment('');
+    }, [props.lmid, props.ctid])
+    useEffect(() => {        
+        if(apiPath){
+            jwtVerify()
+            .then((is_valid) => {
+                if(is_valid){
+                    axios(getLSItem('jwt','access')).get(apiPath+props.user.id+'/')
+                    .then(res => {
+                        // This user already had a comment
+                        setIsPatch(true);
+                        setRating(res.data['rating']);
+                        setComment(res.data['text']);
+                    })
+                    .catch(e => {
+                        // New comment
+                        setIsPatch(false);
+                    })
+                }
+                else{
+                    alert("Please login again");
+                    props.handleSetUser(null);
+                    <Navigate to = '/login/'/>;
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+        }
+    }, [apiPath, props.user])
     function handleClickRating(rating){
         setRating(rating);
     }
@@ -135,10 +141,10 @@ function CommentPostPopup(props){
     }
     function handleSubmit(event){
         jwtVerify()
-        .then(is_valid => {
-            if(is_valid){                
+        .then((is_valid) =>{
+            if(is_valid){
                 if(isPatch){
-                    axios(getLSItem('jwt','access')).patch(apiPath+getLSItem('user','id')+'/', JSON.stringify({
+                    axios(getLSItem('jwt','access')).patch(apiPath+props.user.id+'/', JSON.stringify({
                         rating: rating,
                         text: comment
                     }),
@@ -149,7 +155,6 @@ function CommentPostPopup(props){
                     })
                     .then(() => {
                         alert("Comment updated");
-                        window.location.reload(false);
                     })
                     .catch((e) =>{
                         console.log(e);
@@ -159,7 +164,7 @@ function CommentPostPopup(props){
                 else{
                     axios(getLSItem('jwt','access')).post(apiPath, JSON.stringify({
                         rating: rating,
-                        comment: comment
+                        text: comment
                     }),
                     {
                         headers: {
@@ -168,21 +173,21 @@ function CommentPostPopup(props){
                     })
                     .then(() => {
                         alert("Comment submitted");
-                        window.location.reload(false);
                     })
                     .catch((e) =>{
                         console.log(e);
                         alert(e);
                     });
-                }                
+                }
             }
             else{
+                alert("Please login again");
+                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
         .catch(e => {
             console.log(e);
-            alert(e);
         })
     }
     return(

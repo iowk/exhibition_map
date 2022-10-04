@@ -1,26 +1,14 @@
-import {React, useState, useEffect} from "react";
+import {React,} from "react";
 import { Link } from "react-router-dom";
-import {jwtVerify, getLSItem} from '../auth';
 import './navbar.css';
 
 function NavBar(props){
-    const [username, setUsername] = useState('');
-    useEffect(() => {
-        let isMounted = true;
-        jwtVerify()
-        .then(res => {
-            if(isMounted) setUsername(getLSItem('user', 'username'));
-        });
-        return () => {
-            isMounted = false;
-        }
-    }, [props])
-    if(username) {
+    if(props.user) {
         return(
             <div className="navbar">
                 <Link to="/user">
                     <button className="navbutton">
-                        {username}
+                        {props.user.username}
                     </button>
                 </Link>
             </div>

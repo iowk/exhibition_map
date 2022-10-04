@@ -3,22 +3,24 @@ import './main.css';
 import axios from './axios';
 import NavBar from './components/navbar'
 import Map from './components/map'
-import InfoBlock from './components/infoblock'
-import { jwtVerify } from './auth';
+import { getLSItem, jwtVerify } from './auth';
+import Landmark from './components/landmark';
+import AddLandmark from './components/addLandmark';
+import { Content, AddContent } from './components/content';
 
 function Main(props) {
     // Full main page
-    const [phase, setPhase] = useState('initial');
-    const [addedMarker, setAddedMarker] = useState(null);
-    const [isVerified, setIsVerified] = useState(true);
+    const [phase, setPhase] = useState('initial');    
+    const [user, setUser] = useState(null);
     const [landmarks, setLandmarks] = useState({});
-    const [curLandmarkId, setCurLandmarkId] = useState(0);
+    const [addedMarker, setAddedMarker] = useState(null); //latlng
+    const [curLandmarkId, setCurLandmarkId] = useState(null);
+    const [curContent, setCurContent] = useState({}); // Currently clicked content
     useEffect(() => {
         // GET all landmarks on the map
         const fetchData = async() => {
             try{
-                await jwtVerify();
-                setIsVerified(true);
+                          
                 const res = await axios().get('/map/landmarks/');  
                 const landmarks = await res.data;
                 setLandmarks(landmarks);
@@ -29,26 +31,86 @@ function Main(props) {
         }
         fetchData();        
     }, [props])
-    function handleClickLandmark(landmarkId){
+    useEffect(() => {
+        jwtVerify()
+        .then((is_valid) => {
+            if(is_valid) setUser(JSON.parse(getLSItem('user')));
+            else setUser(null);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    }, [props, phase])
+    function handleClickLandmark(lmid){
         // Landmark is clicked on
-        setCurLandmarkId(landmarkId);
+        setCurLandmarkId(lmid);
         setAddedMarker(null);
         setPhase('landmark');
     }
     function handleAddLandmark(latlng){        
         setAddedMarker(latlng);
-        setPhase('add');
+        setPhase('addLandmark');
+    }
+    function handleSetUser(usr){
+        setUser(usr);
+    }
+    function handleToLandmark() {
+        setPhase('landmark');
+    }
+    function handleToContent(ct) {
+        setPhase('content');
+        setCurContent(ct);
+    }
+    function handleToAddContent() {
+        setPhase('addContent');
+    }
+    var child;
+    console.log("Phase:",phase);
+    if(phase==='initial'){
+        child = <div>
+            Please click on a landmark
+        </div>;
+    }
+    else if(phase==='landmark'){
+        child = <Landmark
+            user = {user}
+            handleSetUser = {handleSetUser}
+            curLandmarkId = {curLandmarkId}
+            handleToContent = {handleToContent}
+            handleToAddContent = {handleToAddContent}             
+        />;
+    }
+    else if(phase==='content'){
+        child = <Content
+            user = {user}
+            handleSetUser = {handleSetUser}
+            curLandmarkId = {curLandmarkId}
+            curContent = {curContent}
+            handleToLandmark = {handleToLandmark}
+        />;;
+    }
+    else if(phase==='addLandmark'){
+        child = <AddLandmark
+            user = {user}
+            handleSetUser = {handleSetUser}
+            addedMarker = {addedMarker}
+        />;;
+    }
+    else if(phase==='addContent'){
+        child = <AddContent
+            user = {user}
+            handleSetUser = {handleSetUser}
+            curLandmarkId = {curLandmarkId}
+            curContent = {curContent}
+            handleToLandmark = {handleToLandmark}
+        />;;
     }
     return(            
         <div>    
-            {isVerified && <NavBar></NavBar>}            
+            {<NavBar user = {user}/>}      
             <div id="infoBlock">
                 {/* Block containing landmark information */}
-                <InfoBlock
-                    phase = {phase}
-                    curLandmarkId = {curLandmarkId}
-                    addedMarker = {addedMarker}
-                />
+                {child}
             </div>
             <div id="map">
                 {/* Map */}

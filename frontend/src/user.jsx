@@ -4,27 +4,35 @@ import { Navigate } from "react-router-dom";
 import {jwtVerify, logout, getLSItem} from './auth';
 
 function User(props){
-    const [verified, setVerified] = useState(false);
-    const [username, setUsername] = useState('');
+    const [user, setUser] = useState({});
+    const [verifyDone, setVerifyDone] = useState(false);
     useEffect(() =>{
-        jwtVerify()
-        .then(() => {             
-            setUsername(getLSItem('user','username'));
-            setVerified(true);
-        })
-        .catch(e => {
-            console.log(e);
-            setUsername('');
-        });    
+        let isMounted = true;        
+        const verify = async() => {
+            try{
+                await jwtVerify();
+                if(isMounted) setUser(JSON.parse(getLSItem('user')));                
+            }
+            catch (e) {
+                if(isMounted) setUser(null);
+            }
+        }        
+        verify().then(() => {
+            setVerifyDone(true);
+        });        
+        return () => { isMounted = false }; 
     }, [props])
     function logoutOnClick() {
         logout();
-        setUsername('');
+        setUser(null);
     }
-    if(username || !verified) {
+    if(!verifyDone){
+        return(<></>);
+    }
+    else if(user) {
         return(
             <div className='userInfo'>
-                <span>User: {username}</span>
+                <span>User: {user.username}</span>
                 <button className='logoutButton' onClick={logoutOnClick}>
                     Logout
                 </button>

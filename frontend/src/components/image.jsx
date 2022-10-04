@@ -29,7 +29,7 @@ function ImageListPopup(props){
         return () => {
             isMounted = false;
         };
-    }, [props])
+    }, [props.lmid, props.ctid])
     return(
         <Popup trigger={<button className='defaultButton'>Show photos</button>}
         position="right center"
@@ -59,7 +59,7 @@ function ImagePostPopup(props) {
     useEffect(() => {
         if(props.ctid) setApiPath('/map/landmarks/'+props.lmid+'/contents/'+props.ctid+'/images/');
         else setApiPath('/map/landmarks/'+props.lmid+'/images/');      
-    }, [props])
+    }, [props.lmid, props.ctid])
     function onImageChange(e) {
         setImage(e.target.files[0]);
     }
@@ -78,17 +78,19 @@ function ImagePostPopup(props) {
                 })
                 .then(() => {
                     alert("Image uploaded");
-                    window.location.reload(false);
                 })
-                .catch((e) => alert(e));                            
+                .catch((e) => {
+                    alert(e)
+                });                            
             }
             else{
-                alert("Please login to upload image");
+                alert("Please login again");
+                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
         .catch(e => {
-            alert(e);
+            console.log(e);
         })       
     }
     return(

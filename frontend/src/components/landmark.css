@@ -27,11 +27,13 @@
 }
 .rating{
     height: 50px;
-    padding: 10px;
 }
 .image{
     height: 50px;
-    padding: 10px;
+}
+.comment{
+    clear: left;
+    height: 50px;
 }
 .rating > p{
     clear: left;

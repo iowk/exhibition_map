@@ -11,21 +11,21 @@ function Login(props){
         login(username, password)
         .then(() => {
             jwtVerify()
-            .then(is_valid => {
+            .then((is_valid) => {
                 if(is_valid){
                     setLoginStatus('success');
                     <Navigate to = '/'/>;
                 }
-                else setLoginStatus('fail');
+                else{
+                    setLoginStatus('fail');
+                }
             })
-            .catch(e => {
+            .catch((e) => {
                 console.log(e);
-                alert(e);
             })
         })
         .catch(e => {
             console.log(e);
-            alert(e);
         });
         event.preventDefault();
     }

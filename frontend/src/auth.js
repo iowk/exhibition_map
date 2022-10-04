@@ -39,12 +39,16 @@ export function logout(){
 export function getLSItem(key1, key2){
     const dict = localStorage.getItem(key1);
     if(dict === null) return null;
+    if(!key2) return dict;
     return JSON.parse(dict)[key2];
 }
 export async function jwtRefresh(){    
-    return new Promise((resolve) => {        
+    return new Promise((resolve, reject) => {        
         let r_jwt = getLSItem('jwt', 'refresh');
-        if(!r_jwt) resolve(false);
+        if(!r_jwt){
+            logout();
+            resolve(false);
+        }
         else{
             console.log("Refresh");
             axios().post('/map/token/refresh/', JSON.stringify({
@@ -62,7 +66,7 @@ export async function jwtRefresh(){
                 resolve(true);
             })
             .catch (e => {
-                console.log("Refresh fail");
+                console.log("Refresh fail");                
                 logout();
                 resolve(false);
             })
@@ -73,20 +77,22 @@ export async function jwtVerify(){
     return new Promise((resolve) => {
         let a_jwt = getLSItem('jwt', 'access');
         if(!a_jwt) resolve(false);
-        axios(a_jwt).post('/map/token/verify/', JSON.stringify({
-            token: a_jwt,
-        }),
-        {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(res => {
-            resolve(true);
-        })
-        .catch (e => {
-            resolve(jwtRefresh());
-        });
+        else{
+            axios(a_jwt).post('/map/token/verify/', JSON.stringify({
+                token: a_jwt,
+            }),
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(() => {
+                resolve(true);
+            })
+            .catch (() => {
+                resolve(jwtRefresh());                
+            });
+        }        
     });    
 }

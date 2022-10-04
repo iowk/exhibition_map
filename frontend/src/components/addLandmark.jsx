@@ -10,13 +10,14 @@ function AddLandmark(props) {
     const [link, setLink] = useState('');
     const [image, setImage] = useState(null);
     function handleSubmit(){
+        console.log("SUBMIT");
         jwtVerify()
-        .then(is_valid => {
+        .then((is_valid) => {
             if(is_valid){
                 axios(getLSItem('jwt','access')).post('/map/landmarks/', JSON.stringify({
                     name: name,
-                    lat: props.latlng.lat(),
-                    lng: props.latlng.lng(),
+                    lat: props.addedMarker.lat(),
+                    lng: props.addedMarker.lng(),
                     link: link,
                 }),
                 {
@@ -28,48 +29,50 @@ function AddLandmark(props) {
                 .then((res) => {
                     if(image){
                         jwtVerify()
-                        .then(is_valid => {
-                            if(is_valid){
-                                axios(getLSItem('jwt','access')).patch('/map/landmarks/'+res.data.id+'/', createCoverImageEntry(image),
-                                {
-                                    headers: {
-                                        'Content-Type': 'multipart/form-data'
-                                    },
-                                })
-                                .then(() => {
-                                    alert("Landmark added");
-                                    window.location.reload(false);
-                                })
-                                .catch((e) => {
-                                    alert(e);
-                                })
-                            }
-                            else{
-                                <Navigate to = '/login/'/>;
-                            }
+                        .then(() => {
+                            axios(getLSItem('jwt','access')).patch('/map/landmarks/'+res.data.id+'/', createCoverImageEntry(image),
+                            {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                },
+                            })
+                            .then(() => {
+                                alert("Landmark added");
+                                window.location.reload(false);
+                            })
+                            .catch((e) => {
+                                console.log(e);
+                                alert(e);
+                            })
                         })
                         .catch((e) => {
                             console.log(e);
-                            alert(e);
+                            alert("Please login again");
+                            props.handleSetUser(null);
+                            <Navigate to = '/login/'/>;
                         })
-                    }                    
+                    }
+                    else{
+                        alert("Landmark added");
+                        window.location.reload(false);
+                    }
                 })
                 .catch((e) =>{
                     console.log(e);
                     alert(e);
-                });             
+                });
             }
             else{
+                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
         .catch(e => {
-            console.log(e);
-            alert(e);
+            console.log(e);            
         })
-    }
-    if(getLSItem('jwt','access')){
-        if(getLSItem('user','is_verified')){
+    }    
+    if(props.user){
+        if(props.user.is_verified){
             return(
                 <div>
                     <div>Add a new landmark</div>
