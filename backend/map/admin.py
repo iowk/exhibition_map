@@ -10,8 +10,8 @@ class LandmarkImageInline(admin.TabularInline):
 	model = LandmarkImage
 
 class LandmarkAdmin(admin.ModelAdmin):
-	fields = ['name', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc']
-	list_display = ('name', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc')
+	fields = ['owner', 'name', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc']
+	list_display = ('owner', 'name', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc')
 	inlines = [ContentInline, LandmarkImageInline]
 
 class UserAdmin(admin.ModelAdmin):
