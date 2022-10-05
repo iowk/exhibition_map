@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { Navigate } from "react-router-dom";
 import DatePicker from 'react-date-picker';
 import './content.css';
@@ -9,6 +9,25 @@ import { createCoverImageEntry, formatDate } from '../utils';
 import axios from '../axios';
 
 function Content(props){
+    function handleDeleteContent(){
+        jwtVerify()
+        .then((is_valid) => {
+            if(is_valid){
+                axios(getLSItem('jwt','access')).delete('/map/landmarks/'+props.curLandmarkId+'/contents/'+props.content.id+'/')
+                .then(() => {
+                    alert("Content deleted");
+                    props.handleToLandmark();
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+            }
+            else props.handleSetUser(null);
+        })
+        .catch((e) => {
+            console.log(e);
+        });       
+    }
     return(
         <div>
             <button onClick={props.handleToLandmark}>
@@ -53,6 +72,10 @@ function Content(props){
                     handleSetUser={props.handleSetUser}
                 /></div>}
             </div>
+            {props.user && (props.user.is_staff) &&
+                <div><button onClick={handleDeleteContent}>
+                    Delete content
+                </button></div>}            
         </div>
     );
 }
