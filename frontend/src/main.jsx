@@ -54,6 +54,9 @@ function Main(props) {
     function handleSetUser(usr){
         setUser(usr);
     }
+    function handleToInitial() {
+        setPhase('initial');
+    }
     function handleToLandmark() {
         setPhase('landmark');
     }
@@ -76,6 +79,7 @@ function Main(props) {
             user = {user}
             handleSetUser = {handleSetUser}
             curLandmarkId = {curLandmarkId}
+            handleToInitial = {handleToInitial}
             handleToContent = {handleToContent}
             handleToAddContent = {handleToAddContent}             
         />;

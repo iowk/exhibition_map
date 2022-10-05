@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './landmark.css';
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
-import { jwtVerify } from './../auth';
+import { jwtVerify, getLSItem } from './../auth';
 import axios from './../axios';
 
 function ContentOverview(props){
@@ -57,6 +57,25 @@ function Landmark(props){
             });
         }        
     }, [props, landmark])
+    function handleDeleteLandmark(){
+        jwtVerify()
+        .then((is_valid) => {
+            if(is_valid){
+                axios(getLSItem('jwt','access')).delete('/map/landmarks/'+props.curLandmarkId+'/')
+                .then(() => {
+                    alert("Landmark deleted");
+                    props.handleToInitial();
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+            }
+            else props.handleSetUser(null);
+        })
+        .catch((e) => {
+            console.log(e);
+        });        
+    }
     function genLandmark(){
         return (
             <div className="landmarkInfo" key='lm'>
@@ -101,6 +120,18 @@ function Landmark(props){
     if(landmark){
         var children = [];
         children.push(genLandmark());
+        if(props.user && (props.user.is_staff)){
+            children.push(
+                <div><button onClick={handleDeleteLandmark}>
+                    Delete landmark
+                </button></div>)
+        }
+        if(props.user && (props.user.is_staff || props.user.id===landmark.owner)){
+            children.push(
+                <div><button onClick={props.handleToAddContent}>
+                    Add content
+                </button></div>)
+        }
         for(var key in contents) {
             if(contents[key]['isGoing']){ 
                 // Ongoing event content       
@@ -110,14 +141,9 @@ function Landmark(props){
                     handleToContent={props.handleToContent}/>);
             }
         }
-        console.log("USER:",props.user)
-        console.log("OWNER:",landmark.owner)
         return (
             <div>
                 {children}
-                {props.user && (props.user.is_staff || props.user.id===landmark.owner) &&  <button onClick={props.handleToAddContent}>
-                    Add content
-                </button>}
             </div>
         );
     }
