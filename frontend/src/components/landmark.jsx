@@ -110,12 +110,14 @@ function Landmark(props){
                     handleToContent={props.handleToContent}/>);
             }
         }
+        console.log("USER:",props.user)
+        console.log("OWNER:",landmark.owner)
         return (
             <div>
                 {children}
-                <button onClick={props.handleToAddContent}>
+                {props.user && (props.user.is_staff || props.user.id===landmark.owner) &&  <button onClick={props.handleToAddContent}>
                     Add content
-                </button>
+                </button>}
             </div>
         );
     }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Navigate } from "react-router-dom";
 import DatePicker from 'react-date-picker';
 import './content.css';
@@ -95,7 +95,7 @@ function AddContent(props){
                             })
                             .catch((e) => {
                                 console.log(e);
-                                alert(e.response.data);
+                                alert(JSON.stringify(e.response.data));
                             })
                         })
                         .catch((e) => {
@@ -112,7 +112,7 @@ function AddContent(props){
                 })
                 .catch((e) =>{
                     console.log(e);
-                    alert(e.response.data);
+                    alert(JSON.stringify(e.response.data));
                 });
             }
             else{
@@ -122,43 +122,38 @@ function AddContent(props){
         })
         .catch(e => {
             console.log(e);
-            alert(e.response.data);    
+            alert(JSON.stringify(e.response.data));
         })
     }
     var child;
     if(props.user){
-        if(props.user.is_verified){
-            child = 
+        child = 
+            <div>
+                <div>Add a new content</div>
+                <textarea
+                    placeholder='Name'
+                    value={name}
+                    onChange={(e) => {setName(e.target.value)}}
+                    className='nameBox'
+                />
+                <textarea
+                    placeholder='Link'
+                    value={link}
+                    onChange={(e) => {setLink(e.target.value)}}
+                    className='linkBox'
+                />                    
                 <div>
-                    <div>Add a new content</div>
-                    <textarea
-                        placeholder='Name'
-                        value={name}
-                        onChange={(e) => {setName(e.target.value)}}
-                        className='nameBox'
-                    />
-                    <textarea
-                        placeholder='Link'
-                        value={link}
-                        onChange={(e) => {setLink(e.target.value)}}
-                        className='linkBox'
-                    />                    
-                    <div>
-                        <DatePicker onChange={setStartDate} format='yyyy-MM-dd' value={startDate} />
-                        <DatePicker onChange={setEndDate} format='yyyy-MM-dd' value={endDate} />
-                    </div>
-                    <input type="file" name="image_url"
-                        accept="image/jpeg,image/png,image/gif" onChange={(e) => {setImage(e.target.files[0])}} />
-                    <div className='buttonDiv'>
-                        <button onClick={handleSubmit} className='submitButton'>
-                            Upload
-                        </button>
-                    </div>
-                </div>;
-        }
-        else{
-            child = <div>Please activate your account to add a content</div>;
-        }
+                    <DatePicker onChange={setStartDate} format='yyyy-MM-dd' value={startDate} />
+                    <DatePicker onChange={setEndDate} format='yyyy-MM-dd' value={endDate} />
+                </div>
+                <input type="file" name="image_url"
+                    accept="image/jpeg,image/png,image/gif" onChange={(e) => {setImage(e.target.files[0])}} />
+                <div className='buttonDiv'>
+                    <button onClick={handleSubmit} className='submitButton'>
+                        Upload
+                    </button>
+                </div>
+            </div>;
     }
     else{
         child = <div>Please login to add a content</div>;
