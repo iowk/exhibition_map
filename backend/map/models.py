@@ -39,7 +39,7 @@ class Comment(models.Model): # Landmark and content comments
         return super(Comment, self).save(*args, **kwargs)
 
 class Landmark(models.Model):
-    owner = models.ForeignKey(CustomUser, related_name='landmark', on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, related_name='landmark', on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=100)
     lat = models.FloatField(default = 0.0)
     lng = models.FloatField(default = 0.0)
@@ -60,7 +60,7 @@ class Landmark(models.Model):
         return list(self.comments.all().aggregate(Avg('rating')).values())[0]
 
 class LandmarkImage(Image):
-    owner = models.ForeignKey(CustomUser, related_name='landmarkImages', on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, related_name='landmarkImages', on_delete=models.SET_NULL, null=True)
     landmark = models.ForeignKey(Landmark, related_name='images', on_delete=models.CASCADE)
 
 class LandmarkComment(Comment):
@@ -70,7 +70,8 @@ class LandmarkComment(Comment):
         constraints = [
             models.UniqueConstraint(fields=["owner", "landmark"], name='unique_owner_landmark_comment')]
 
-class Content(models.Model): 
+class Content(models.Model):
+    owner = models.ForeignKey(CustomUser, related_name='content', on_delete=models.SET_NULL, null=True)
     landmark = models.ForeignKey(Landmark, related_name='contents', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     startDate = models.DateField(blank=True)
@@ -96,7 +97,7 @@ class Content(models.Model):
         return list(self.comments.all().aggregate(Avg('rating')).values())[0]
 
 class ContentImage(Image):
-    owner = models.ForeignKey(CustomUser, related_name='contentImages', on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, related_name='contentImages', on_delete=models.SET_NULL, null=True)
     content = models.ForeignKey(Content, related_name='images', on_delete=models.CASCADE)
 
 class ContentComment(Comment):

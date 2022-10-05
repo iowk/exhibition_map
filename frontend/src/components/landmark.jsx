@@ -6,6 +6,9 @@ import { jwtVerify } from './../auth';
 import axios from './../axios';
 
 function ContentOverview(props){
+    function handleOnClick(){
+        props.handleToContent(props.content);
+    }
     return (
         <div className="contentInfo">
             <img src={props.content.coverImageSrc} alt="Not found"></img>
@@ -16,7 +19,7 @@ function ContentOverview(props){
                     <div className="link">{props.content.link}</div>
                 </a>      
                 <p>Rating: {props.content.avgRating}</p>
-                <button onClick={props.handleToContent(props.content)}>
+                <button onClick={handleOnClick}>
                     Detail
                 </button>          
             </div>
@@ -53,7 +56,7 @@ function Landmark(props){
                 console.log(e);
             });
         }        
-    }, [props])
+    }, [props, landmark])
     function genLandmark(){
         return (
             <div className="landmarkInfo" key='lm'>

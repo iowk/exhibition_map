@@ -85,7 +85,7 @@ function Main(props) {
             user = {user}
             handleSetUser = {handleSetUser}
             curLandmarkId = {curLandmarkId}
-            curContent = {curContent}
+            content = {curContent}
             handleToLandmark = {handleToLandmark}
         />;;
     }
@@ -101,7 +101,6 @@ function Main(props) {
             user = {user}
             handleSetUser = {handleSetUser}
             curLandmarkId = {curLandmarkId}
-            curContent = {curContent}
             handleToLandmark = {handleToLandmark}
         />;;
     }

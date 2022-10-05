@@ -10,7 +10,6 @@ function AddLandmark(props) {
     const [link, setLink] = useState('');
     const [image, setImage] = useState(null);
     function handleSubmit(){
-        console.log("SUBMIT");
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){

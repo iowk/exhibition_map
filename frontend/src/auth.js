@@ -76,7 +76,10 @@ export async function jwtRefresh(){
 export async function jwtVerify(){
     return new Promise((resolve) => {
         let a_jwt = getLSItem('jwt', 'access');
-        if(!a_jwt) resolve(false);
+        if(!a_jwt){
+            logout();
+            resolve(false);
+        }
         else{
             axios(a_jwt).post('/map/token/verify/', JSON.stringify({
                 token: a_jwt,

@@ -119,6 +119,7 @@ function CommentPostPopup(props){
                     })
                     .catch(e => {
                         // New comment
+                        console.log("No comment exists for this user");
                         setIsPatch(false);
                     })
                 }
@@ -132,7 +133,7 @@ function CommentPostPopup(props){
                 console.log(e);
             });
         }
-    }, [apiPath, props.user])
+    }, [apiPath, props])
     function handleClickRating(rating){
         setRating(rating);
     }
