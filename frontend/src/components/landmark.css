@@ -22,6 +22,36 @@
 .contentInfo{
     height: 100px;
 }
+.contentInfo .des{
+    margin: 0px;
+    float: left;
+    width: 70%;
+    height: 100%;
+}
+.contentInfo .des:hover{
+    background-color: lightgray;
+    cursor: pointer;
+}
+.contentInfo .des > h2{   
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+.contentInfo .des > p{   
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+.contentImage{
+    clear: left;
+    float: left;
+    width: 30%;
+    height: 100%;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 .detailButton{
     margin-top: 5px;
 }
@@ -34,9 +64,11 @@
     margin: 0px;
 }
 .image{
-    height: 50px;
+    margin: 5px;
 }
 .comment{
-    clear: left;
-    height: 50px;
+    margin: 5px;
+}
+.addContent{
+    margin: 5px;
 }

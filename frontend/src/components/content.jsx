@@ -29,13 +29,15 @@ function Content(props){
         });       
     }
     return(
-        <div>
-            <button onClick={props.handleToLandmark}>
+        <div className='contentDetail'>            
+            <button onClick={props.handleToLandmark} className='backButton'>
                 Back
             </button>
-            <img src={props.content.coverImageSrc} alt="Not found"></img>
-            <div className="des">
-                <h1>{props.content.name}</h1>
+            <h1 className='title'>{props.content.name}</h1>
+            <div className='contentDetailImage'>
+                <img src={props.content.coverImageSrc} alt="Not found"></img>
+            </div>            
+            <div className="des">                
                 <p>{props.content.startDate} ~ {props.content.endDate}</p>
                 <a href={props.content.link}>
                     <div className="link">{props.content.link}</div>
@@ -44,34 +46,34 @@ function Content(props){
                     <p>Rating: {props.content.avgRating}</p>}
             </div>
             <div className='comment'>                
-                <div><CommentListPopup
+                <CommentListPopup
                     lmid={props.curLandmarkId}
                     ctid={props.content.id}
                     name={props.content.name}
-                /></div>
+                />
                 {props.user.is_verified && (
                     // Comment button for activated user                         
-                    <div><CommentPostPopup
+                    <CommentPostPopup
                         lmid={props.curLandmarkId}
                         ctid={props.content.id}
                         name={props.content.name}
                         user={props.user}
                         handleSetUser={props.handleSetUser}
-                    /></div>
+                    />
                 )}
             </div>
             <div className='image'>
-                <div><ImageListPopup
+                <ImageListPopup
                     lmid={props.curLandmarkId}
                     ctid={props.content.id}
-                /></div>
+                />
                 {props.user.is_verified &&      
-                <div><ImagePostPopup
+                <ImagePostPopup
                     lmid={props.curLandmarkId}
                     ctid={props.content.id}
                     user={props.user}
                     handleSetUser={props.handleSetUser}
-                /></div>}
+                />}
             </div>
             {props.user && (props.user.is_staff) &&
                 <div><button onClick={handleDeleteContent}>

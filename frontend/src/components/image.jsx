@@ -31,7 +31,7 @@ function ImageListPopup(props){
         };
     }, [props.lmid, props.ctid])
     return(
-        <Popup trigger={<button className='defaultButton'>Show photos</button>}
+        <div id='imageList'><Popup trigger={<button className='defaultButton'>Show photos</button>}
         position="right center"
         modal>
             {close => (
@@ -49,7 +49,7 @@ function ImageListPopup(props){
                 ))}
                 </Slide>
             </div>)}
-        </Popup>
+        </Popup></div>
     );
 }
 function ImagePostPopup(props) {
@@ -94,7 +94,7 @@ function ImagePostPopup(props) {
         })       
     }
     return(
-        <Popup trigger={<button className='defaultButton'>Upload photo</button>}
+        <div id='imagePost'><Popup trigger={<button className='defaultButton'>Upload photo</button>}
         position="right center"
         modal>
             {close => (
@@ -121,7 +121,7 @@ function ImagePostPopup(props) {
                 </div>
             </div>
             )}
-        </Popup>
+        </Popup></div>
     );    
 }
 

@@ -73,7 +73,7 @@ function CommentListPopup(props){
         };
     }, [props.lmid, props.ctid])
     return(
-        <Popup trigger={<button className='defaultButton'>Show comments</button>}
+        <div id='commentList'><Popup trigger={<button className='defaultButton'>Show comments</button>}
         position="right center"
         modal>
             {close => (
@@ -89,7 +89,7 @@ function CommentListPopup(props){
                     </div>
                 ))}
             </div>)}
-        </Popup>
+        </Popup></div>
     );
 }
 function CommentPostPopup(props){
@@ -196,7 +196,7 @@ function CommentPostPopup(props){
     }
     const closeModal = () => setOpen(false);
     return(
-        <div>
+        <div id='commentPost'>
             <button className='addCommentButton' onClick={handleOpen}>Write comment</button>
             <Popup
             open={open}

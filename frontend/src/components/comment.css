@@ -91,3 +91,11 @@
     left: 50%;
     transform: translate(-50%);
 }
+#commentList{
+    width: 150px;
+    display:inline-block;
+}
+#commentPost{
+    width: 150px;
+    display:inline-block;
+}

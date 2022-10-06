@@ -10,17 +10,15 @@ function ContentOverview(props){
         props.handleToContent(props.content);
     }
     return (
-        <div className="contentInfo">
+        <div className="contentInfo" onClick={handleOnClick}>
             <div className='contentImage'>
                 <img src={props.content.coverImageSrc} alt="Not found"></img>
             </div>            
             <div className="des">
-                <h1>{props.content.name}</h1>
+                <h2>{props.content.name}</h2>
+                <p>{props.content.startDate} ~ {props.content.endDate}</p>
                 {props.content.avgRating && 
-                    <p className='rating'>Rating: {props.content.avgRating}</p>}
-                <button onClick={handleOnClick} className="detailButton">
-                    Detail
-                </button>          
+                    <p className='rating'>Rating: {props.content.avgRating}</p>}       
             </div>
         </div>
     );
@@ -86,30 +84,30 @@ function Landmark(props){
                 {landmark.avgRating && 
                     <p className='rating'>Rating: {landmark.avgRating}</p>}
                 <div className='comment'>                
-                    <div><CommentListPopup
+                    <CommentListPopup
                         lmid={landmark.id}
                         name={landmark.name}
-                    /></div>
+                    />
                     {props.user && props.user.is_verified && (
                         // Comment button for activated user                         
-                        <div><CommentPostPopup
+                        <CommentPostPopup
                             lmid={landmark.id}                            
                             name={landmark.name}
                             user={props.user}
                             handleSetUser={props.handleSetUser}
-                        /></div>
+                        />
                     )}
                 </div>
                 <div className='image'>
-                    <div><ImageListPopup
+                    <ImageListPopup
                         lmid={landmark.id}
-                    /></div>
+                    />
                     {props.user && props.user.is_verified &&      
-                    <div><ImagePostPopup
+                    <ImagePostPopup
                         lmid={landmark.id}
                         user={props.user}
                         handleSetUser={props.handleSetUser}
-                    /></div>}
+                    />}
                 </div>
             </div>
         );
@@ -126,7 +124,7 @@ function Landmark(props){
         }
         if(props.user && (props.user.is_staff || props.user.id===landmark.owner)){
             children.push(
-                <div><button onClick={props.handleToAddContent}>
+                <div className='addContent'><button onClick={props.handleToAddContent}>
                     Add content
                 </button></div>)
         }

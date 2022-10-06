@@ -1,34 +1,38 @@
-.contentInfo{
+.contentDetail{
     margin: 0%;
     margin-right: 0%;
-}
-.contentImage{
-    clear: left;
-    float: left;
-    width: 30%;
     height: 100%;
-    margin-top: 5px;
+}
+.contentDetailImage{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center; 
 }
-.contentImage > img{
-    width: 100%;
-}
-.contentInfo .des{
+.contentDetail .des{
     float: left;
-    width: 70%;
+    width: 100%;
     margin-top: 5px;
     display: flex;
     flex-direction: column;
     align-items: center;  
 }
-.contentInfo .des > h1{
-    font-size: larger;
-    font-weight: normal;
+.contentDetail .des > p{
     text-align: center;
     margin: 0px;
 }
-.contentInfo .des .link:hover{
+.contentDetail .des .link:hover{
     background-color: lightgray;
+}
+.backButton{
+    z-index: 1;
+    overflow: auto;
+}
+.title{
+    text-align: center;
+}
+.image{
+    margin: 5px;
+}
+.comment{
+    margin: 5px;
 }
