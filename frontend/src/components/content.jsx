@@ -40,7 +40,7 @@ function Content(props){
             <div className="des">                
                 <p>{props.content.startDate} ~ {props.content.endDate}</p>
                 <a href={props.content.link}>
-                    <div className="link">{props.content.link}</div>
+                    <div className="link">Website</div>
                 </a>
                 {props.content.avgRating && 
                     <p>Rating: {props.content.avgRating}</p>}
