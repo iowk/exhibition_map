@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './register.css';
 import axios from './axios';
-import {login, getLSItem} from './auth';
+import {login, getToken} from './auth';
 
 function Register(props){
     // Full register page
@@ -69,7 +69,7 @@ function Register(props){
                 clearErr();
                 login(username, password)
                 .then(() => {
-                    axios(getLSItem('jwt','access')).get('/map/users/send_acc_email/')
+                    axios(getToken()).get('/map/users/send_acc_email/')
                     .then(() => {
                         setButtomMessage("Registration success. Activation mail is sent to " + email);
                     })

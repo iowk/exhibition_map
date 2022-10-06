@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './landmark.css';
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
-import { jwtVerify, getLSItem } from './../auth';
+import { jwtVerify, getToken } from './../auth';
 import axios from './../axios';
 
 function ContentOverview(props){
@@ -11,15 +11,14 @@ function ContentOverview(props){
     }
     return (
         <div className="contentInfo">
-            <img src={props.content.coverImageSrc} alt="Not found"></img>
+            <div className='contentImage'>
+                <img src={props.content.coverImageSrc} alt="Not found"></img>
+            </div>            
             <div className="des">
                 <h1>{props.content.name}</h1>
-                <p>{props.content.startDate} ~ {props.content.endDate}</p>
-                <a href={props.content.link}>
-                    <div className="link">{props.content.link}</div>
-                </a>      
-                <p>Rating: {props.content.avgRating}</p>
-                <button onClick={handleOnClick}>
+                {props.content.avgRating && 
+                    <p className='rating'>Rating: {props.content.avgRating}</p>}
+                <button onClick={handleOnClick} className="detailButton">
                     Detail
                 </button>          
             </div>
@@ -61,7 +60,7 @@ function Landmark(props){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getLSItem('jwt','access')).delete('/map/landmarks/'+props.curLandmarkId+'/')
+                axios(getToken()).delete('/map/landmarks/'+props.curLandmarkId+'/')
                 .then(() => {
                     alert("Landmark deleted");
                     props.handleToInitial();
@@ -82,11 +81,10 @@ function Landmark(props){
                 <h1>{landmark.name}</h1>                
                 <img src={landmark.coverImageSrc} alt="Not found"></img>
                 <a href={landmark.link}>
-                    <div className="link">{landmark.link}</div>
+                    <div className="link">Website</div>
                 </a>
-                <div className='rating'>
-                    <p>Rating: {landmark.avgRating}</p>
-                </div>
+                {landmark.avgRating && 
+                    <p className='rating'>Rating: {landmark.avgRating}</p>}
                 <div className='comment'>                
                     <div><CommentListPopup
                         lmid={landmark.id}

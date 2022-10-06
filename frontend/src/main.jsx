@@ -109,8 +109,10 @@ function Main(props) {
         />;;
     }
     return(            
-        <div>    
-            {<NavBar user = {user}/>}      
+        <div id="main">
+            <div id="navbar">
+                {<NavBar user = {user}/>}
+            </div>
             <div id="infoBlock">
                 {/* Block containing landmark information */}
                 {child}

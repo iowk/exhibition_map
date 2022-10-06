@@ -7,7 +7,7 @@ const zoom = 15;
 const containerStyle = {
     // Map container style
     width: '98vw',
-    height: '100vh'
+    height: '98vh'
 };
 
 const center = {

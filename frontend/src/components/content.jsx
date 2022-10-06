@@ -4,7 +4,7 @@ import DatePicker from 'react-date-picker';
 import './content.css';
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
-import { jwtVerify, getLSItem } from '../auth';
+import { jwtVerify, getToken } from '../auth';
 import { createCoverImageEntry, formatDate } from '../utils';
 import axios from '../axios';
 
@@ -13,7 +13,7 @@ function Content(props){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getLSItem('jwt','access')).delete('/map/landmarks/'+props.curLandmarkId+'/contents/'+props.content.id+'/')
+                axios(getToken()).delete('/map/landmarks/'+props.curLandmarkId+'/contents/'+props.content.id+'/')
                 .then(() => {
                     alert("Content deleted");
                     props.handleToLandmark();
@@ -39,8 +39,9 @@ function Content(props){
                 <p>{props.content.startDate} ~ {props.content.endDate}</p>
                 <a href={props.content.link}>
                     <div className="link">{props.content.link}</div>
-                </a>      
-                <p>Rating: {props.content.avgRating}</p>
+                </a>
+                {props.content.avgRating && 
+                    <p>Rating: {props.content.avgRating}</p>}
             </div>
             <div className='comment'>                
                 <div><CommentListPopup
@@ -90,7 +91,7 @@ function AddContent(props){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getLSItem('jwt','access')).post('/map/landmarks/'+props.curLandmarkId+'/contents/', JSON.stringify({
+                axios(getToken()).post('/map/landmarks/'+props.curLandmarkId+'/contents/', JSON.stringify({
                     name: name,
                     link: link,
                     startDate: formatDate(startDate),
@@ -106,7 +107,7 @@ function AddContent(props){
                     if(image){
                         jwtVerify()
                         .then(() => {
-                            axios(getLSItem('jwt','access')).patch('/map/landmarks/'+props.curLandmarkId+'/contents/'+res.data.id+'/', createCoverImageEntry(image),
+                            axios(getToken()).patch('/map/landmarks/'+props.curLandmarkId+'/contents/'+res.data.id+'/', createCoverImageEntry(image),
                             {
                                 headers: {
                                     'Content-Type': 'multipart/form-data'

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navigate } from "react-router-dom";
 import './addLandmark.css';
 import axios from '../axios';
-import { jwtVerify, getLSItem } from '../auth';
+import { jwtVerify, getToken } from '../auth';
 import { createCoverImageEntry } from '../utils';
 
 function AddLandmark(props) {
@@ -13,7 +13,7 @@ function AddLandmark(props) {
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getLSItem('jwt','access')).post('/map/landmarks/', JSON.stringify({
+                axios(getToken()).post('/map/landmarks/', JSON.stringify({
                     name: name,
                     lat: props.addedMarker.lat(),
                     lng: props.addedMarker.lng(),
@@ -29,7 +29,7 @@ function AddLandmark(props) {
                     if(image){
                         jwtVerify()
                         .then(() => {
-                            axios(getLSItem('jwt','access')).patch('/map/landmarks/'+res.data.id+'/', createCoverImageEntry(image),
+                            axios(getToken()).patch('/map/landmarks/'+res.data.id+'/', createCoverImageEntry(image),
                             {
                                 headers: {
                                     'Content-Type': 'multipart/form-data'

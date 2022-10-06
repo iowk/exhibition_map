@@ -13,15 +13,15 @@ export async function login(username, password){
                 'Content-Type': 'application/json'
             }
         })
-        .then(res => {        
-            localStorage.setItem('jwt', JSON.stringify(res.data));
-            axios(res.data['access']).get('/map/current_user/')
+        .then(res => {
+            localStorage.setItem('jwt_access', res.data.access);
+            localStorage.setItem('jwt_refresh', res.data.refresh);
+            axios(res.data.access).get('/map/current_user/')
             .then(res => {
                 localStorage.setItem('user', JSON.stringify(res.data));
                 resolve();
             })
             .catch(e => {
-                console.log(e);
                 alert(e);
                 reject();
             })
@@ -33,7 +33,8 @@ export async function login(username, password){
 }
 
 export function logout(){
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('jwt_access');
+    localStorage.removeItem('jwt_refresh');
     localStorage.removeItem('user');
 }
 export function getLSItem(key1, key2){
@@ -42,15 +43,18 @@ export function getLSItem(key1, key2){
     if(!key2) return dict;
     return JSON.parse(dict)[key2];
 }
+export function getToken(){
+    return localStorage.getItem('jwt_access');
+}
 export async function jwtRefresh(){    
-    return new Promise((resolve, reject) => {        
-        let r_jwt = getLSItem('jwt', 'refresh');
+    return new Promise((resolve, reject) => {  
+        console.log("Refresh");      
+        let r_jwt = localStorage.getItem('jwt_refresh');
         if(!r_jwt){
             logout();
             resolve(false);
         }
         else{
-            console.log("Refresh");
             axios().post('/map/token/refresh/', JSON.stringify({
                 refresh: r_jwt,
             }),
@@ -62,7 +66,7 @@ export async function jwtRefresh(){
             })
             .then(res => {
                 console.log("Refresh success");
-                localStorage.setItem('jwt', JSON.stringify(res.data));            
+                localStorage.setItem('jwt_access', res.data.access);        
                 resolve(true);
             })
             .catch (e => {
@@ -75,7 +79,7 @@ export async function jwtRefresh(){
 }
 export async function jwtVerify(){
     return new Promise((resolve) => {
-        let a_jwt = getLSItem('jwt', 'access');
+        let a_jwt = getToken();
         if(!a_jwt){
             logout();
             resolve(false);

@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import Popup from 'reactjs-popup';
 import { Slide } from 'react-slideshow-image';
 import axios from '../axios';
-import { jwtVerify, getLSItem } from '../auth';
+import { jwtVerify, getToken } from '../auth';
 import { createImageEntry } from '../utils';
 import 'react-slideshow-image/dist/styles.css';
 import './image.css'
@@ -70,7 +70,7 @@ function ImagePostPopup(props) {
         jwtVerify()
         .then(is_valid => {
             if(is_valid){
-                axios(getLSItem('jwt','access')).post(apiPath, createImageEntry(image, imageTitle),
+                axios(getToken()).post(apiPath, createImageEntry(image, imageTitle),
                 {
                     headers: {
                         'Content-type':'multipart/form-data',

@@ -3,7 +3,7 @@ import Popup from 'reactjs-popup';
 import { Navigate } from "react-router-dom";
 import './comment.css';
 import axios from '../axios';
-import { jwtVerify, getLSItem } from '../auth';
+import { jwtVerify, getToken } from '../auth';
 
 function WriteRatingBlock(props) {
     // Inside PopupBlock
@@ -95,6 +95,7 @@ function CommentListPopup(props){
 function CommentPostPopup(props){
     // Pop up when user clicks the comment button for landmark or content
     const maxRating = 5;
+    const [open, setOpen] = useState(false);
     const [isPatch, setIsPatch] = useState(false);
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
@@ -105,35 +106,37 @@ function CommentPostPopup(props){
         setRating(5);
         setComment('');
     }, [props.lmid, props.ctid])
-    useEffect(() => {        
-        if(apiPath){
-            jwtVerify()
-            .then((is_valid) => {
-                if(is_valid){
-                    axios(getLSItem('jwt','access')).get(apiPath+props.user.id+'/')
-                    .then(res => {
-                        // This user already had a comment
-                        setIsPatch(true);
-                        setRating(res.data['rating']);
-                        setComment(res.data['text']);
-                    })
-                    .catch(e => {
-                        // New comment
-                        console.log("No comment exists for this user");
-                        setIsPatch(false);
-                    })
-                }
-                else{
-                    alert("Please login again");
-                    props.handleSetUser(null);
-                    <Navigate to = '/login/'/>;
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-        }
-    }, [apiPath, props])
+    function handleOpen(){
+        setOpen(true);
+        fetchComment();
+    }
+    function fetchComment(){
+        jwtVerify()
+        .then((is_valid) => {
+            if(is_valid){
+                axios(getToken()).get(apiPath+props.user.id+'/')
+                .then(res => {
+                    // This user already had a comment
+                    setIsPatch(true);
+                    setRating(res.data['rating']);
+                    setComment(res.data['text']);
+                })
+                .catch(e => {
+                    // New comment
+                    console.log("No comment exists for this user");
+                    setIsPatch(false);
+                })
+            }
+            else{
+                alert("Please login again");
+                props.handleSetUser(null);
+                <Navigate to = '/login/'/>;
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    }
     function handleClickRating(rating){
         setRating(rating);
     }
@@ -145,7 +148,7 @@ function CommentPostPopup(props){
         .then((is_valid) =>{
             if(is_valid){
                 if(isPatch){
-                    axios(getLSItem('jwt','access')).patch(apiPath+props.user.id+'/', JSON.stringify({
+                    axios(getToken()).patch(apiPath+props.user.id+'/', JSON.stringify({
                         rating: rating,
                         text: comment
                     }),
@@ -163,7 +166,7 @@ function CommentPostPopup(props){
                     });
                 }
                 else{
-                    axios(getLSItem('jwt','access')).post(apiPath, JSON.stringify({
+                    axios(getToken()).post(apiPath, JSON.stringify({
                         rating: rating,
                         text: comment
                     }),
@@ -191,34 +194,40 @@ function CommentPostPopup(props){
             console.log(e);
         })
     }
+    const closeModal = () => setOpen(false);
     return(
-        <Popup trigger={<button className='addCommentButton'>Write comment</button>}
-        position="right center"
-        modal>
-            {close => (
-            <div className="modal">
-                <button className="close" onClick={close}> 
-                    &times; 
-                </button>
-                <div className="title">
-                    {props.name}
-                </div>
-                <div className='popupForm'>
-                    <WriteRatingBlock
-                        rating={rating}
-                        maxRating={maxRating}
-                        handleClickRating={handleClickRating}
-                    />
-                    <WriteCommentBlock
-                        comment={comment}
-                        handleWriteComment={handleWriteComment}
-                    />
-                    <button onClick={handleSubmit} className='popupSubmitButton'>
-                        Submit
+        <div>
+            <button className='addCommentButton' onClick={handleOpen}>Write comment</button>
+            <Popup
+            open={open}
+            position="right center"
+            closeOnDocumentClick
+            onClose={closeModal}
+            modal>
+                <div className="modal">
+                    <button className="close" onClick={closeModal}>                    
+                        &times; 
                     </button>
+                    <div className="title">
+                        {props.name}
+                    </div>
+                    <div className='popupForm'>
+                        <WriteRatingBlock
+                            rating={rating}
+                            maxRating={maxRating}
+                            handleClickRating={handleClickRating}
+                        />
+                        <WriteCommentBlock
+                            comment={comment}
+                            handleWriteComment={handleWriteComment}
+                        />
+                        <button onClick={handleSubmit} className='popupSubmitButton'>
+                            Submit
+                        </button>
+                    </div>
                 </div>
-            </div>)}
-        </Popup>
+            </Popup>
+        </div>
     );
 }
 
