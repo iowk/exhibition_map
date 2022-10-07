@@ -1,5 +1,24 @@
-.logoutButton{
-    width: 100px;
-    margin-left: 150px;
-    margin-top: 10px;
+.userInfo{
+    position: absolute;    
+    top: 100px;
+    left: 100px;
+    right: 100px;
+    bottom: 100px;
+    padding: 40px;
+    border: solid black;
+}
+.userInfo > div{
+    height: 50px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;    
+}
+.userInfo .title{
+    width: 150px;   
+}
+.activationButton{
+    float: left;
+    width: 200px;
+    margin-left: 20px;
 }

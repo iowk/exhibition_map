@@ -7,6 +7,7 @@ import { ImageListPopup, ImagePostPopup } from './image';
 import { jwtVerify, getToken } from '../auth';
 import { createCoverImageEntry, formatDate } from '../utils';
 import axios from '../axios';
+import '../general.css';
 
 function Content(props){
     function handleDeleteContent(){
@@ -72,7 +73,7 @@ function Content(props){
                 />}
             </div>
             {props.user && (props.user.is_staff) &&
-                <div><button onClick={handleDeleteContent}>
+                <div><button className='contentDetailButton' onClick={handleDeleteContent}>
                     Delete content
                 </button></div>}            
         </div>

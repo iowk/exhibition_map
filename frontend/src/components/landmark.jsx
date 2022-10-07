@@ -4,6 +4,7 @@ import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
 import { jwtVerify, getToken } from './../auth';
 import axios from './../axios';
+import star from '../media/star.png'
 
 function ContentOverview(props){
     function handleOnClick(){
@@ -13,12 +14,15 @@ function ContentOverview(props){
         <div className="contentInfo" onClick={handleOnClick}>
             <div className='contentImage'>
                 <img src={props.content.coverImageSrc} alt="Not found"></img>
-            </div>            
+            </div>
             <div className="des">
                 <h2>{props.content.name}</h2>
                 <p>{props.content.startDate} ~ {props.content.endDate}</p>
                 {props.content.avgRating && 
-                    <p className='rating'>Rating: {props.content.avgRating}</p>}       
+                    <div className='rating'>
+                        <img className='starImage' src={star} alt='Rating:'></img>
+                        <span className='ratingNum'>{props.content.avgRating}</span>
+                    </div>}      
             </div>
         </div>
     );
@@ -78,11 +82,15 @@ function Landmark(props){
             <div className="landmarkInfo" key='lm'>
                 <h1>{landmark.name}</h1>         
                 <img src={landmark.coverImageSrc} alt="Not found"></img>
-                <a href={landmark.link}>
-                    <div className="link">Website</div>
-                </a>
-                {landmark.avgRating && 
-                    <p className='rating'>Rating: {landmark.avgRating}</p>}
+                <div className='link-rating'>
+                    <a href={landmark.link}>
+                        <div className="link">Website</div>
+                    </a>
+                    {landmark.avgRating &&
+                        <div className='rating'>
+                        <img className='starImage' src={star} alt='Rating:'></img>
+                        <span className='ratingNum'>{landmark.avgRating}</span></div>}
+                </div>
                 <div className='comment'>                
                     <CommentListPopup
                         lmid={landmark.id}
@@ -118,13 +126,13 @@ function Landmark(props){
         children.push(genLandmark());
         if(props.user && (props.user.is_staff)){
             children.push(
-                <div><button onClick={handleDeleteLandmark}>
+                <div><button className='deleteLandmarkButton' onClick={handleDeleteLandmark}>
                     Delete landmark
                 </button></div>)
         }
         if(props.user && (props.user.is_staff || props.user.id===landmark.owner)){
             children.push(
-                <div className='addContent'><button onClick={props.handleToAddContent}>
+                <div><button className='addContentButton' onClick={props.handleToAddContent}>
                     Add content
                 </button></div>)
         }

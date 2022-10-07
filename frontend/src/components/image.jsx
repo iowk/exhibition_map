@@ -7,6 +7,7 @@ import { jwtVerify, getToken } from '../auth';
 import { createImageEntry } from '../utils';
 import 'react-slideshow-image/dist/styles.css';
 import './image.css'
+import '../general.css';
 
 function ImageListPopup(props){
     const [images, setImages] = useState([]);

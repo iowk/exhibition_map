@@ -2,30 +2,29 @@ import React, { useState ,useEffect } from 'react';
 import Popup from 'reactjs-popup';
 import { Navigate } from "react-router-dom";
 import './comment.css';
+import '../general.css';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
 import star from '../media/star.png'
+import star_empty from '../media/star_empty.png'
 
 function WriteRatingBlock(props) {
     // Inside PopupBlock
     function setRatingBox () {
         var children = [];
-        children.push(<div className='ratingTitle' key='ratingTitle'>Rating</div>)
         // There are (props.rating) filled rating icons
         for(let i = 1 ; i <= props.rating ; ++i){
             let cur=i;
-            children.push(<div className='button' key={cur}><button 
+            children.push(<img src={star} alt='☆'
             onClick={() => props.handleClickRating(cur)}
-            className='filledRating'>
-                </button></div>);
+            className='starImage'></img>);
         }
         // There are (maxRating - props.rating) empty rating icons
         for(let i = props.rating+1 ; i <= props.maxRating ; ++i){
             let cur=i;
-            children.push(<div className='button' key={cur}><button 
+            children.push(<img src={star_empty} alt='★'
             onClick={() => props.handleClickRating(cur)}
-            className='emptyRating'>
-                </button></div>);
+            className='starImage'></img>);
         }
         return (
             <div className='ratingBox'>{children}</div>

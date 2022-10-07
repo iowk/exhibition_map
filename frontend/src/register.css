@@ -19,13 +19,13 @@
     display: flex;
     flex-direction: column;
     height: auto;
-    width: 400px;
+    width: 600px;
     padding-top: 200px;
+    font-size: 20px;
 }
 .regbutton{
-    width: 100px;
-    margin-left: 150px;
-    margin-top: 10px;
+    margin-left: 250px;
+    margin-top: 30px;
 }
 .inpDiv{
     clear: left;
@@ -42,13 +42,22 @@
 }
 .inpBox{
     float: left;
+    font-size: 20px;    
+    border-radius: 5px;
+    border-width: 3px;
 }
-.regspan{   
-    width: 150px;
+.inpBox:focus{
+    outline: none;
+    border-color: blue;
 }
-.buttomMessage{
+.regspan{
+    width: 200px;
+}
+.bottomMessage{
+    color: red;
+    font-size: 20px;
     clear: left;
-    margin-top: 50px;
+    margin-top: 30px;
     width: 100%;
     display: flex;
     justify-content: center;

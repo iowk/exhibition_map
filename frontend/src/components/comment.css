@@ -30,24 +30,23 @@
     margin-left: 20px;
 }
 .ratingTitle {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 30px;
     font-size: 24px;
     clear: left;
     float: left;
 }
-.filledRating {
+.ratingBox .starImage {
     height: 30px;
-    width: 60px;
-    margin-left: 20px;
-    background-color: yellow;
+    width: 30px;
+    margin-right: 20px;
+    background-color: transparent;
     float: left;
 }
-.emptyRating {
-    height: 30px;
-    width: 60px;
-    margin-left: 20px;
-    background-color: white;
-    float: left;
+.ratingBox .starImage:hover {
+    cursor: pointer;
 }
 .commentBox {
     font-size: 20px;
@@ -73,9 +72,16 @@
     width: 150px;
     display:inline-block;
 }
+#commentList > button{
+    width: 150px;
+}
 #commentPost{
     width: 150px;
     display:inline-block;
+}
+#commentPost > button{
+    width: 150px;
+    margin-left: 30px;
 }
 .name{
     height: 40px;

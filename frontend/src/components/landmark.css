@@ -3,8 +3,8 @@
     margin-right: 0%;
 }
 .landmarkInfo > h1{   
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     text-align: center;
 }
 .landmarkInfo > img{
@@ -12,19 +12,37 @@
     margin-bottom: 0%;
     width: 100%;
 }
+.landmarkInfo .link-rating{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 .landmarkInfo .link{
     font-size: larger;
-    text-align: center;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    text-align: center;    
+    margin-right: 30px;
 }
 .landmarkInfo .link:hover{
-    background-color: lightgray;
+    background-color: rgb(245, 245, 245);
 }
-.landmarkInfo .rating{
-    height: auto;
-    text-align: center;
-    margin: 0px;
+.rating{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 30px;    
+}
+.starImage{
+    height: 80%;
+    background-color: transparent;
+}
+.ratingNum{
+    margin-left: 5px;
+    padding-top: 2px;
+    font-size: 20px;
+    vertical-align: middle;
 }
 .landmarkInfo .comment{
     padding: 5px;
@@ -34,6 +52,7 @@
 }
 .contentInfo{
     height: 100px;
+    margin: 5px;
 }
 .contentInfo .contentImage{
     clear: left;
@@ -51,26 +70,28 @@
 .contentInfo .des{
     margin: 0px;
     float: left;
-    width: 70%;
+    width: calc(70% - 10px);
+    margin-left: 10px;
     height: 100%;
 }
 .contentInfo .des:hover{
-    background-color: lightgray;
+    background-color: rgb(245, 245, 245);
     cursor: pointer;
 }
 .contentInfo .des > h2{   
     margin-top: 5px;
     margin-bottom: 5px;
-    text-align: center;
+    font-size: 26px;
 }
 .contentInfo .des > p{   
     margin-top: 5px;
     margin-bottom: 5px;
-    text-align: center;
 }
-.detailButton{
-    margin-top: 5px;
+.deleteLandmarkButton{
+    width: 150px;
+    margin: 5px;
 }
-.addContent{
+.addContentButton{
+    width: 150px;
     margin: 5px;
 }

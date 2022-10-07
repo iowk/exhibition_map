@@ -16,6 +16,10 @@ function Main(props) {
     const [addedMarker, setAddedMarker] = useState(null); //latlng
     const [curLandmarkId, setCurLandmarkId] = useState(null);
     const [curContent, setCurContent] = useState({}); // Currently clicked content
+    const [center, setCenter] = useState({
+        lat: 25.04452274013203, 
+        lng: 121.52982217234694,
+    }); // Map center coordinates
     useEffect(() => {
         // GET all landmarks on the map
         const fetchData = async() => {
@@ -120,6 +124,7 @@ function Main(props) {
             <div id="map">
                 {/* Map */}
                 <Map 
+                    center = {center}
                     landmarks = {landmarks}
                     addedMarker = {addedMarker}
                     handleClickLandmark = {handleClickLandmark}

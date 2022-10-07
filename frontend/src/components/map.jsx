@@ -10,12 +10,6 @@ const containerStyle = {
     height: '98vh'
 };
 
-const center = {
-    // Map center coordinate
-    lat: 25.04452274013203, 
-    lng: 121.52982217234694,
-};
-
 const mapOptions = {
     styles: [
         {
@@ -75,7 +69,7 @@ function Map(props) {
         >
             <GoogleMap
                 mapContainerStyle={containerStyle}
-                center={center}
+                center={props.center}
                 zoom={zoom}
                 options={mapOptions}
                 addChild={props.landmarks.length}
