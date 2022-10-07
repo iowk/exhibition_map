@@ -33,18 +33,14 @@ function Content(props){
             <button onClick={props.handleToLandmark} className='backButton'>
                 Back
             </button>
-            <h1 className='title'>{props.content.name}</h1>
-            <div className='contentDetailImage'>
-                <img src={props.content.coverImageSrc} alt="Not found"></img>
-            </div>            
-            <div className="des">                
-                <p>{props.content.startDate} ~ {props.content.endDate}</p>
-                <a href={props.content.link}>
-                    <div className="link">Website</div>
-                </a>
-                {props.content.avgRating && 
-                    <p>Rating: {props.content.avgRating}</p>}
-            </div>
+            <h1>{props.content.name}</h1>
+            <img src={props.content.coverImageSrc} alt="Not found"></img>    
+            <p className='date'>{props.content.startDate} ~ {props.content.endDate}</p>
+            <a href={props.content.link}>
+                <div className="link">Website</div>
+            </a>
+            {props.content.avgRating && 
+                <p className='rating'>Rating: {props.content.avgRating}</p>}
             <div className='comment'>                
                 <CommentListPopup
                     lmid={props.curLandmarkId}

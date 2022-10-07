@@ -3,23 +3,8 @@
     height: 100%;
     width: 100%;
     background-color: white;
-}
-.modal > .header {
-    width: 100%;  
-    border-bottom: 1px solid gray;  
-    font-size: 18px;  
-    text-align: center;  
-    padding: 5px;
-}
-.modal > .content {  
-    width: 100%;  
-    padding: 10px 5px;
-}
-.modal > .actions {  
-    width: 100%;  
-    padding: 10px 5px;  
-    margin: auto;  
-    text-align: center;
+    border-radius: 15px;
+    border: solid #cfcece;
 }
 .modal > .close {  
     cursor: pointer;  
@@ -37,14 +22,6 @@
 .popup-content {
     height: 80%;
     width: 60%;
-}
-.modal .title {
-    height: 50px;
-    line-height: 50px;
-    font-size: 36px;
-    position: relative;
-    text-align: center;
-    border-style: outset;
 }
 .ratingBox {
     height: 50px;
@@ -73,9 +50,10 @@
     float: left;
 }
 .commentBox {
+    font-size: 20px;
     height: calc(100% - 140px);
     width: calc(100% - 44px);
-    padding: 0px;
+    padding: 10px;
     margin-left: 20px;
     margin-right: 20px;
 }
@@ -98,4 +76,60 @@
 #commentPost{
     width: 150px;
     display:inline-block;
+}
+.name{
+    height: 40px;
+    padding-top: 10px;
+    font-size: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+.each-comment{
+    width: calc(100% - 26px);
+    margin: 10px;
+    border: solid black;
+    border-radius: 5px;
+}
+.each-comment > .title{
+    font-size: 20px;
+    height: 25px;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid lightgrey;
+}
+.each-comment > .title > .owner{
+    height: 25px;
+    width: 200px;
+    float: left;
+    margin-left: 10px;
+}
+.each-comment > .title > .rating{
+    height: 25px;
+    height: 100%;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+}
+.each-comment > .title > .rating > .starImage{
+    display: flex;
+    align-items: center;
+    float: left;
+    height: 80%;
+    background-color: transparent;
+}
+.each-comment > .title > .rating > .ratingNum{
+    display: flex;
+    align-items: center;
+    float: left;
+    margin-left: 5px;
+    padding-top: 2px;
+    height: 80%;
+}
+.each-comment > .text{
+    padding: 10px;
+    font-size: 20px;
+    height: 100px;
 }

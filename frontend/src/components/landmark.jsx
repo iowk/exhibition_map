@@ -76,7 +76,7 @@ function Landmark(props){
     function genLandmark(){
         return (
             <div className="landmarkInfo" key='lm'>
-                <h1>{landmark.name}</h1>                
+                <h1>{landmark.name}</h1>         
                 <img src={landmark.coverImageSrc} alt="Not found"></img>
                 <a href={landmark.link}>
                     <div className="link">Website</div>

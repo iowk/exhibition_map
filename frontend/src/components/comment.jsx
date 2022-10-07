@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import './comment.css';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
+import star from '../media/star.png'
 
 function WriteRatingBlock(props) {
     // Inside PopupBlock
@@ -81,11 +82,17 @@ function CommentListPopup(props){
                 <button className="close" onClick={close}> 
                     &times; 
                 </button>
+                <div className='name'> {props.name} </div>
                 {comments.map((comment, index)=>(
                     <div className="each-comment" key={index}>
-                        <div className='comment-owner'>Owner: {comment.owner}</div>
-                        <div className='comment-rating'>Rating: {comment.rating}</div>
-                        <div className='comment-text'>Comment: {comment.text}</div>
+                        <div className='title'>
+                            <div className='owner'>{comment.owner}</div>
+                            <div className='rating'>
+                                <img className='starImage' src={star} alt='Rating:'></img>
+                                <div className='ratingNum'>{comment.rating}</div>
+                            </div>
+                        </div>
+                        <div className='text'>{comment.text}</div>
                     </div>
                 ))}
             </div>)}
@@ -208,7 +215,7 @@ function CommentPostPopup(props){
                     <button className="close" onClick={closeModal}>                    
                         &times; 
                     </button>
-                    <div className="title">
+                    <div className="name">
                         {props.name}
                     </div>
                     <div className='popupForm'>

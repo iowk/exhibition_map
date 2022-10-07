@@ -18,7 +18,7 @@
     position: absolute;
     left: 15px;
     top: 15px;
-    height: calc(98vh - 50px);
+    height: calc(98vh - 30px);
     width: 30%;
     padding: 10px;
     z-index: 1;
@@ -26,6 +26,7 @@
     font-size: larger;
     word-wrap: break-word;
     overflow: auto;
+    border-radius: 15px;
 }
 #map {
     position: absolute;

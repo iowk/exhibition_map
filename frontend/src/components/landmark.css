@@ -7,20 +7,46 @@
     margin-bottom: 5px;
     text-align: center;
 }
-.landmarkInfo .link{
-    font-size: larger;
-    text-align: center;
-}
-.landmarkInfo .link:hover{
-    background-color: lightgray;
-}
 .landmarkInfo > img{
     margin-left: 0%;
     margin-bottom: 0%;
     width: 100%;
 }
+.landmarkInfo .link{
+    font-size: larger;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.landmarkInfo .link:hover{
+    background-color: lightgray;
+}
+.landmarkInfo .rating{
+    height: auto;
+    text-align: center;
+    margin: 0px;
+}
+.landmarkInfo .comment{
+    padding: 5px;
+}
+.landmarkInfo .image{
+    padding: 5px;
+}
 .contentInfo{
     height: 100px;
+}
+.contentInfo .contentImage{
+    clear: left;
+    float: left;
+    width: 30%;
+    height: 100%;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.contentInfo .contentImage:hover{
+    cursor: pointer;
 }
 .contentInfo .des{
     margin: 0px;
@@ -42,32 +68,8 @@
     margin-bottom: 5px;
     text-align: center;
 }
-.contentImage{
-    clear: left;
-    float: left;
-    width: 30%;
-    height: 100%;
-    margin: 0px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
 .detailButton{
     margin-top: 5px;
-}
-.link {
-    margin: 5px;
-}
-.rating{
-    height: auto;
-    text-align: center;
-    margin: 0px;
-}
-.image{
-    margin: 5px;
-}
-.comment{
-    margin: 5px;
 }
 .addContent{
     margin: 5px;
