@@ -40,6 +40,17 @@ class CurrentUser(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
+class UserComment(generics.RetrieveAPIView):
+    serializer_class = serializers.UserCommentSerializer
+    permission_classes = [permissions.AllowAny]
+    def get_object(self):
+        try:
+            obj = CustomUser.objects.get(pk=self.kwargs['pk_user'])
+            serializer = serializers.UserCommentSerializer(instance=obj)
+            return serializer.data
+        except CustomUser.DoesNotExist:
+            raise Http404
+
 class UserList(generics.ListAPIView):
     serializer_class = serializers.UserSerializer
     permission_classes = [permissions.IsAdminUser]
@@ -194,7 +205,7 @@ class LandmarkCommentDetail(generics.RetrieveUpdateDestroyAPIView):
         filter = {'owner': self.kwargs['pk_user']}
         return get_object_or_404(queryset, **filter)
 
-class ContentList(generics.ListCreateAPIView):
+class LandmarkContentList(generics.ListCreateAPIView):
     serializer_class = serializers.ContentSerializer
     permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
@@ -203,21 +214,17 @@ class ContentList(generics.ListCreateAPIView):
         except Landmark.DoesNotExist:
             raise Http404
     def post(self, request, pk_lm, format=None):
-        print(request.data)
         serializer = serializers.ContentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(landmark_id=pk_lm, owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ContentDetail(generics.RetrieveUpdateDestroyAPIView):
+class ContentDetail(generics.RetrieveAPIView):
     serializer_class = serializers.ContentSerializer
-    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    permission_classes = [permissions.AllowAny]
     def get_queryset(self):
-        try:
-            return Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
-        except Landmark.DoesNotExist:
-            raise Http404
+        return Content.objects.all()
     def get_object(self):
         queryset = self.get_queryset()
         filter = {'pk': self.kwargs['pk_ct']}
@@ -228,14 +235,10 @@ class ContentImageList(generics.ListCreateAPIView):
     permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
-            contents = Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
-            try:
-                return contents.get(pk=self.kwargs['pk_ct']).images
-            except Content.DoesNotExist:
-                raise Http404
-        except Landmark.DoesNotExist:
-            raise Http404    
-    def post(self, request, pk_lm, pk_ct, format=None):        
+            return Content.objects.get(pk=self.kwargs['pk_ct']).images
+        except Content.DoesNotExist:
+            raise Http404
+    def post(self, request, pk_ct, format=None):        
         serializer = serializers.ContentImageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(content_id=pk_ct, owner=request.user)
@@ -247,12 +250,8 @@ class ContentImageDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
-            contents = Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
-            try:
-                return contents.get(pk=self.kwargs['pk_ct']).images
-            except Content.DoesNotExist:
-                raise Http404
-        except Landmark.DoesNotExist:
+            return Content.objects.get(pk=self.kwargs['pk_ct']).images
+        except Content.DoesNotExist:
             raise Http404
     def get_object(self):
         queryset = self.get_queryset()
@@ -264,14 +263,10 @@ class ContentCommentList(generics.ListCreateAPIView):
     permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         try:
-            contents = Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
-            try:
-                return contents.get(pk=self.kwargs['pk_ct']).comments
-            except Content.DoesNotExist:
-                raise Http404
-        except Landmark.DoesNotExist:
+            return Content.objects.get(pk=self.kwargs['pk_ct']).comments
+        except Content.DoesNotExist:
             raise Http404
-    def post(self, request, pk_lm, pk_ct, format=None):        
+    def post(self, request, pk_ct, format=None):        
         serializer = serializers.ContentCommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(content_id=pk_ct, owner=request.user)
@@ -283,12 +278,8 @@ class ContentCommentDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
-            contents = Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
-            try:
-                return contents.get(pk=self.kwargs['pk_ct']).comments
-            except Content.DoesNotExist:
-                raise Http404
-        except Landmark.DoesNotExist:
+            return Content.objects.get(pk=self.kwargs['pk_ct']).comments
+        except Content.DoesNotExist:
             raise Http404
     def get_object(self):
         queryset = self.get_queryset()

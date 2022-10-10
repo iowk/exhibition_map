@@ -7,7 +7,7 @@ import django.contrib.auth.password_validation as validators
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CustomUser
-        fields = ['id', 'username', 'email', 'is_staff', 'is_verified', 'landmarkImages', 'contentImages', 'landmarkComments', 'contentComments']
+        fields = ['id', 'username', 'email', 'is_staff', 'is_verified']
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,7 +57,7 @@ class LandmarkCommentSerializer(serializers.ModelSerializer):
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Content
-        fields = ['id', 'owner', 'name', 'startDate', 'endDate', 'link', 'coverImageSrc', 'isGoing', 'avgRating']
+        fields = ['id', 'owner', 'landmark_id', 'name', 'startDate', 'endDate', 'link', 'coverImageSrc', 'isGoing', 'avgRating']
 
     def validate_start_date(self, data):
         if data['startDate'] > data['endDate']:
@@ -75,3 +75,10 @@ class ContentCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ContentComment
         fields = ['id', 'owner', 'created', 'modified', 'text', 'rating', 'content_id']
+
+class UserCommentSerializer(serializers.ModelSerializer):
+    landmarkComments = LandmarkCommentSerializer(many=True, read_only=True)
+    contentComments = ContentCommentSerializer(many=True, read_only=True)
+    class Meta:
+        model = models.CustomUser
+        fields = ['id', 'landmarkComments', 'contentComments']
