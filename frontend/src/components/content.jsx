@@ -14,7 +14,7 @@ function Content(props){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getToken()).delete('/map/landmarks/'+props.curLandmarkId+'/contents/'+props.content.id+'/')
+                axios(getToken()).delete('/map/contents/'+props.content.id+'/')
                 .then(() => {
                     alert("Content deleted");
                     props.handleToLandmark();
@@ -44,32 +44,32 @@ function Content(props){
                 <p className='rating'>Rating: {props.content.avgRating}</p>}
             <div className='comment'>                
                 <CommentListPopup
-                    lmid={props.curLandmarkId}
                     ctid={props.content.id}
                     name={props.content.name}
+                    buttonName='Show comments'
                 />
                 {props.user.is_verified && (
                     // Comment button for activated user                         
                     <CommentPostPopup
-                        lmid={props.curLandmarkId}
                         ctid={props.content.id}
                         name={props.content.name}
                         user={props.user}
                         handleSetUser={props.handleSetUser}
+                        buttonName='Write comment'
                     />
                 )}
             </div>
             <div className='image'>
                 <ImageListPopup
-                    lmid={props.curLandmarkId}
                     ctid={props.content.id}
+                    buttonName='Show photos'
                 />
                 {props.user.is_verified &&      
                 <ImagePostPopup
-                    lmid={props.curLandmarkId}
                     ctid={props.content.id}
                     user={props.user}
                     handleSetUser={props.handleSetUser}
+                    buttonName='Upload photo'
                 />}
             </div>
             {props.user && (props.user.is_staff) &&

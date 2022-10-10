@@ -23,8 +23,7 @@ function Main(props) {
     useEffect(() => {
         // GET all landmarks on the map
         const fetchData = async() => {
-            try{
-                          
+            try{                          
                 const res = await axios().get('/map/landmarks/');  
                 const landmarks = await res.data;
                 setLandmarks(landmarks);

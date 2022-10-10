@@ -14,7 +14,7 @@ function ImageListPopup(props){
     useEffect(() => {
         let isMounted = true;
         var apiPath = '';
-        if(props.ctid) apiPath = '/map/landmarks/'+props.lmid+'/contents/'+props.ctid+'/images/';
+        if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/images/';
         else apiPath = '/map/landmarks/'+props.lmid+'/images/';
         const fetchData = async () => {            
             try{
@@ -32,9 +32,10 @@ function ImageListPopup(props){
         };
     }, [props.lmid, props.ctid])
     return(
-        <div id='imageList'><Popup trigger={<button className='defaultButton'>Show photos</button>}
+        <div id='imageList'><Popup trigger={<button className='defaultButton'>{props.buttonName}</button>}
         position="right center"
-        modal>
+        modal        
+        className='image-list-popup'>
             {close => (
             <div className="slide-container">
                 <button className="close" onClick={close}> 
@@ -58,7 +59,7 @@ function ImagePostPopup(props) {
     const [image, setImage] = useState(null);
     const [imageTitle, setImageTitle] = useState('');
     useEffect(() => {
-        if(props.ctid) setApiPath('/map/landmarks/'+props.lmid+'/contents/'+props.ctid+'/images/');
+        if(props.ctid) setApiPath('/map/contents/'+props.ctid+'/images/');
         else setApiPath('/map/landmarks/'+props.lmid+'/images/');      
     }, [props.lmid, props.ctid])
     function onImageChange(e) {
@@ -78,6 +79,7 @@ function ImagePostPopup(props) {
                     },
                 })
                 .then(() => {
+                    setImageTitle('');
                     alert("Image uploaded");
                 })
                 .catch((e) => {
@@ -95,7 +97,7 @@ function ImagePostPopup(props) {
         })       
     }
     return(
-        <div id='imagePost'><Popup trigger={<button className='defaultButton'>Upload photo</button>}
+        <div id='imagePost'><Popup trigger={<button className='defaultButton'>{props.buttonName}</button>}
         position="right center"
         modal>
             {close => (

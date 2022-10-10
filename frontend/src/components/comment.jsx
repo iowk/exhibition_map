@@ -15,14 +15,14 @@ function WriteRatingBlock(props) {
         // There are (props.rating) filled rating icons
         for(let i = 1 ; i <= props.rating ; ++i){
             let cur=i;
-            children.push(<img src={star} alt='☆'
+            children.push(<img key={i} src={star} alt='☆'
             onClick={() => props.handleClickRating(cur)}
             className='starImage'></img>);
         }
         // There are (maxRating - props.rating) empty rating icons
         for(let i = props.rating+1 ; i <= props.maxRating ; ++i){
             let cur=i;
-            children.push(<img src={star_empty} alt='★'
+            children.push(<img key={i} src={star_empty} alt='★'
             onClick={() => props.handleClickRating(cur)}
             className='starImage'></img>);
         }
@@ -55,7 +55,7 @@ function CommentListPopup(props){
     useEffect(() => {
         let isMounted = true;
         var apiPath = '';
-        if(props.ctid) apiPath = '/map/landmarks/'+props.lmid+'/contents/'+props.ctid+'/comments/';
+        if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/comments/';
         else apiPath = '/map/landmarks/'+props.lmid+'/comments/';
         const fetchData = async () => {            
             try{
@@ -73,7 +73,7 @@ function CommentListPopup(props){
         };
     }, [props.lmid, props.ctid])
     return(
-        <div id='commentList'><Popup trigger={<button className='defaultButton'>Show comments</button>}
+        <div id='commentList'><Popup trigger={<button className='defaultButton'>{props.buttonName}</button>}
         position="right center"
         modal>
             {close => (
@@ -107,7 +107,7 @@ function CommentPostPopup(props){
     const [comment, setComment] = useState('');
     const [apiPath, setApiPath] = useState('');
     useEffect(() => {        
-        if(props.ctid) setApiPath('/map/landmarks/'+props.lmid+'/contents/'+props.ctid+'/comments/');
+        if(props.ctid) setApiPath('/map/contents/'+props.ctid+'/comments/');
         else setApiPath('/map/landmarks/'+props.lmid+'/comments/');
         setRating(5);
         setComment('');
@@ -200,10 +200,35 @@ function CommentPostPopup(props){
             console.log(e);
         })
     }
+    function handleDelete(event){
+        jwtVerify()
+        .then((is_valid) =>{
+            if(is_valid){
+                if(isPatch){
+                    axios(getToken()).delete(apiPath+props.user.id+'/')
+                    .then(() => {
+                        alert("Comment deleted");
+                    })
+                    .catch((e) =>{
+                        console.log(e);
+                        alert(e);
+                    });
+                }
+            }
+            else{
+                alert("Please login again");
+                props.handleSetUser(null);
+                <Navigate to = '/login/'/>;
+            }
+        })
+        .catch(e => {
+            console.log(e);
+        })
+    }
     const closeModal = () => setOpen(false);
     return(
         <div id='commentPost'>
-            <button className='addCommentButton' onClick={handleOpen}>Write comment</button>
+            <button className='addCommentButton' onClick={handleOpen}>{props.buttonName}</button>
             <Popup
             open={open}
             position="right center"
@@ -227,9 +252,14 @@ function CommentPostPopup(props){
                             comment={comment}
                             handleWriteComment={handleWriteComment}
                         />
-                        <button onClick={handleSubmit} className='popupSubmitButton'>
-                            Submit
-                        </button>
+                        <div className='buttonDiv'>
+                            <button onClick={handleSubmit} className='popupSubmitButton'>
+                                Submit
+                            </button>
+                            {isPatch && <button onClick={handleDelete} className='popupDeleteButton'>
+                                Delete
+                            </button>}
+                        </div>
                     </div>
                 </div>
             </Popup>

@@ -95,26 +95,30 @@ function Landmark(props){
                     <CommentListPopup
                         lmid={landmark.id}
                         name={landmark.name}
+                        buttonName='Show comments'
                     />
                     {props.user && props.user.is_verified && (
                         // Comment button for activated user                         
                         <CommentPostPopup
-                            lmid={landmark.id}                            
+                            lmid={landmark.id}
                             name={landmark.name}
                             user={props.user}
                             handleSetUser={props.handleSetUser}
+                            buttonName='Write comment'
                         />
                     )}
                 </div>
                 <div className='image'>
                     <ImageListPopup
                         lmid={landmark.id}
+                        buttonName='Show photos'
                     />
                     {props.user && props.user.is_verified &&      
                     <ImagePostPopup
                         lmid={landmark.id}
                         user={props.user}
                         handleSetUser={props.handleSetUser}
+                        buttonName='Upload photo'
                     />}
                 </div>
             </div>
@@ -126,13 +130,13 @@ function Landmark(props){
         children.push(genLandmark());
         if(props.user && (props.user.is_staff)){
             children.push(
-                <div><button className='deleteLandmarkButton' onClick={handleDeleteLandmark}>
+                <div key='deleteLandmarkButton'><button className='deleteLandmarkButton' onClick={handleDeleteLandmark}>
                     Delete landmark
                 </button></div>)
         }
         if(props.user && (props.user.is_staff || props.user.id===landmark.owner)){
             children.push(
-                <div><button className='addContentButton' onClick={props.handleToAddContent}>
+                <div key='AddContentButton'><button className='addContentButton' onClick={props.handleToAddContent}>
                     Add content
                 </button></div>)
         }

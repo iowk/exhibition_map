@@ -6,6 +6,7 @@ import Register from './register'
 import Activate from './activate'
 import Login from './login'
 import User from './user'
+import UserComment from './userComment'
 
 ReactDOM.render(
     <BrowserRouter>
@@ -15,6 +16,7 @@ ReactDOM.render(
             <Route path="/activate/:uidb64/:token" element={<Activate/>}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/user" element={<User />}></Route>
+            <Route path="/user/comments" element={<UserComment />}></Route>
         </Routes>
     </BrowserRouter>,
 

@@ -1,0 +1,38 @@
+.userComment{
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    right: 100px;
+    padding: 40px;
+}
+.each-user-comment{
+    height: 300px;    
+    margin-bottom: 5px;
+    border: solid black;
+}
+.each-user-comment .title{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 40px;
+    padding: 15px;
+    border-bottom: solid grey;
+}
+.each-user-comment .title .name{
+    font-size: 24px;
+    width: 40%;
+}
+.each-user-comment .title .rating{
+    text-align: center;
+    width: 10%;
+}
+.each-user-comment .title #commentPost{
+    width: 50%;
+}
+.each-user-comment .title #commentPost > button{
+    float: right;
+}
+.each-user-comment .text{    
+    font-size: 20px;
+    margin: 15px;
+}

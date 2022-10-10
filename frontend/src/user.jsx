@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import {jwtVerify, logout, getLSItem, getToken} from './auth';
 import axios from './axios';
 import NavBar from './components/navbar'
@@ -11,18 +11,24 @@ function User(props){
     const [verifyDone, setVerifyDone] = useState(false);
     useEffect(() =>{
         let isMounted = true;        
-        const verify = async() => {
+        const fetchData = async() => {
             try{
-                await jwtVerify();
-                if(isMounted) setUser(JSON.parse(getLSItem('user')));                
+                const is_valid = await jwtVerify();
+                if(isMounted){
+                    if(is_valid){
+                        setUser(JSON.parse(getLSItem('user')));
+                    }
+                    else setUser(null);
+                }
             }
             catch (e) {
+                console.log(e);
                 if(isMounted) setUser(null);
             }
         }        
-        verify().then(() => {
+        fetchData().then(() => {
             setVerifyDone(true);
-        });        
+        });
         return () => { isMounted = false }; 
     }, [props])
     function logoutOnClick() {
@@ -70,9 +76,12 @@ function User(props){
                         <button className='activationButton' onClick={activateOnClick}>
                             Send activation mail
                         </button>
-                    </div>                    
-                    }
-                    <div className='logoutButton'><button className='logoutButton' onClick={logoutOnClick}>
+                    </div>       
+                    }                    
+                    <div><Link to="/user/comments/"><button className='toCommentButton'>
+                        Your comments
+                    </button></Link></div>
+                    <div><button onClick={logoutOnClick} className='logoutButton'>
                         Logout
                     </button></div>
                 </div>
