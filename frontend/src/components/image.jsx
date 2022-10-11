@@ -26,7 +26,7 @@ function ImageListPopup(props){
                 console.log(e);
             }
         }
-        fetchData();
+        if(props.ctid || props.lmid) fetchData();
         return () => {
             isMounted = false;
         };

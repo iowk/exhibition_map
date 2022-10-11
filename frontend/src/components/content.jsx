@@ -7,7 +7,9 @@ import { ImageListPopup, ImagePostPopup } from './image';
 import { jwtVerify, getToken } from '../auth';
 import { createCoverImageEntry, formatDate } from '../utils';
 import axios from '../axios';
+import star from '../media/star.png'
 import '../general.css';
+
 
 function Content(props){
     function handleDeleteContent(){
@@ -17,7 +19,7 @@ function Content(props){
                 axios(getToken()).delete('/map/contents/'+props.content.id+'/')
                 .then(() => {
                     alert("Content deleted");
-                    props.handleToLandmark();
+                    props.handleToLandmark(props.landmark);
                 })
                 .catch((e) => {
                     console.log(e);
@@ -29,21 +31,29 @@ function Content(props){
             console.log(e);
         });       
     }
+    function handleBack(){
+        props.handleToLandmark(props.landmark);
+    }
     return(
         <div className='contentDetail'>            
-            <button onClick={props.handleToLandmark} className='backButton'>
-                Back
+            <button onClick={handleBack} className='backButton'>
+                {props.landmark.name}
             </button>
             <h1>{props.content.name}</h1>
             <img src={props.content.coverImageSrc} alt="Not found"></img>    
             <p className='date'>{props.content.startDate} ~ {props.content.endDate}</p>
-            <a href={props.content.link}>
-                <div className="link">Website</div>
-            </a>
-            {props.content.avgRating && 
-                <p className='rating'>Rating: {props.content.avgRating}</p>}
-            <div className='comment'>                
+            <div className='link-rating'>
+                <a href={props.content.link}>
+                    <div className="link">Website</div>
+                </a>
+                {props.content.avgRating &&
+                    <div className='rating'>
+                    <img className='starImage' src={star} alt='Rating:'></img>
+                    <span className='ratingNum'>{props.content.avgRating}</span></div>}
+            </div>
+            <div className='contentButtons'>
                 <CommentListPopup
+                    key='CommentListPopup'
                     ctid={props.content.id}
                     name={props.content.name}
                     buttonName='Show comments'
@@ -51,6 +61,7 @@ function Content(props){
                 {props.user.is_verified && (
                     // Comment button for activated user                         
                     <CommentPostPopup
+                        key='CommentPostPopup'
                         ctid={props.content.id}
                         name={props.content.name}
                         user={props.user}
@@ -58,25 +69,25 @@ function Content(props){
                         buttonName='Write comment'
                     />
                 )}
-            </div>
-            <div className='image'>
                 <ImageListPopup
+                    key='ImageListPopup'
                     ctid={props.content.id}
                     buttonName='Show photos'
                 />
                 {props.user.is_verified &&      
                 <ImagePostPopup
+                    key='ImagePostPopup'
                     ctid={props.content.id}
                     user={props.user}
                     handleSetUser={props.handleSetUser}
                     buttonName='Upload photo'
                 />}
-            </div>
             {props.user && (props.user.is_staff) &&
-                <div><button className='contentDetailButton' onClick={handleDeleteContent}>
+                <div className='contentDelete'><button className='contentDeleteButton' onClick={handleDeleteContent}>
                     Delete content
                 </button></div>}            
-        </div>
+            </div>
+        </div>                
     );
 }
 
@@ -86,11 +97,14 @@ function AddContent(props){
     const [image, setImage] = useState(null);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
+    function handleBack(){
+        props.handleToLandmark(props.landmark);
+    }
     function handleSubmit(){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getToken()).post('/map/landmarks/'+props.curLandmarkId+'/contents/', JSON.stringify({
+                axios(getToken()).post('/map/landmarks/'+props.landmark.id+'/contents/', JSON.stringify({
                     name: name,
                     link: link,
                     startDate: formatDate(startDate),
@@ -106,7 +120,7 @@ function AddContent(props){
                     if(image){
                         jwtVerify()
                         .then(() => {
-                            axios(getToken()).patch('/map/landmarks/'+props.curLandmarkId+'/contents/'+res.data.id+'/', createCoverImageEntry(image),
+                            axios(getToken()).patch('/map/contents/'+res.data.id+'/', createCoverImageEntry(image),
                             {
                                 headers: {
                                     'Content-Type': 'multipart/form-data'
@@ -114,7 +128,7 @@ function AddContent(props){
                             })
                             .then(() => {
                                 alert("Content added");
-                                window.location.reload(false);
+                                props.handleToLandmark(props.landmark);
                             })
                             .catch((e) => {
                                 console.log(e);
@@ -130,7 +144,7 @@ function AddContent(props){
                     }
                     else{
                         alert("Content added");
-                        window.location.reload(false);
+                        props.handleToLandmark(props.landmark);
                     }
                 })
                 .catch((e) =>{
@@ -183,8 +197,8 @@ function AddContent(props){
     }
     return(
     <div>
-        <button onClick={props.handleToLandmark}>
-            Back
+        <button onClick={handleBack}>
+            {props.landmark.name}
         </button>
         {child}
      </div>);

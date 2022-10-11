@@ -1,0 +1,22 @@
+.searchBar{
+    height: 100%;
+    width: 100%;
+}
+.searchBar .inputBox{
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    height: 36px;
+    width: calc(100% - 29px);
+    border: solid 2px black;
+    background-color: rgb(235, 235, 235);
+    font-size: 22px;
+}
+.searchBar .searchImage{
+    z-index: 1;
+    position: absolute;
+    height: 28px;
+    right: 17px;
+    top: 19px;
+    cursor: pointer;
+}

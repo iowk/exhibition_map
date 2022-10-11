@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate } from "react-router-dom";
-import {jwtVerify, logout, getLSItem, getToken} from './auth';
+import {jwtVerify, getLSItem, getToken} from './auth';
 import { CommentPostPopup} from './components/comment';
 import axios from './axios';
 import NavBar from './components/navbar'
@@ -55,10 +55,8 @@ function EachUserContentComment(props){
             try{
                 const res_ct = await axios().get('/map/contents/'+props.comment.content_id);
                 const content = await res_ct.data;
-                const res_lm = await axios().get('/map/landmarks/'+content.landmark_id);
-                const landmark = await res_lm.data;
                 setCTName(content.name);
-                setLMName(landmark.name);
+                setLMName(content.landmark_name);
             }
             catch (e) {
                 console.log(e);
@@ -126,7 +124,7 @@ function UserComment(props){
     }
     else if(user) {
         var children = [];
-        for(var key in landmarkComments) {
+        for(let key in landmarkComments) {
             let ch_key = 'l_' + landmarkComments[key].id
             children.push(<EachUserLandmarkComment
                 key={ch_key}
@@ -135,7 +133,7 @@ function UserComment(props){
                 handleSetUser={setUser}
             />);            
         }
-        for(var key in contentComments) {
+        for(let key in contentComments) {
             let ch_key = 'c_' + contentComments[key].id
             children.push(<EachUserContentComment
                 key={ch_key}

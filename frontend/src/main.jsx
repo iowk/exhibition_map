@@ -4,6 +4,7 @@ import axios from './axios';
 import NavBar from './components/navbar'
 import Map from './components/map'
 import { getLSItem, jwtVerify } from './auth';
+import { SearchBar, SearchResultList } from './components/search';
 import Landmark from './components/landmark';
 import AddLandmark from './components/addLandmark';
 import { Content, AddContent } from './components/content';
@@ -14,12 +15,40 @@ function Main(props) {
     const [user, setUser] = useState(null);
     const [landmarks, setLandmarks] = useState({});
     const [addedMarker, setAddedMarker] = useState(null); //latlng
-    const [curLandmarkId, setCurLandmarkId] = useState(null);
+    const [curLandmark, setCurLandmark] = useState({});
     const [curContent, setCurContent] = useState({}); // Currently clicked content
     const [center, setCenter] = useState({
         lat: 25.04452274013203, 
         lng: 121.52982217234694,
     }); // Map center coordinates
+    const [searchResult, setSearchResult] = useState([]);
+    const [initialSearchResult, setInitialSearchResult] = useState([]);
+    useEffect(() => {
+        // GET all landmarks on the map   
+        const fetchData = async() => {
+            try{                          
+                const res = await axios().post('/map/search/', JSON.stringify({
+                    lat: center['lat'],
+                    lng: center['lng'],
+                    pattern: '',
+                    count: 100,
+                    thres: 0
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });  
+                const res_data = await res.data;
+                setInitialSearchResult(res_data);
+            }
+            catch (e) {
+                console.log(e);
+            }
+        }
+        console.log(center);
+        if(phase==='initial') fetchData();        
+    }, [center])
     useEffect(() => {
         // GET all landmarks on the map
         const fetchData = async() => {
@@ -46,9 +75,17 @@ function Main(props) {
     }, [props, phase])
     function handleClickLandmark(lmid){
         // Landmark is clicked on
-        setCurLandmarkId(lmid);
         setAddedMarker(null);
         setPhase('landmark');
+        if(lmid!==curLandmark.id){
+            axios().get('/map/landmarks/'+lmid)
+            .then(res => {
+                setCurLandmark(res.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+        }        
     }
     function handleAddLandmark(latlng){        
         setAddedMarker(latlng);
@@ -58,30 +95,82 @@ function Main(props) {
         setUser(usr);
     }
     function handleToInitial() {
-        setPhase('initial');
+        setAddedMarker(null);
+        setPhase('initial');        
     }
-    function handleToLandmark() {
+    function handleSearch(pattern) {
+        setAddedMarker(null);
+        if(pattern===''){
+            setPhase('initial');
+        }
+        else{
+            setPhase('search');
+            axios().post('/map/search/', JSON.stringify({
+                lat: center['lat'],
+                lng: center['lng'],
+                pattern: pattern,
+                count: 100,
+                thres: 0.001
+            }),
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(res => {            
+                setSearchResult(res.data);
+            })
+            .catch(e => {
+                console.log(e);
+            }); 
+        }           
+    }
+    function handleToLandmark(lm) {        
+        setAddedMarker(null);        
+        setCurLandmark(lm);
+        setCenter({lat: lm.lat, lng: lm.lng});
         setPhase('landmark');
     }
     function handleToContent(ct) {
-        setPhase('content');
+        setAddedMarker(null);        
         setCurContent(ct);
+        if(ct.landmark_id!==curLandmark.id){
+            axios().get('/map/landmarks/'+ct.landmark_id)
+            .then(res => {
+                setCurLandmark(res.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+        }  
+        setCenter({lat: ct.lat, lng: ct.lng});
+        setPhase('content');
     }
     function handleToAddContent() {
+        setAddedMarker(null);
         setPhase('addContent');
     }
     var child;
     console.log("Phase:",phase);
-    if(phase==='initial'){
-        child = <div>
-            Please click on a landmark
-        </div>;
+    if(phase==='initial'){        
+        child = <SearchResultList
+            searchResult = {initialSearchResult}
+            handleToLandmark = {handleToLandmark}
+            handleToContent = {handleToContent}
+        />;
+    }
+    else if(phase==='search'){
+        child = <SearchResultList
+            searchResult = {searchResult}
+            handleToLandmark = {handleToLandmark}
+            handleToContent = {handleToContent}
+        />;
     }
     else if(phase==='landmark'){
         child = <Landmark
             user = {user}
             handleSetUser = {handleSetUser}
-            curLandmarkId = {curLandmarkId}
+            landmark = {curLandmark}
             handleToInitial = {handleToInitial}
             handleToContent = {handleToContent}
             handleToAddContent = {handleToAddContent}             
@@ -91,30 +180,35 @@ function Main(props) {
         child = <Content
             user = {user}
             handleSetUser = {handleSetUser}
-            curLandmarkId = {curLandmarkId}
+            landmark = {curLandmark}
             content = {curContent}
             handleToLandmark = {handleToLandmark}
-        />;;
+        />;
     }
     else if(phase==='addLandmark'){
         child = <AddLandmark
             user = {user}
             handleSetUser = {handleSetUser}
             addedMarker = {addedMarker}
-        />;;
+        />;
     }
     else if(phase==='addContent'){
         child = <AddContent
             user = {user}
             handleSetUser = {handleSetUser}
-            curLandmarkId = {curLandmarkId}
+            landmark = {curLandmark}
             handleToLandmark = {handleToLandmark}
-        />;;
+        />;
     }
     return(            
         <div id="main">
             <div id="navbar">
                 {<NavBar user = {user}/>}
+            </div>
+            <div id='searchBar'>
+                <SearchBar
+                    handleSearch = {handleSearch}
+                />
             </div>
             <div id="infoBlock">
                 {/* Block containing landmark information */}

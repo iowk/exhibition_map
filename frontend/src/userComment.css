@@ -23,7 +23,10 @@
     width: 40%;
 }
 .each-user-comment .title .rating{
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 30px;
     width: 10%;
 }
 .each-user-comment .title #commentPost{

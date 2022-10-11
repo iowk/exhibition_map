@@ -3,51 +3,25 @@ import './landmark.css';
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
 import { jwtVerify, getToken } from './../auth';
+import {ContentOverview} from './overview'
 import axios from './../axios';
 import star from '../media/star.png'
 
-function ContentOverview(props){
-    function handleOnClick(){
-        props.handleToContent(props.content);
-    }
-    return (
-        <div className="contentInfo" onClick={handleOnClick}>
-            <div className='contentImage'>
-                <img src={props.content.coverImageSrc} alt="Not found"></img>
-            </div>
-            <div className="des">
-                <h2>{props.content.name}</h2>
-                <p>{props.content.startDate} ~ {props.content.endDate}</p>
-                {props.content.avgRating && 
-                    <div className='rating'>
-                        <img className='starImage' src={star} alt='Rating:'></img>
-                        <span className='ratingNum'>{props.content.avgRating}</span>
-                    </div>}      
-            </div>
-        </div>
-    );
-}
-
 function Landmark(props){
-    const [landmark, setLandmark] = useState(null); // Currently clicked landmark
     const [contents, setContents] = useState(null); // Contents of the currently clicked landmark
     useEffect(() => {
         const fetchData = async() => {
             try{
-                // GET landmark                
-                const res_lm = await axios().get('/map/landmarks/'+props.curLandmarkId+'/');            
-                const lm = await res_lm.data;
                 // GET contents
-                const res_cons = await axios().get('/map/landmarks/'+props.curLandmarkId+'/contents/');            
+                const res_cons = await axios().get('/map/landmarks/'+props.landmark.id+'/contents/');            
                 const ct = await res_cons.data;
                 // Set state
-                setLandmark(lm);
                 setContents(ct);
             } catch (e) {
                 console.log(e);
             }
         }
-        if(!landmark || landmark.id!==props.curLandmarkId) fetchData();
+        if(props.landmark.id) fetchData();
         if(props.user){
             jwtVerify()
             .then((is_valid) => {
@@ -57,12 +31,12 @@ function Landmark(props){
                 console.log(e);
             });
         }        
-    }, [props, landmark])
+    }, [props])
     function handleDeleteLandmark(){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getToken()).delete('/map/landmarks/'+props.curLandmarkId+'/')
+                axios(getToken()).delete('/map/landmarks/'+props.landmark.id+'/')
                 .then(() => {
                     alert("Landmark deleted");
                     props.handleToInitial();
@@ -80,73 +54,80 @@ function Landmark(props){
     function genLandmark(){
         return (
             <div className="landmarkInfo" key='lm'>
-                <h1>{landmark.name}</h1>         
-                <img src={landmark.coverImageSrc} alt="Not found"></img>
+                <h1>{props.landmark.name}</h1>         
+                <img src={props.landmark.coverImageSrc} alt="Not found"></img>
                 <div className='link-rating'>
-                    <a href={landmark.link}>
+                    <a href={props.landmark.link}>
                         <div className="link">Website</div>
                     </a>
-                    {landmark.avgRating &&
+                    {props.landmark.avgRating &&
                         <div className='rating'>
                         <img className='starImage' src={star} alt='Rating:'></img>
-                        <span className='ratingNum'>{landmark.avgRating}</span></div>}
-                </div>
-                <div className='comment'>                
-                    <CommentListPopup
-                        lmid={landmark.id}
-                        name={landmark.name}
-                        buttonName='Show comments'
-                    />
-                    {props.user && props.user.is_verified && (
-                        // Comment button for activated user                         
-                        <CommentPostPopup
-                            lmid={landmark.id}
-                            name={landmark.name}
-                            user={props.user}
-                            handleSetUser={props.handleSetUser}
-                            buttonName='Write comment'
-                        />
-                    )}
-                </div>
-                <div className='image'>
-                    <ImageListPopup
-                        lmid={landmark.id}
-                        buttonName='Show photos'
-                    />
-                    {props.user && props.user.is_verified &&      
-                    <ImagePostPopup
-                        lmid={landmark.id}
-                        user={props.user}
-                        handleSetUser={props.handleSetUser}
-                        buttonName='Upload photo'
-                    />}
-                </div>
+                        <span className='ratingNum'>{props.landmark.avgRating}</span></div>}
+                </div>                
             </div>
         );
     }
     
-    if(landmark){
+    if(props.landmark){
         var children = [];
         children.push(genLandmark());
+        var buttons = [];
+        buttons.push(<CommentListPopup
+            key='commentListPopup'
+            lmid={props.landmark.id}
+            name={props.landmark.name}
+            buttonName='Show comments'
+        />)
+        if(props.user && props.user.is_verified){
+            buttons.push(<CommentPostPopup
+                key='commentPostPopup'
+                lmid={props.landmark.id}
+                name={props.landmark.name}
+                user={props.user}
+                handleSetUser={props.handleSetUser}
+                buttonName='Write comment'
+            />)
+        }
+        buttons.push(<ImageListPopup
+            key='ImageListPopup'
+            lmid={props.landmark.id}
+            buttonName='Show photos'
+        />)
+        if(props.user && props.user.is_verified){
+            buttons.push(<ImagePostPopup
+                key='ImagePostPopup'
+                lmid={props.landmark.id}
+                user={props.user}
+                handleSetUser={props.handleSetUser}
+                buttonName='Upload photo'
+            />)
+        }        
         if(props.user && (props.user.is_staff)){
-            children.push(
+            buttons.push(
                 <div key='deleteLandmarkButton'><button className='deleteLandmarkButton' onClick={handleDeleteLandmark}>
                     Delete landmark
                 </button></div>)
         }
-        if(props.user && (props.user.is_staff || props.user.id===landmark.owner)){
-            children.push(
-                <div key='AddContentButton'><button className='addContentButton' onClick={props.handleToAddContent}>
+        if(props.user && (props.user.is_staff || props.user.id===props.landmark.owner)){
+            buttons.push(
+                <div key='addContentButton'><button className='addContentButton' onClick={props.handleToAddContent}>
                     Add content
                 </button></div>)
         }
-        for(var key in contents) {
+        children.push(
+            <div key='landmarkButtons' className='landmarkButtons'>
+                {buttons}
+            </div>
+        )        
+        for(let key in contents) {
             if(contents[key]['isGoing']){ 
                 // Ongoing event content       
                 children.push(<ContentOverview 
                     key={contents[key].id}
                     content={contents[key]}
-                    handleToContent={props.handleToContent}/>);
+                    handleToContent={props.handleToContent}
+                    showLandmarkName={false}/>);
             }
         }
         return (

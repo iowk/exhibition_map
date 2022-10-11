@@ -79,20 +79,15 @@
 .buttonDiv > button{
     margin-left: 30px;
 }
-#commentList{
-    width: 150px;
-    display:inline-block;
-}
 #commentList > button{
     width: 150px;
-}
-#commentPost{
-    width: 150px;
-    display:inline-block;
+    margin: 5px;
+    margin-right: 25px;
 }
 #commentPost > button{
     width: 150px;
-    margin-left: 30px;
+    margin: 5px;
+    margin-right: 25px;
 }
 .each-comment{
     width: calc(100% - 26px);

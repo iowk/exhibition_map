@@ -29,4 +29,5 @@ urlpatterns = format_suffix_patterns([
     path('contents/<int:pk_ct>/images/<int:pk_image>/', views.ContentImageDetail.as_view(), name='content_image_detail'),
     path('contents/<int:pk_ct>/comments/', views.ContentCommentList.as_view(), name='content_comment_list'),
     path('contents/<int:pk_ct>/comments/<int:pk_user>/', views.ContentCommentDetail.as_view(), name='content_comment_detail'),
+    path('search/', views.Search.as_view(), name='search'),
 ])

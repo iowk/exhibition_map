@@ -15,83 +15,37 @@
 .landmarkInfo .link-rating{
     display: flex;
     flex-direction: row;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     margin-top: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 5px;      
+}
+.landmarkInfo .link-rating .rating{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 15px;
+    height: 30px;  
 }
 .landmarkInfo .link{
     font-size: larger;
-    text-align: center;    
-    margin-right: 30px;
 }
 .landmarkInfo .link:hover{
     background-color: rgb(245, 245, 245);
 }
-.rating{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: 30px;    
-}
-.starImage{
-    height: 80%;
-    background-color: transparent;
-}
-.ratingNum{
-    margin-left: 5px;
-    padding-top: 2px;
-    font-size: 20px;
-    vertical-align: middle;
-}
-.landmarkInfo .comment{
+.landmarkButtons{
     padding: 5px;
-}
-.landmarkInfo .image{
-    padding: 5px;
-}
-.contentInfo{
-    height: 100px;
-    margin: 5px;
-}
-.contentInfo .contentImage{
-    clear: left;
-    float: left;
-    width: 30%;
-    height: 100%;
-    margin: 0px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-.contentInfo .contentImage:hover{
-    cursor: pointer;
-}
-.contentInfo .des{
-    margin: 0px;
-    float: left;
-    width: calc(70% - 10px);
     margin-left: 10px;
-    height: 100%;
-}
-.contentInfo .des:hover{
-    background-color: rgb(245, 245, 245);
-    cursor: pointer;
-}
-.contentInfo .des > h2{   
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: 26px;
-}
-.contentInfo .des > p{   
-    margin-top: 5px;
-    margin-bottom: 5px;
+    display: inline-flex;
+    flex-wrap: wrap;
 }
 .deleteLandmarkButton{
     width: 150px;
     margin: 5px;
+    margin-right: 25px;
 }
 .addContentButton{
     width: 150px;
     margin: 5px;
+    margin-right: 25px;
 }

@@ -55,9 +55,12 @@ class LandmarkCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'owner', 'created', 'modified', 'text', 'rating', 'landmark_id']
 
 class ContentSerializer(serializers.ModelSerializer):
+    lat = serializers.ReadOnlyField(source='landmark.lat')
+    lng = serializers.ReadOnlyField(source='landmark.lng')
+    landmark_name = serializers.ReadOnlyField(source='landmark.name')
     class Meta:
         model = models.Content
-        fields = ['id', 'owner', 'landmark_id', 'name', 'startDate', 'endDate', 'link', 'coverImageSrc', 'isGoing', 'avgRating']
+        fields = ['id', 'owner', 'landmark_id', 'landmark_name', 'lat', 'lng', 'name', 'startDate', 'endDate', 'link', 'coverImageSrc', 'isGoing', 'avgRating']
 
     def validate_start_date(self, data):
         if data['startDate'] > data['endDate']:

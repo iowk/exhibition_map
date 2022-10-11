@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.http import Http404
 from django.contrib.auth.models import User
+from django.db.models import F
 import os
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions
@@ -15,6 +16,7 @@ from .mail import SendAccActiveEmail
 from .token import account_activation_token
 from . import serializers
 from .permissions import ReadOnly, IsOwnerOrReadOnly, IsAdminUserOrReadOnly, IsActivatedOrReadOnly
+from .utils import search_score
 
 # Create your views here.
 class MapInfo:
@@ -220,9 +222,9 @@ class LandmarkContentList(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ContentDetail(generics.RetrieveAPIView):
+class ContentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ContentSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
     def get_queryset(self):
         return Content.objects.all()
     def get_object(self):
@@ -285,3 +287,29 @@ class ContentCommentDetail(generics.RetrieveUpdateDestroyAPIView):
         queryset = self.get_queryset()
         filter = {'owner': self.kwargs['pk_user']}
         return get_object_or_404(queryset, **filter)
+
+class Search(APIView):
+    '''
+    Compare the searched pattern with landmark, content names, and return a list of landmarks, contents sorted by Dice coefficient.
+    request.data
+        Argument        Type        Description
+        pattern         string      searched pattern
+        lat             float       map center lat
+        lng             float       map center lng
+        count           int         top {count} results will be returned
+        thres           int         minimum score threshold 
+    '''
+    permission_classes = [permissions.AllowAny]
+    def post(self, request):
+        #rq = {'lat': 24.2, 'lng': 122.2, 'pattern': 'huashan', 'count': 100, 'thres': 0.001}
+        rq = request.data
+        ls = serializers.LandmarkSerializer(Landmark.objects.all(), many=True).data + serializers.ContentSerializer(Content.objects.all(), many=True).data
+        for i, dic in enumerate(ls):
+            if('isGoing' in dic.keys() and not dic['isGoing']): ls[i]['score'] = -1000 # Non ongoing content
+            else: ls[i]['score'] = search_score(dic, rq)
+            ls[i]['coverImageSrc'] = 'http://localhost:8000' + ls[i]['coverImageSrc']
+        ls.sort(key=lambda x: -x['score'])
+        idx = 0
+        while idx < min(len(ls), rq['count']) and ls[idx]['score'] >= rq['thres']:
+            idx+=1
+        return Response(ls[:idx], status=status.HTTP_200_OK)
