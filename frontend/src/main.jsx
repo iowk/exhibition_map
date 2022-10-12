@@ -48,7 +48,7 @@ function Main(props) {
         }
         console.log(center);
         if(phase==='initial') fetchData();        
-    }, [center])
+    }, [center, phase])
     useEffect(() => {
         // GET all landmarks on the map
         const fetchData = async() => {
