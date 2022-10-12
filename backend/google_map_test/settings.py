@@ -28,7 +28,7 @@ GOOGLE_MAP_API_KEY = os.environ['GOOGLE_MAP_API_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '8s11onff92.execute-api.ap-northeast-1.amazonaws.com']
 
 
 # Application definition

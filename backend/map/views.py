@@ -307,7 +307,7 @@ class Search(APIView):
         for i, dic in enumerate(ls):
             if('isGoing' in dic.keys() and not dic['isGoing']): ls[i]['score'] = -1000 # Non ongoing content
             else: ls[i]['score'] = search_score(dic, rq)
-            ls[i]['coverImageSrc'] = 'http://localhost:8000' + ls[i]['coverImageSrc']
+            #ls[i]['coverImageSrc'] = 'http://localhost:8000' + ls[i]['coverImageSrc']
         ls.sort(key=lambda x: -x['score'])
         idx = 0
         while idx < min(len(ls), rq['count']) and ls[idx]['score'] >= rq['thres']:
