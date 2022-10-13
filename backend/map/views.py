@@ -303,11 +303,10 @@ class Search(APIView):
     def post(self, request):
         #rq = {'lat': 24.2, 'lng': 122.2, 'pattern': 'huashan', 'count': 100, 'thres': 0.001}
         rq = request.data
-        ls = serializers.LandmarkSerializer(Landmark.objects.all(), many=True).data + serializers.ContentSerializer(Content.objects.all(), many=True).data
+        ls = serializers.LandmarkSerializer(Landmark.objects.all(), context={"request": request}, many=True).data + serializers.ContentSerializer(Content.objects.all(), context={"request": request}, many=True).data
         for i, dic in enumerate(ls):
             if('isGoing' in dic.keys() and not dic['isGoing']): ls[i]['score'] = -1000 # Non ongoing content
             else: ls[i]['score'] = search_score(dic, rq)
-            #ls[i]['coverImageSrc'] = 'http://localhost:8000' + ls[i]['coverImageSrc']
         ls.sort(key=lambda x: -x['score'])
         idx = 0
         while idx < min(len(ls), rq['count']) and ls[idx]['score'] >= rq['thres']:
