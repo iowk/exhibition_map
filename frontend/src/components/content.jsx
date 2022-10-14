@@ -84,6 +84,9 @@ function Content(props){
                     Delete content
                 </button></div>}            
             </div>
+            <div className='contentDescription'>
+                {props.content.description}
+            </div>
         </div>                
     );
 }

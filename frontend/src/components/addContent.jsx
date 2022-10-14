@@ -12,6 +12,7 @@ import './addContent.css';
 function AddContent(props){
     const [name, setName] = useState('');
     const [link, setLink] = useState('');
+    const [description, setDescription] = useState('');
     const [image, setImage] = useState(null);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -25,6 +26,7 @@ function AddContent(props){
                 axios(getToken()).post('/map/landmarks/'+props.landmark.id+'/contents/', JSON.stringify({
                     name: name,
                     link: link,
+                    description: description,
                     startDate: formatDate(startDate),
                     endDate: formatDate(endDate)
                 }),
@@ -98,6 +100,14 @@ function AddContent(props){
                         value={link}
                         onChange={(e) => {setLink(e.target.value)}}
                         className='linkBox'
+                    />   
+                </div>
+                <div>
+                    <textarea
+                        placeholder='Description'
+                        value={description}
+                        onChange={(e) => {setDescription(e.target.value)}}
+                        className='descriptionBox'
                     />   
                 </div>
                 <div className='dateDiv'>

@@ -77,6 +77,7 @@ class Content(models.Model):
     startDate = models.DateField(blank=True)
     endDate = models.DateField(blank=True)
     link = models.CharField(max_length=200, blank=True)
+    description = models.CharField(max_length=3000, blank=True)
     coverImageSrc = models.ImageField(upload_to='images/', default='images/empty.jpg')
 
     class Meta:

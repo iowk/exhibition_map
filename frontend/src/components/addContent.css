@@ -31,6 +31,9 @@
 .addContent > div .linkBox{
     height: 40px;
 }
+.addContent > div .descriptionBox{
+    height: 400px;
+}
 .addContent .buttonDiv{
     display: flex;
     flex-direction: column;
