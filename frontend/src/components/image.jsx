@@ -5,6 +5,7 @@ import { Slide } from 'react-slideshow-image';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
 import { createImageEntry } from '../utils';
+
 import 'react-slideshow-image/dist/styles.css';
 import './image.css'
 import '../general.css';
@@ -57,13 +58,20 @@ function ImageListPopup(props){
 function ImagePostPopup(props) {
     const [apiPath, setApiPath] = useState(null);
     const [image, setImage] = useState(null);
+    const [imagePreviewSrc, setImagePreviewSrc] = useState(null);
     const [imageTitle, setImageTitle] = useState('');
     useEffect(() => {
         if(props.ctid) setApiPath('/map/contents/'+props.ctid+'/images/');
         else setApiPath('/map/landmarks/'+props.lmid+'/images/');      
     }, [props.lmid, props.ctid])
     function onImageChange(e) {
-        setImage(e.target.files[0]);
+        const file_size = e.target.files[0].size;
+        console.log("Image size:", file_size);
+        if(file_size > 10*1024*1024) alert("Image size should not exceed 10 MB");
+        else{
+            setImagePreviewSrc(URL.createObjectURL(e.target.files[0]));
+            setImage(e.target.files[0]);
+        }
     }
     function onImageTitleChange(e) {
         setImageTitle(e.target.value);
@@ -105,8 +113,9 @@ function ImagePostPopup(props) {
                 <button className="close" onClick={close}> 
                     &times; 
                 </button>
+                <div className='imagePreview' style={{'backgroundImage': `url(${imagePreviewSrc})`}}></div>
                 <div>
-                    <textarea
+                    <input
                         placeholder='Title'
                         value={imageTitle}
                         onChange={onImageTitleChange}
@@ -114,7 +123,7 @@ function ImagePostPopup(props) {
                     />
                 </div>
                 <div>
-                    <input type="file" name="image_url"
+                    <input type="file" name="image_url" className='uploadImage'
                         accept="image/jpeg,image/png,image/gif" onChange={onImageChange} />
                 </div>
                 <div className='buttonDiv'>

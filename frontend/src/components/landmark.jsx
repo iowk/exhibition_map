@@ -55,7 +55,7 @@ function Landmark(props){
         return (
             <div className="landmarkInfo" key='lm'>
                 <h1>{props.landmark.name}</h1>         
-                <img src={props.landmark.coverImageSrc} alt="Not found"></img>
+                <img src={props.landmark.coverImageSrc} alt=""></img>
                 <div className='link-rating'>
                     <a href={props.landmark.link}>
                         <div className="link">Website</div>
