@@ -55,24 +55,34 @@ function ImageListPopup(props){
         </Popup></div>
     );
 }
-function ImagePostPopup(props) {
-    const [apiPath, setApiPath] = useState(null);
-    const [image, setImage] = useState(null);
+function UploadImage(props){
     const [imagePreviewSrc, setImagePreviewSrc] = useState(null);
-    const [imageTitle, setImageTitle] = useState('');
-    useEffect(() => {
-        if(props.ctid) setApiPath('/map/contents/'+props.ctid+'/images/');
-        else setApiPath('/map/landmarks/'+props.lmid+'/images/');      
-    }, [props.lmid, props.ctid])
     function onImageChange(e) {
         const file_size = e.target.files[0].size;
         console.log("Image size:", file_size);
         if(file_size > 10*1024*1024) alert("Image size should not exceed 10 MB");
         else{
             setImagePreviewSrc(URL.createObjectURL(e.target.files[0]));
-            setImage(e.target.files[0]);
+            props.handleSetImage(e.target.files[0]);
         }
     }
+    return(<div className='uploadImage'>
+        {imagePreviewSrc && <div className='imagePreview' style={{'backgroundImage': `url(${imagePreviewSrc})`}}/>}
+        {!imagePreviewSrc && <div  className='imagePreview'><span>Upload image</span></div>}
+        <div className='inputDiv'>
+            <input type="file" name="image_url"
+                accept="image/jpeg,image/png,image/gif" onChange={onImageChange} />
+        </div>        
+    </div>);    
+}
+function ImagePostPopup(props) {
+    const [apiPath, setApiPath] = useState(null);
+    const [image, setImage] = useState(null);
+    const [imageTitle, setImageTitle] = useState('');
+    useEffect(() => {
+        if(props.ctid) setApiPath('/map/contents/'+props.ctid+'/images/');
+        else setApiPath('/map/landmarks/'+props.lmid+'/images/');      
+    }, [props.lmid, props.ctid])    
     function onImageTitleChange(e) {
         setImageTitle(e.target.value);
     }
@@ -112,8 +122,7 @@ function ImagePostPopup(props) {
             <div className="post-container">
                 <button className="close" onClick={close}> 
                     &times; 
-                </button>
-                <div className='imagePreview' style={{'backgroundImage': `url(${imagePreviewSrc})`}}></div>
+                </button>                
                 <div>
                     <input
                         placeholder='Title'
@@ -122,9 +131,8 @@ function ImagePostPopup(props) {
                         className='titleBox'
                     />
                 </div>
-                <div>
-                    <input type="file" name="image_url" className='uploadImage'
-                        accept="image/jpeg,image/png,image/gif" onChange={onImageChange} />
+                <div id='uploadImageBox'>
+                    <UploadImage handleSetImage={setImage}/>
                 </div>
                 <div className='buttonDiv'>
                     <button onClick={handleSubmit} className='popupSubmitButton'>
@@ -137,4 +145,4 @@ function ImagePostPopup(props) {
     );    
 }
 
-export { ImageListPopup, ImagePostPopup };
+export { ImageListPopup, ImagePostPopup, UploadImage };

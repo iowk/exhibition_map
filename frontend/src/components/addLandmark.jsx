@@ -4,6 +4,7 @@ import './addLandmark.css';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
 import { createCoverImageEntry } from '../utils';
+import { UploadImage } from './image'
 
 function AddLandmark(props) {
     const [name, setName] = useState('');
@@ -73,22 +74,27 @@ function AddLandmark(props) {
     if(props.user){
         if(props.user.is_verified){
             return(
-                <div>
-                    <div>Add a new landmark</div>
-                    <textarea
-                        placeholder='Name'
-                        value={name}
-                        onChange={(e) => {setName(e.target.value)}}
-                        className='nameBox'
-                    />
-                    <textarea
-                        placeholder='Link'
-                        value={link}
-                        onChange={(e) => {setLink(e.target.value)}}
-                        className='linkBox'
-                    />
-                    <input type="file" name="image_url"
-                        accept="image/jpeg,image/png,image/gif" onChange={(e) => {setImage(e.target.files[0])}} />
+                <div className='addLandmark'>
+                    <div className='dtop'>Add a new landmark</div>
+                    <div>
+                        <textarea
+                            placeholder='Name'
+                            value={name}
+                            onChange={(e) => {setName(e.target.value)}}
+                            className='nameBox'
+                        />
+                    </div>
+                    <div>
+                        <textarea
+                            placeholder='Link'
+                            value={link}
+                            onChange={(e) => {setLink(e.target.value)}}
+                            className='linkBox'
+                        />
+                    </div>
+                    <div id='uploadImageBox'>
+                        <UploadImage handleSetImage={setImage}/>
+                    </div>
                     <div className='buttonDiv'>
                         <button onClick={handleSubmit} className='submitButton'>
                             Upload

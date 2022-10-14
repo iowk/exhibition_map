@@ -1,0 +1,38 @@
+.addContent{
+    margin-top: 20px;
+}
+.addContent > div{
+    margin: 15px; 
+    width: calc(100% - 30px);
+}
+.addContent > div > textarea{
+    width: calc(100% - 10px);
+    padding: 5px;
+    font-size: 16px;
+    resize: none;
+    border-radius: 5px;
+}
+.addContent .dateDiv > div > span{
+    display: inline-block;
+    margin-bottom: 5px;
+    width: 100px;
+}
+.addContent .dateDiv > div .react-date-picker{
+    margin-bottom: 10px;
+    background-color: rgb(245,245,245);
+}
+.addContent #uploadImageBox{
+    height: 20vw;
+    width: calc(100% - 30px);
+}
+.addContent > div .nameBox{
+    height: 20px;
+}
+.addContent > div .linkBox{
+    height: 40px;
+}
+.addContent .buttonDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

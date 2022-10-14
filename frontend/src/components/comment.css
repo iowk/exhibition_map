@@ -1,3 +1,7 @@
+.popup-content {
+    height: 80%;
+    width: 60%;
+}
 .modal {
     font-size: 12px;
     height: 100%;
@@ -5,6 +9,9 @@
     background-color: white;
     border-radius: 15px;
     border: solid #cfcece;
+}
+.modal > div{
+    margin: 30px;    
 }
 .modal > .close {  
     cursor: pointer;  
@@ -20,63 +27,49 @@
     border: 1px solid #cfcece;
 }
 .modal .name{
-    height: 40px;
-    padding-top: 10px;
-    font-size: 32px;
+    height: 60px;
+    margin-bottom: 0px;
+    font-size: 36px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
 }
-.popup-content {
-    height: 80%;
-    width: 60%;
+.modal .popupForm {
+    margin-top: 15px;
+    height: calc(100% - 135px);
 }
-.ratingBox {
+.modal .popupForm .ratingBox {
     height: 50px;
-    padding: 0px;
-    margin-top: 20px;
     margin-left: 20px;
 }
-.ratingTitle {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 30px;
-    font-size: 24px;
-    clear: left;
-    float: left;
-}
-.ratingBox .starImage {
+.modal .popupForm .ratingBox .starImage {
     height: 30px;
     width: 30px;
     margin-right: 20px;
     background-color: transparent;
     float: left;
 }
-.ratingBox .starImage:hover {
+.modal .popupForm .ratingBox .starImage:hover {
     cursor: pointer;
 }
-.commentBox {
-    font-size: 20px;
-    height: calc(100% - 140px);
-    width: calc(100% - 44px);
+.modal .popupForm .commentBox {
+    font-size: 16px;
     padding: 10px;
-    margin-left: 20px;
-    margin-right: 20px;
+    height: calc(100% - 130px);
+    width: calc(100% - 20px);
+    border: solid 2px black;
+    border-radius: 5px;
+    resize: none;
 }
-.popupForm {
-    height: calc(100% - 80px);
-    padding: 10px;
-}
-.buttonDiv{
+.modal .popupForm .buttonDiv{
     margin-top: 15px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
-.buttonDiv > button{
+.modal .popupForm .buttonDiv > button{
     margin-left: 30px;
 }
 #commentList > button{
@@ -89,13 +82,12 @@
     margin: 5px;
     margin-right: 25px;
 }
-.each-comment{
-    width: calc(100% - 26px);
-    margin: 10px;
+.modal .each-comment{
+    width: calc(100% - 66px);
     border: solid black;
     border-radius: 5px;
 }
-.each-comment > .title{
+.modal .each-comment > .title{
     font-size: 20px;
     height: 25px;
     padding: 2px;
@@ -103,27 +95,27 @@
     align-items: center;
     border-bottom: 1px solid lightgrey;
 }
-.each-comment > .title > .owner{
+.modal .each-comment > .title > .owner{
     height: 25px;
     width: 200px;
     float: left;
     margin-left: 10px;
 }
-.each-comment > .title > .rating{
+.modal .each-comment > .title > .rating{
     height: 25px;
     height: 100%;
     margin-left: 20px;
     display: flex;
     align-items: center;
 }
-.each-comment > .title > .rating > .starImage{
+.modal .each-comment > .title > .rating > .starImage{
     display: flex;
     align-items: center;
     float: left;
     height: 80%;
     background-color: transparent;
 }
-.each-comment > .title > .rating > .ratingNum{
+.modal .each-comment > .title > .rating > .ratingNum{
     display: flex;
     align-items: center;
     float: left;
@@ -131,7 +123,7 @@
     padding-top: 2px;
     height: 80%;
 }
-.each-comment > .text{
+.modal .each-comment > .text{
     padding: 10px;
     font-size: 20px;
     height: 100px;

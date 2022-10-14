@@ -1,0 +1,30 @@
+.addLandmark > div{
+    margin: 15px; 
+    width: calc(100% - 30px);
+}
+.addLandmark > div > textarea{
+    width: calc(100% - 10px);
+    padding: 5px;
+    font-size: 16px;
+    resize: none;
+    border-radius: 5px;
+}
+.addLandmark .dtop{
+    font-size: 24px;
+    text-align: center;
+}
+.addLandmark > div .nameBox{
+    height: 20px;
+}
+.addLandmark > div .linkBox{
+    height: 40px;
+}
+.addLandmark #uploadImageBox{
+    height: 20vw;
+    width: calc(100% - 30px);
+}
+.addLandmark .buttonDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

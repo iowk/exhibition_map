@@ -7,7 +7,8 @@ import { getLSItem, jwtVerify } from './auth';
 import { SearchBar, SearchResultList } from './components/search';
 import Landmark from './components/landmark';
 import AddLandmark from './components/addLandmark';
-import { Content, AddContent } from './components/content';
+import Content from './components/content';
+import AddContent from './components/addContent';
 
 function Main(props) {
     // Full main page

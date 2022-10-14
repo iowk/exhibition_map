@@ -7,10 +7,11 @@
     left: 12px;
     top: 12px;
     height: 36px;
-    width: calc(100% - 29px);
+    width: calc(100% - 40px);
     border: solid 2px black;
     background-color: rgb(235, 235, 235);
-    font-size: 22px;
+    font-size: 20px;
+    padding-left: 10px;
 }
 .searchBar .searchImage{
     z-index: 1;

@@ -1,11 +1,8 @@
-import React, {useState} from 'react';
-import { Navigate } from "react-router-dom";
-import DatePicker from 'react-date-picker';
+import React from 'react';
 import './content.css';
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
 import { jwtVerify, getToken } from '../auth';
-import { createCoverImageEntry, formatDate } from '../utils';
 import axios from '../axios';
 import star from '../media/star.png'
 import '../general.css';
@@ -91,117 +88,4 @@ function Content(props){
     );
 }
 
-function AddContent(props){
-    const [name, setName] = useState('');
-    const [link, setLink] = useState('');
-    const [image, setImage] = useState(null);
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-    function handleBack(){
-        props.handleToLandmark(props.landmark);
-    }
-    function handleSubmit(){
-        jwtVerify()
-        .then((is_valid) => {
-            if(is_valid){
-                axios(getToken()).post('/map/landmarks/'+props.landmark.id+'/contents/', JSON.stringify({
-                    name: name,
-                    link: link,
-                    startDate: formatDate(startDate),
-                    endDate: formatDate(endDate)
-                }),
-                {
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                })
-                .then((res) => {
-                    if(image){
-                        jwtVerify()
-                        .then(() => {
-                            axios(getToken()).patch('/map/contents/'+res.data.id+'/', createCoverImageEntry(image),
-                            {
-                                headers: {
-                                    'Content-Type': 'multipart/form-data'
-                                },
-                            })
-                            .then(() => {
-                                alert("Content added");
-                                props.handleToLandmark(props.landmark);
-                            })
-                            .catch((e) => {
-                                console.log(e);
-                                alert(JSON.stringify(e.response.data));
-                            })
-                        })
-                        .catch((e) => {
-                            console.log(e);
-                            alert("Please login again");
-                            props.handleSetUser(null);
-                            <Navigate to = '/login/'/>;
-                        })
-                    }
-                    else{
-                        alert("Content added");
-                        props.handleToLandmark(props.landmark);
-                    }
-                })
-                .catch((e) =>{
-                    console.log(e);
-                    alert(JSON.stringify(e.response.data));
-                });
-            }
-            else{
-                props.handleSetUser(null);
-                <Navigate to = '/login/'/>;
-            }
-        })
-        .catch(e => {
-            console.log(e);
-            alert(JSON.stringify(e.response.data));
-        })
-    }
-    var child;
-    if(props.user){
-        child = 
-            <div>
-                <div>Add a new content</div>
-                <textarea
-                    placeholder='Name'
-                    value={name}
-                    onChange={(e) => {setName(e.target.value)}}
-                    className='nameBox'
-                />
-                <textarea
-                    placeholder='Link'
-                    value={link}
-                    onChange={(e) => {setLink(e.target.value)}}
-                    className='linkBox'
-                />                    
-                <div>
-                    <DatePicker onChange={setStartDate} format='yyyy-MM-dd' value={startDate} />
-                    <DatePicker onChange={setEndDate} format='yyyy-MM-dd' value={endDate} />
-                </div>
-                <input type="file" name="image_url"
-                    accept="image/jpeg,image/png,image/gif" onChange={(e) => {setImage(e.target.files[0])}} />
-                <div className='buttonDiv'>
-                    <button onClick={handleSubmit} className='submitButton'>
-                        Upload
-                    </button>
-                </div>
-            </div>;
-    }
-    else{
-        child = <div>Please login to add a content</div>;
-    }
-    return(
-    <div>
-        <button onClick={handleBack}>
-            {props.landmark.name}
-        </button>
-        {child}
-     </div>);
-}
-
-export {Content, AddContent};
+export default Content;
