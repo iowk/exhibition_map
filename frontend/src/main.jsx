@@ -25,7 +25,7 @@ function Main(props) {
     const [searchResult, setSearchResult] = useState([]);
     const [initialSearchResult, setInitialSearchResult] = useState([]);
     useEffect(() => {
-        // GET all landmarks on the map   
+        // Set initial search results
         const fetchData = async() => {
             try{                          
                 const res = await axios().post('/map/search/', JSON.stringify({
@@ -47,7 +47,6 @@ function Main(props) {
                 console.log(e);
             }
         }
-        console.log(center);
         if(phase==='initial') fetchData();        
     }, [center, phase])
     useEffect(() => {
@@ -62,8 +61,8 @@ function Main(props) {
                 console.log(e);
             }
         }
-        fetchData();        
-    }, [props])
+        if(phase==='initial' || phase==='landmark') fetchData();        
+    }, [phase])
     useEffect(() => {
         jwtVerify()
         .then((is_valid) => {
@@ -72,8 +71,8 @@ function Main(props) {
         })
         .catch((e) => {
             console.log(e);
-        });
-    }, [props, phase])
+        });   
+    }, [phase])
     function handleClickLandmark(lmid){
         // Landmark is clicked on
         setAddedMarker(null);
@@ -152,7 +151,6 @@ function Main(props) {
         setPhase('addContent');
     }
     var child;
-    console.log("Phase:",phase);
     if(phase==='initial'){        
         child = <SearchResultList
             searchResult = {initialSearchResult}

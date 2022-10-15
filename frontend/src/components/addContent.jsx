@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useRef } from 'react';
 import { Navigate } from "react-router-dom";
 import DatePicker from 'react-date-picker';
 import './content.css';
@@ -10,12 +10,12 @@ import '../general.css';
 import './addContent.css';
 
 function AddContent(props){
-    const [name, setName] = useState('');
-    const [link, setLink] = useState('');
-    const [description, setDescription] = useState('');
+    const nameRef = useRef();
+    const linkRef = useRef();
+    const descriptionRef = useRef();
     const [image, setImage] = useState(null);
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     function handleBack(){
         props.handleToLandmark(props.landmark);
     }
@@ -24,9 +24,9 @@ function AddContent(props){
         .then((is_valid) => {
             if(is_valid){
                 axios(getToken()).post('/map/landmarks/'+props.landmark.id+'/contents/', JSON.stringify({
-                    name: name,
-                    link: link,
-                    description: description,
+                    name: nameRef.current.value,
+                    link: linkRef.current.value,
+                    description: descriptionRef.current.value,
                     startDate: formatDate(startDate),
                     endDate: formatDate(endDate)
                 }),
@@ -89,30 +89,27 @@ function AddContent(props){
                 <div>
                     <textarea
                         placeholder='Name'
-                        value={name}
-                        onChange={(e) => {setName(e.target.value)}}
+                        ref={nameRef}
                         className='nameBox'
                     />
                 </div>
                 <div>
                     <textarea
                         placeholder='Link'
-                        value={link}
-                        onChange={(e) => {setLink(e.target.value)}}
+                        ref={linkRef}
                         className='linkBox'
                     />   
                 </div>
                 <div>
                     <textarea
                         placeholder='Description'
-                        value={description}
-                        onChange={(e) => {setDescription(e.target.value)}}
+                        ref={descriptionRef}
                         className='descriptionBox'
                     />   
                 </div>
                 <div className='dateDiv'>
-                    <div><span>Start date: </span><DatePicker onChange={setStartDate} format='yyyy-MM-dd' value={startDate} /></div>
-                    <div><span>End date: </span><DatePicker onChange={setEndDate} format='yyyy-MM-dd' value={endDate} /></div>
+                    <div><span>Start date: </span><DatePicker onChange={setStartDate} format='yyyy-MM-dd' value={startDate}/></div>
+                    <div><span>End date: </span><DatePicker onChange={setEndDate} format='yyyy-MM-dd' value={endDate}/></div>
                 </div>
                 <div id='uploadImageBox'>
                     <UploadImage handleSetImage={setImage}/>

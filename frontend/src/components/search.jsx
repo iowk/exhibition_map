@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef} from 'react';
 import './search.css'
 import search from '../media/search.png'
 import {ContentOverview, LandmarkOverview} from './overview'
@@ -27,24 +27,23 @@ function SearchResultList(props){
 }
 
 function SearchBar(props){
-    const [pattern, setPattern] = useState('');
+    const patternRef = useRef();
     return(
         <div className='searchBar'>
             <form>
             <input 
                 className='inputBox'
                 placeholder='Search a landmark or content'
-                value={pattern}
-                onChange={(event) => {setPattern(event.target.value)}}
+                ref={patternRef}
                 onKeyPress={event => {
                     if (event.key === 'Enter') {
                         event.preventDefault();
-                        props.handleSearch(pattern);
+                        props.handleSearch(patternRef.current.value);
                     }
                 }}
             />
             <img className='searchImage' src={search} alt='🔍'
-            onClick={() => props.handleSearch(pattern)}/>
+            onClick={() => props.handleSearch(patternRef.current.value)}/>
             </form>
         </div>
     );

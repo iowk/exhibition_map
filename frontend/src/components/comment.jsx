@@ -1,4 +1,4 @@
-import React, { useState ,useEffect } from 'react';
+import React, { useState ,useEffect, useRef } from 'react';
 import Popup from 'reactjs-popup';
 import { Navigate } from "react-router-dom";
 import './comment.css';
@@ -33,22 +33,6 @@ function WriteRatingBlock(props) {
     return(
         setRatingBox()
     );    
-}
-function WriteCommentBlock(props){
-    // Inside CommentPopup
-    function setCommentBox() {
-        return (
-            <textarea
-                placeholder='Write comment'
-                value={props.comment}
-                onChange={props.handleWriteComment}
-                className='commentBox'
-            />
-        );
-    }
-    return(
-        setCommentBox()
-    );
 }
 function CommentListPopup(props){
     const [comments, setComments] = useState([]);
@@ -104,14 +88,12 @@ function CommentPostPopup(props){
     const [open, setOpen] = useState(false);
     const [isPatch, setIsPatch] = useState(false);
     const [rating, setRating] = useState(5);
-    const [comment, setComment] = useState('');
-    const [apiPath, setApiPath] = useState('');
-    useEffect(() => {        
-        if(props.ctid) setApiPath('/map/contents/'+props.ctid+'/comments/');
-        else setApiPath('/map/landmarks/'+props.lmid+'/comments/');
-        setRating(5);
-        setComment('');
-    }, [props.lmid, props.ctid])
+    const commentRef = useRef();
+
+    let apiPath = '';
+    if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/comments/';
+    else apiPath = '/map/landmarks/'+props.lmid+'/comments/';
+
     function handleOpen(){
         setOpen(true);
         fetchComment();
@@ -125,7 +107,7 @@ function CommentPostPopup(props){
                     // This user already had a comment
                     setIsPatch(true);
                     setRating(res.data['rating']);
-                    setComment(res.data['text']);
+                    commentRef.current.value = res.data['text'];
                 })
                 .catch(e => {
                     // New comment
@@ -146,9 +128,6 @@ function CommentPostPopup(props){
     function handleClickRating(rating){
         setRating(rating);
     }
-    function handleWriteComment(event){
-        setComment(event.target.value);
-    }
     function handleSubmit(event){
         jwtVerify()
         .then((is_valid) =>{
@@ -156,7 +135,7 @@ function CommentPostPopup(props){
                 if(isPatch){
                     axios(getToken()).patch(apiPath+props.user.id+'/', JSON.stringify({
                         rating: rating,
-                        text: comment
+                        text: commentRef.current.value
                     }),
                     {
                         headers: {
@@ -174,7 +153,7 @@ function CommentPostPopup(props){
                 else{
                     axios(getToken()).post(apiPath, JSON.stringify({
                         rating: rating,
-                        text: comment
+                        text: commentRef.current.value
                     }),
                     {
                         headers: {
@@ -248,9 +227,10 @@ function CommentPostPopup(props){
                             maxRating={maxRating}
                             handleClickRating={handleClickRating}
                         />
-                        <WriteCommentBlock
-                            comment={comment}
-                            handleWriteComment={handleWriteComment}
+                        <textarea
+                            placeholder='Write comment'
+                            ref={commentRef}
+                            className='commentBox'
                         />
                         <div className='buttonDiv'>
                             <button onClick={handleSubmit} className='popupSubmitButton'>

@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './register.css';
 import { login, jwtVerify, getLSItem } from './auth';
 import { Link, Navigate } from "react-router-dom";
 import NavBar from './components/navbar'
 
 function Login(props){
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const usernameRef = useRef();
+    const passwordRef = useRef();
     const [loginStatus, setLoginStatus] = useState('');
     function handleSubmit(event){
-        login(username, password)
+        login(usernameRef.current.value, passwordRef.current.value)
         .then(() => {
             jwtVerify()
             .then((is_valid) => {
@@ -40,8 +40,7 @@ function Login(props){
                         <span  className='regspan'>Username</span>
                         <input 
                             type='text'
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            ref={usernameRef}
                             className='inpBox'
                         />
                     </div>
@@ -49,8 +48,7 @@ function Login(props){
                         <span  className='regspan'>Password</span>
                         <input 
                             type='password'
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            ref={passwordRef}
                             className='inpBox'
                         />
                     </div>

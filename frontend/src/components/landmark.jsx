@@ -63,7 +63,7 @@ function Landmark(props){
                     {props.landmark.avgRating &&
                         <div className='rating'>
                         <img className='starImage' src={star} alt='Rating:'></img>
-                        <span className='ratingNum'>{props.landmark.avgRating}</span></div>}
+                        <span className='ratingNum'>{props.landmark.avgRating.toFixed(1)}</span></div>}
                 </div>                
             </div>
         );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Navigate } from "react-router-dom";
 import Popup from 'reactjs-popup';
 import { Slide } from 'react-slideshow-image';
@@ -76,28 +76,22 @@ function UploadImage(props){
     </div>);    
 }
 function ImagePostPopup(props) {
-    const [apiPath, setApiPath] = useState(null);
     const [image, setImage] = useState(null);
-    const [imageTitle, setImageTitle] = useState('');
-    useEffect(() => {
-        if(props.ctid) setApiPath('/map/contents/'+props.ctid+'/images/');
-        else setApiPath('/map/landmarks/'+props.lmid+'/images/');      
-    }, [props.lmid, props.ctid])    
-    function onImageTitleChange(e) {
-        setImageTitle(e.target.value);
-    }
+    const imageTitleRef = useRef();
+    let apiPath = '';
+    if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/images/';
+    else apiPath = '/map/landmarks/'+props.lmid+'/images/';
     function handleSubmit(){
         jwtVerify()
         .then(is_valid => {
             if(is_valid){
-                axios(getToken()).post(apiPath, createImageEntry(image, imageTitle),
+                axios(getToken()).post(apiPath, createImageEntry(image, imageTitleRef.current.value),
                 {
                     headers: {
                         'Content-type':'multipart/form-data',
                     },
                 })
                 .then(() => {
-                    setImageTitle('');
                     alert("Image uploaded");
                 })
                 .catch((e) => {
@@ -126,8 +120,7 @@ function ImagePostPopup(props) {
                 <div>
                     <input
                         placeholder='Title'
-                        value={imageTitle}
-                        onChange={onImageTitleChange}
+                        ref={imageTitleRef}
                         className='titleBox'
                     />
                 </div>

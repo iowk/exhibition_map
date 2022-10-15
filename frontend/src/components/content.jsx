@@ -46,7 +46,7 @@ function Content(props){
                 {props.content.avgRating &&
                     <div className='rating'>
                     <img className='starImage' src={star} alt='Rating:'></img>
-                    <span className='ratingNum'>{props.content.avgRating}</span></div>}
+                    <span className='ratingNum'>{props.content.avgRating.toFixed(1)}</span></div>}
             </div>
             <div className='contentButtons'>
                 <CommentListPopup

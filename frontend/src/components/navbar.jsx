@@ -1,10 +1,14 @@
-import {React,} from "react";
+import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import './navbar.css';
 import '../general.css';
 
 function NavBar(props){
-    if(props.user) {
+    const [user, setUser] = useState({});
+    useEffect(() => {
+        setUser(props.user);
+    }, [props.user])
+    if(user) {
         return(
             <div className="navbar">
                 <Link to="/">
@@ -14,7 +18,7 @@ function NavBar(props){
                 </Link>
                 <Link to="/user">
                     <button className="navbutton">
-                        {props.user.username}
+                        {user.username}
                     </button>
                 </Link>
             </div>

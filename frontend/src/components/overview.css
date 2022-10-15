@@ -48,3 +48,6 @@
     align-items: center;
     height: 30px;  
 }
+#content-overview .des > h2{
+    color: darkred;
+}

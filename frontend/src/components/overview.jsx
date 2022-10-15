@@ -7,7 +7,7 @@ function LandmarkOverview(props){
         props.handleToLandmark(props.landmark);
     }
     return (
-        <div className="overview" onClick={handleOnClick}>
+        <div className="overview" id="landmark-overview" onClick={handleOnClick}>
             <div className='contentImage'>
                 <img src={props.landmark.coverImageSrc} alt="Not found"></img>
             </div>
@@ -16,7 +16,7 @@ function LandmarkOverview(props){
                 {props.landmark.avgRating && 
                     <div className='rating'>
                         <img className='starImage' src={star} alt='Rating:'></img>
-                        <span className='ratingNum'>{props.landmark.avgRating}</span>
+                        <span className='ratingNum'>{props.landmark.avgRating.toFixed(1)}</span>
                     </div>}      
             </div>
         </div>
@@ -28,7 +28,7 @@ function ContentOverview(props){
         props.handleToContent(props.content);
     }
     return (
-        <div className="overview" onClick={handleOnClick}>
+        <div className="overview" id="content-overview" onClick={handleOnClick}>
             <div className='contentImage'>
                 <img src={props.content.coverImageSrc} alt="Not found"></img>
             </div>
@@ -39,7 +39,7 @@ function ContentOverview(props){
                 {props.content.avgRating && 
                     <div className='rating'>
                         <img className='starImage' src={star} alt='Rating:'></img>
-                        <span className='ratingNum'>{props.content.avgRating}</span>
+                        <span className='ratingNum'>{props.content.avgRating.toFixed(1)}</span>
                     </div>}      
             </div>
         </div>

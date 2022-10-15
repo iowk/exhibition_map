@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './register.css';
 import './general.css';
 import axios from './axios';
@@ -7,8 +7,8 @@ import NavBar from './components/navbar'
 
 function Register(props){
     // Full register page
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
+    const usernameRef = useRef();
+    const emailRef = useRef();
     const [password, setPassword] = useState('');
     const [passwordConf, setPasswordConf] = useState('');
     const [err, setErr] = useState({
@@ -48,8 +48,8 @@ function Register(props){
         setErr(err_cpy);
     }
     function clearInput(){
-        setUsername('');
-        setEmail('');
+        usernameRef.current.value = '';
+        emailRef.current.value = '';
         setPassword('');
         setPasswordConf('');
     }
@@ -57,8 +57,8 @@ function Register(props){
         // POST username, email and password
         if(password===passwordConf){
             axios().post('/map/users/register/', JSON.stringify({
-                username: username,
-                email: email,
+                username: usernameRef.current.value,
+                email: emailRef.current.value,
                 password: password,
             }),
             {
@@ -69,11 +69,11 @@ function Register(props){
             })
             .then(() => {
                 clearErr();
-                login(username, password)
+                login(usernameRef.current.value, password)
                 .then(() => {
                     axios(getToken()).get('/map/users/send_acc_email/')
                     .then(() => {
-                        setBottomMessage("Registration success. Activation mail is sent to " + email);
+                        setBottomMessage("Registration success. Activation mail is sent to " + emailRef.current.value);
                     })
                     .catch(e => {
                         console.log(e);
@@ -105,8 +105,7 @@ function Register(props){
                     <span className='regspan'>Username</span>
                     <input
                         type='text'
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        ref={usernameRef}
                         className='inpBox'
                     />
                 </div>
@@ -115,8 +114,7 @@ function Register(props){
                     <span className='regspan'>Email</span>
                     <input
                         type='text'
-                        value={email}                     
-                        onChange={(e) => setEmail(e.target.value)}
+                        ref={emailRef}
                         className='inpBox'
                     />
                 </div>

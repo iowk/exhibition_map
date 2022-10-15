@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Navigate } from "react-router-dom";
 import './addLandmark.css';
 import axios from '../axios';
@@ -7,18 +7,18 @@ import { createCoverImageEntry } from '../utils';
 import { UploadImage } from './image'
 
 function AddLandmark(props) {
-    const [name, setName] = useState('');
-    const [link, setLink] = useState('');
+    const nameRef = useRef();
+    const linkRef = useRef();
     const [image, setImage] = useState(null);
     function handleSubmit(){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
                 axios(getToken()).post('/map/landmarks/', JSON.stringify({
-                    name: name,
+                    name: nameRef.current.value,
                     lat: props.addedMarker.lat(),
                     lng: props.addedMarker.lng(),
-                    link: link,
+                    link: linkRef.current.value,
                 }),
                 {
                     headers: {
@@ -79,16 +79,14 @@ function AddLandmark(props) {
                     <div>
                         <textarea
                             placeholder='Name'
-                            value={name}
-                            onChange={(e) => {setName(e.target.value)}}
+                            ref={nameRef}
                             className='nameBox'
                         />
                     </div>
                     <div>
                         <textarea
                             placeholder='Link'
-                            value={link}
-                            onChange={(e) => {setLink(e.target.value)}}
+                            ref={linkRef}
                             className='linkBox'
                         />
                     </div>
