@@ -14,7 +14,7 @@ function AddLandmark(props) {
         return() => {
             props.handleSetAddedMarker(null);
         };
-    }, []);
+    }, [props]);
     function handleSubmit(){
         jwtVerify()
         .then((is_valid) => {
