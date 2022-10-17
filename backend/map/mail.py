@@ -9,13 +9,13 @@ def SendAccActiveEmail(user, current_site):
     mail_subject = 'Exhibition map activation email'  
     message = render_to_string('acc_active_email.html', {  
         'user': user,  
-        'domain': 'http://localhost:3000/',#current_site.domain,  
+        'domain': settings.FRONTEND_PATH, 
         'uid':urlsafe_base64_encode(force_bytes(user.id)),  
         'token':account_activation_token.make_token(user),  
     })
     send_mail(
         subject = mail_subject, 
         message = message, 
-        from_email=settings.EMAIL_HOST_USER, 
+        from_email = settings.EMAIL_HOST_USER, 
         recipient_list=[user.email]  
     )

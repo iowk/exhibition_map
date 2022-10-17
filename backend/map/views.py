@@ -80,7 +80,6 @@ class UserRegister(generics.CreateAPIView):
                 serializer.data['email'],
                 serializer.data['password']
             )
-            current_site = get_current_site(request)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -88,7 +87,6 @@ class SendUserActivationMail(APIView):
     permission_classes = [permissions.AllowAny]
     def get(self, request):
         current_site = get_current_site(request)
-        SendAccActiveEmail(request.user, current_site)
         try:            
             SendAccActiveEmail(request.user, current_site)
             return Response(status=status.HTTP_200_OK)
