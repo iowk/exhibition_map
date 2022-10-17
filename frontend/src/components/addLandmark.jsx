@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Navigate } from "react-router-dom";
 import './addLandmark.css';
 import axios from '../axios';
@@ -10,6 +10,11 @@ function AddLandmark(props) {
     const nameRef = useRef();
     const linkRef = useRef();
     const [image, setImage] = useState(null);
+    useEffect(() => {
+        return() => {
+            props.handleSetAddedMarker(null);
+        };
+    }, []);
     function handleSubmit(){
         jwtVerify()
         .then((is_valid) => {
@@ -75,7 +80,7 @@ function AddLandmark(props) {
         if(props.user.is_verified){
             return(
                 <div className='addLandmark'>
-                    <div className='dtop'>Add a new landmark</div>
+                    <div className='dtop'>Add a new landmark at <br/> ({props.addedMarker.lat()}, {props.addedMarker.lng()})</div>
                     <div>
                         <textarea
                             placeholder='Name'

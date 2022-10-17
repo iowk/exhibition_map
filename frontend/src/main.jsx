@@ -74,8 +74,7 @@ function Main(props) {
         });   
     }, [phase])
     function handleClickLandmark(lmid){
-        // Landmark is clicked on
-        setAddedMarker(null);
+        // Landmark is clicked on        
         setPhase('landmark');
         if(lmid!==curLandmark.id){
             axios().get('/map/landmarks/'+lmid)
@@ -87,19 +86,20 @@ function Main(props) {
             });
         }        
     }
-    function handleAddLandmark(latlng){        
+    function handleAddLandmark(latlng){
         setAddedMarker(latlng);
         setPhase('addLandmark');
     }
     function handleSetUser(usr){
         setUser(usr);
     }
+    function handleSetAddedMarker(added_marker){
+        setAddedMarker(added_marker);
+    }
     function handleToInitial() {
-        setAddedMarker(null);
         setPhase('initial');        
     }
     function handleSearch(pattern) {
-        setAddedMarker(null);
         if(pattern===''){
             setPhase('initial');
         }
@@ -125,14 +125,12 @@ function Main(props) {
             }); 
         }           
     }
-    function handleToLandmark(lm) {        
-        setAddedMarker(null);        
+    function handleToLandmark(lm) { 
         setCurLandmark(lm);
         setCenter({lat: lm.lat, lng: lm.lng});
         setPhase('landmark');
     }
-    function handleToContent(ct) {
-        setAddedMarker(null);        
+    function handleToContent(ct) {   
         setCurContent(ct);
         if(ct.landmark_id!==curLandmark.id){
             axios().get('/map/landmarks/'+ct.landmark_id)
@@ -147,7 +145,6 @@ function Main(props) {
         setPhase('content');
     }
     function handleToAddContent() {
-        setAddedMarker(null);
         setPhase('addContent');
     }
     var child;
@@ -188,6 +185,7 @@ function Main(props) {
         child = <AddLandmark
             user = {user}
             handleSetUser = {handleSetUser}
+            handleSetAddedMarker= {handleSetAddedMarker}
             addedMarker = {addedMarker}
         />;
     }

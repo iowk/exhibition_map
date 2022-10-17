@@ -68,7 +68,7 @@ function UploadImage(props){
     }
     return(<div className='uploadImage'>
         {imagePreviewSrc && <div className='imagePreview' style={{'backgroundImage': `url(${imagePreviewSrc})`}}/>}
-        {!imagePreviewSrc && <div  className='imagePreview'><span>Upload image</span></div>}
+        {!imagePreviewSrc && <div  className='imagePreview'><span>Image preview</span></div>}
         <div className='inputDiv'>
             <input type="file" name="image_url"
                 accept="image/jpeg,image/png,image/gif" onChange={onImageChange} />
