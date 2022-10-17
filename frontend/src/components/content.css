@@ -42,13 +42,19 @@
     text-align: center;
     margin: 0px;    
 }
-.contentButtons{
+.contentDetail .contentButtons{
     padding: 5px;
     display: inline-flex;
     flex-wrap: wrap;
     justify-content: center;
 }
-.contentDeleteButton{
+.contentDetail .addDesButton{
+    width: 150px;
+    margin: 5px;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+.contentDetail .contentDeleteButton{
     width: 150px;
     margin: 5px;
     margin-left: 25px;

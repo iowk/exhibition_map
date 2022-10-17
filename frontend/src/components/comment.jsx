@@ -87,7 +87,8 @@ function CommentPostPopup(props){
     const maxRating = 5;
     const [open, setOpen] = useState(false);
     const [isPatch, setIsPatch] = useState(false);
-    const [rating, setRating] = useState(5);
+    const [rating, setRating] = useState(maxRating);
+    const [oldComment, setOldComment] = useState('');
     const commentRef = useRef();
 
     let apiPath = '';
@@ -107,7 +108,7 @@ function CommentPostPopup(props){
                     // This user already had a comment
                     setIsPatch(true);
                     setRating(res.data['rating']);
-                    commentRef.current.value = res.data['text'];
+                    setOldComment(res.data['text']);
                 })
                 .catch(e => {
                     // New comment
@@ -230,6 +231,7 @@ function CommentPostPopup(props){
                         <textarea
                             placeholder='Write comment'
                             ref={commentRef}
+                            defaultValue={oldComment}
                             className='commentBox'
                         />
                         <div className='buttonDiv'>

@@ -2,11 +2,11 @@ import React from 'react';
 import './content.css';
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
+import { DesPostPopup } from './description';
 import { jwtVerify, getToken } from '../auth';
 import axios from '../axios';
 import star from '../media/star.png'
 import '../general.css';
-
 
 function Content(props){
     function handleDeleteContent(){
@@ -79,10 +79,22 @@ function Content(props){
                     handleSetUser={props.handleSetUser}
                     buttonName='Upload photo'
                 />}
-            {props.user && (props.user.is_staff) &&
-                <div className='contentDelete'><button className='contentDeleteButton' onClick={handleDeleteContent}>
-                    Delete content
-                </button></div>}            
+                {props.user && (props.user.is_staff) && 
+                <DesPostPopup
+                    key='DesPostPopup'
+                    ctid={props.content.id}
+                    name={props.content.name}
+                    user={props.user}
+                    description={props.content.description}
+                    handleSetUser={props.handleSetUser}
+                    buttonName='Modify description'
+                />}  
+                {props.user && (props.user.is_staff) &&
+                <div className='contentDelete'>
+                    <button className='contentDeleteButton' onClick={handleDeleteContent}>
+                        Delete content
+                    </button>
+                </div>} 
             </div>
             <div className='contentDescription'>
                 {props.content.description}
