@@ -44,13 +44,14 @@
 }
 .contentButtons{
     padding: 5px;
-    margin-left: 10px;
     display: inline-flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 .contentDeleteButton{
     width: 150px;
     margin: 5px;
+    margin-left: 25px;
     margin-right: 25px;
 }
 .contentDetail .contentDescription{

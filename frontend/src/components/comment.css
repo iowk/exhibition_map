@@ -75,11 +75,13 @@
 #commentList > button{
     width: 150px;
     margin: 5px;
+    margin-left: 25px;
     margin-right: 25px;
 }
 #commentPost > button{
     width: 150px;
     margin: 5px;
+    margin-left: 25px;
     margin-right: 25px;
 }
 .modal .each-comment{
