@@ -61,7 +61,9 @@ function Map(props) {
         children.push(setAddedMarker(props.addedMarker));
     }
     for(var key in props.landmarks) {
-        children.push(setMarker(props.landmarks[key]));
+        if(props.landmarks[key]['is_visible']){
+            children.push(setMarker(props.landmarks[key]));
+        }        
     }
     return (
         <LoadScript

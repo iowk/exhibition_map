@@ -25,12 +25,12 @@ function AddLandmark(props) {
                         'Content-Type': 'multipart/form-data'
                     },
                 })
-                .then((res) => {
-                    alert("Landmark added");
-                    window.location.reload(false);
+                .then(() => {
+                    alert("Your request will be validated soon.\nThank you for your contribution.");
                 })
                 .catch((e) =>{
                     console.log(e);
+                    alert(JSON.stringify(e.response.data));
                 });
             }
             else{
@@ -45,7 +45,7 @@ function AddLandmark(props) {
     if(props.addedMarker && props.user && props.user.is_verified){
         return(
             <div className='addLandmark'>
-                <div className='dtop'>Add a new landmark at <br/> ({props.addedMarker.lat()}, {props.addedMarker.lng()})</div>
+                <div className='dtop'>Suggest a new landmark at <br/> ({props.addedMarker.lat()}, {props.addedMarker.lng()})</div>
                 <div>
                     <textarea
                         placeholder='Name'
@@ -73,17 +73,17 @@ function AddLandmark(props) {
     }
     else if(!props.addedMarker){
         return(
-            <div>Please click on the map to add a landmark</div>
+            <div>Please click on the map to suggest a landmark</div>
         );
     }
     else if(!props.user){
         return(
-            <div>Please login to add a landmark</div>
+            <div>Please login to suggest a landmark</div>
         );
     }
     else{
         return(
-            <div>Please actvate your account to add a landmark</div>
+            <div>Please actvate your account to suggest a landmark</div>
         );
     }
 }

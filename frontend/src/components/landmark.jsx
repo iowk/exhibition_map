@@ -121,8 +121,8 @@ function Landmark(props){
             </div>
         )        
         for(let key in contents) {
-            if(contents[key]['isGoing']){ 
-                // Ongoing event content       
+            if(contents[key]['isGoing'] && contents[key]['is_visible']){ 
+                // Ongoing and visible content       
                 children.push(<ContentOverview 
                     key={contents[key].id}
                     content={contents[key]}

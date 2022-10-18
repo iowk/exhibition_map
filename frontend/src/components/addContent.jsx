@@ -37,7 +37,7 @@ function AddContent(props){
                     },
                 })
                 .then(() => {
-                    alert("Content added");
+                    alert("Your request will be validated soon.\nThank you for your contribution.");
                     props.handleToLandmark(props.landmark);
                 })
                 .catch((e) =>{
@@ -94,7 +94,7 @@ function AddContent(props){
             </div>;
     }
     else{
-        child = <div>Please login to add a content</div>;
+        child = <div>Please login to suggest an exhibition</div>;
     }
     return(
     <div className='addContentParent'>
