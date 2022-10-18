@@ -55,7 +55,7 @@ function Content(props){
                     name={props.content.name}
                     buttonName='Show comments'
                 />
-                {props.user.is_verified && (
+                {props.user && props.user.is_verified && (
                     // Comment button for activated user                         
                     <CommentPostPopup
                         key='CommentPostPopup'
@@ -71,7 +71,7 @@ function Content(props){
                     ctid={props.content.id}
                     buttonName='Show photos'
                 />
-                {props.user.is_verified &&      
+                {props.user && props.user.is_verified &&      
                 <ImagePostPopup
                     key='ImagePostPopup'
                     ctid={props.content.id}
