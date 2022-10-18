@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom";
 import './addLandmark.css';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
-import { createCoverImageEntry } from '../utils';
 import { UploadImage } from './image'
 
 function AddLandmark(props) {
@@ -11,60 +10,32 @@ function AddLandmark(props) {
     const linkRef = useRef();
     const [image, setImage] = useState(null);
     useEffect(() => {
-        return() => {
+        return() => {            
             props.handleSetAddedMarker(null);
         };
-    }, [props]);
+    }, []);
     function handleSubmit(){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getToken()).post('/map/landmarks/', JSON.stringify({
-                    name: nameRef.current.value,
-                    lat: props.addedMarker.lat(),
-                    lng: props.addedMarker.lng(),
-                    link: linkRef.current.value,
-                }),
+                let form_data = new FormData();
+                if(image) form_data.append('coverImageSrc', image, image.name);
+                form_data.append('name', nameRef.current.value);
+                form_data.append('link', linkRef.current.value);
+                form_data.append('lat', props.addedMarker.lat());
+                form_data.append('lng', props.addedMarker.lng());
+                axios(getToken()).post('/map/landmarks/', form_data,
                 {
                     headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'multipart/form-data'
                     },
                 })
                 .then((res) => {
-                    if(image){
-                        jwtVerify()
-                        .then(() => {
-                            axios(getToken()).patch('/map/landmarks/'+res.data.id+'/', createCoverImageEntry(image),
-                            {
-                                headers: {
-                                    'Content-Type': 'multipart/form-data'
-                                },
-                            })
-                            .then(() => {
-                                alert("Landmark added");
-                                window.location.reload(false);
-                            })
-                            .catch((e) => {
-                                console.log(e);
-                                alert(e);
-                            })
-                        })
-                        .catch((e) => {
-                            console.log(e);
-                            alert("Please login again");
-                            props.handleSetUser(null);
-                            <Navigate to = '/login/'/>;
-                        })
-                    }
-                    else{
-                        alert("Landmark added");
-                        window.location.reload(false);
-                    }
+                    alert("Landmark added");
+                    window.location.reload(false);
                 })
                 .catch((e) =>{
                     console.log(e);
-                    alert(e);
                 });
             }
             else{
@@ -75,46 +46,49 @@ function AddLandmark(props) {
         .catch(e => {
             console.log(e);            
         })
-    }    
-    if(props.user){
-        if(props.user.is_verified){
-            return(
-                <div className='addLandmark'>
-                    <div className='dtop'>Add a new landmark at <br/> ({props.addedMarker.lat()}, {props.addedMarker.lng()})</div>
-                    <div>
-                        <textarea
-                            placeholder='Name'
-                            ref={nameRef}
-                            className='nameBox'
-                        />
-                    </div>
-                    <div>
-                        <textarea
-                            placeholder='Link'
-                            ref={linkRef}
-                            className='linkBox'
-                        />
-                    </div>
-                    <div id='uploadImageBox'>
-                        <UploadImage handleSetImage={setImage}/>
-                    </div>
-                    <div className='buttonDiv'>
-                        <button onClick={handleSubmit} className='submitButton'>
-                            Upload
-                        </button>
-                    </div>
+    }
+    if(props.addedMarker && props.user && props.user.is_verified){
+        return(
+            <div className='addLandmark'>
+                <div className='dtop'>Add a new landmark at <br/> ({props.addedMarker.lat()}, {props.addedMarker.lng()})</div>
+                <div>
+                    <textarea
+                        placeholder='Name'
+                        ref={nameRef}
+                        className='nameBox'
+                    />
                 </div>
-            );
-        }
-        else{
-            return(
-                <div>Please activate your account to add a landmark</div>
-            );
-        }            
+                <div>
+                    <textarea
+                        placeholder='Link'
+                        ref={linkRef}
+                        className='linkBox'
+                    />
+                </div>
+                <div id='uploadImageBox'>
+                    <UploadImage handleSetImage={setImage}/>
+                </div>
+                <div className='buttonDiv'>
+                    <button onClick={handleSubmit} className='submitButton'>
+                        Upload
+                    </button>
+                </div>
+            </div>
+        );
+    }
+    else if(!props.addedMarker){
+        return(
+            <div>Please click on the map to add a landmark</div>
+        );
+    }
+    else if(!props.user){
+        return(
+            <div>Please login to add a landmark</div>
+        );
     }
     else{
         return(
-            <div>Please login to add a landmark</div>
+            <div>Please actvate your account to add a landmark</div>
         );
     }
 }

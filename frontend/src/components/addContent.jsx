@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import DatePicker from 'react-date-picker';
 import './content.css';
 import { jwtVerify, getToken } from '../auth';
-import { createCoverImageEntry, formatDate } from '../utils';
+import { formatDate } from '../utils';
 import { UploadImage } from './image'
 import axios from '../axios';
 import '../general.css';
@@ -23,49 +23,22 @@ function AddContent(props){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getToken()).post('/map/landmarks/'+props.landmark.id+'/contents/', JSON.stringify({
-                    name: nameRef.current.value,
-                    link: linkRef.current.value,
-                    description: descriptionRef.current.value,
-                    startDate: formatDate(startDate),
-                    endDate: formatDate(endDate)
-                }),
+                let form_data = new FormData();
+                if(image) form_data.append('coverImageSrc', image, image.name);
+                form_data.append('name', nameRef.current.value);
+                form_data.append('link', linkRef.current.value);
+                form_data.append('description', descriptionRef.current.value);
+                form_data.append('startDate', formatDate(startDate));
+                form_data.append('endDate', formatDate(endDate));
+                axios(getToken()).post('/map/landmarks/'+props.landmark.id+'/contents/', form_data,
                 {
                     headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'multipart/form-data'
                     },
                 })
-                .then((res) => {
-                    if(image){
-                        jwtVerify()
-                        .then(() => {
-                            axios(getToken()).patch('/map/contents/'+res.data.id+'/', createCoverImageEntry(image),
-                            {
-                                headers: {
-                                    'Content-Type': 'multipart/form-data'
-                                },
-                            })
-                            .then(() => {
-                                alert("Content added");
-                                props.handleToLandmark(props.landmark);
-                            })
-                            .catch((e) => {
-                                console.log(e);
-                                alert(JSON.stringify(e.response.data));
-                            })
-                        })
-                        .catch((e) => {
-                            console.log(e);
-                            alert("Please login again");
-                            props.handleSetUser(null);
-                            <Navigate to = '/login/'/>;
-                        })
-                    }
-                    else{
-                        alert("Content added");
-                        props.handleToLandmark(props.landmark);
-                    }
+                .then(() => {
+                    alert("Content added");
+                    props.handleToLandmark(props.landmark);
                 })
                 .catch((e) =>{
                     console.log(e);
@@ -79,7 +52,6 @@ function AddContent(props){
         })
         .catch(e => {
             console.log(e);
-            alert(JSON.stringify(e.response.data));
         })
     }
     var child;

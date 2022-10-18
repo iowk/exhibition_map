@@ -86,15 +86,9 @@ function Main(props) {
             });
         }        
     }
-    function handleAddLandmark(latlng){
-        setAddedMarker(latlng);
-        setPhase('addLandmark');
-    }
-    function handleSetUser(usr){
-        setUser(usr);
-    }
-    function handleSetAddedMarker(added_marker){
+    function handleAddLandmark(added_marker){
         setAddedMarker(added_marker);
+        setPhase('addLandmark');
     }
     function handleToInitial() {
         setPhase('initial');        
@@ -165,7 +159,7 @@ function Main(props) {
     else if(phase==='landmark'){
         child = <Landmark
             user = {user}
-            handleSetUser = {handleSetUser}
+            handleSetUser = {setUser}
             landmark = {curLandmark}
             handleToInitial = {handleToInitial}
             handleToContent = {handleToContent}
@@ -175,24 +169,25 @@ function Main(props) {
     else if(phase==='content'){
         child = <Content
             user = {user}
-            handleSetUser = {handleSetUser}
+            handleSetUser = {setUser}
             landmark = {curLandmark}
             content = {curContent}
             handleToLandmark = {handleToLandmark}
         />;
     }
     else if(phase==='addLandmark'){
+        console.log(addedMarker);
         child = <AddLandmark
             user = {user}
-            handleSetUser = {handleSetUser}
-            handleSetAddedMarker= {handleSetAddedMarker}
+            handleSetUser = {setUser}
+            handleSetAddedMarker= {setAddedMarker}
             addedMarker = {addedMarker}
         />;
     }
     else if(phase==='addContent'){
         child = <AddContent
             user = {user}
-            handleSetUser = {handleSetUser}
+            handleSetUser = {setUser}
             landmark = {curLandmark}
             handleToLandmark = {handleToLandmark}
         />;

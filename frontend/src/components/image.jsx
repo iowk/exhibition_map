@@ -4,7 +4,6 @@ import Popup from 'reactjs-popup';
 import { Slide } from 'react-slideshow-image';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
-import { createImageEntry } from '../utils';
 
 import 'react-slideshow-image/dist/styles.css';
 import './image.css'
@@ -85,7 +84,10 @@ function ImagePostPopup(props) {
         jwtVerify()
         .then(is_valid => {
             if(is_valid){
-                axios(getToken()).post(apiPath, createImageEntry(image, imageTitleRef.current.value),
+                let form_data = new FormData();
+                form_data.append('src', image, image.name);
+                form_data.append('name', imageTitleRef.current.value);
+                axios(getToken()).post(apiPath, form_data,
                 {
                     headers: {
                         'Content-type':'multipart/form-data',
