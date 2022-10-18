@@ -72,10 +72,10 @@ class UserDetail(generics.RetrieveDestroyAPIView):
 class UserRegister(generics.CreateAPIView):
     serializer_class = serializers.UserRegisterSerializer
     permission_classes = [permissions.AllowAny]
-    def post(self, request, format=None): 
+    def post(self, request, format=None):
         serializer = serializers.UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
-            user = CustomUser.objects.create_user(   
+            user = CustomUser.objects.create_user(
                 serializer.data['username'],
                 serializer.data['email'],
                 serializer.data['password']
@@ -87,7 +87,7 @@ class SendUserActivationMail(APIView):
     permission_classes = [permissions.AllowAny]
     def get(self, request):
         current_site = get_current_site(request)
-        try:            
+        try:
             SendAccActiveEmail(request.user, current_site)
             return Response(status=status.HTTP_200_OK)
         except:
@@ -97,13 +97,13 @@ class UserActivate(generics.RetrieveAPIView):
     serializer_class = serializers.UserActivateSerializer
     permission_classes = [permissions.AllowAny]
     def get_object(self):
-        try:  
-            uid = force_str(urlsafe_base64_decode(self.kwargs['uidb64']))  
-            user = CustomUser.objects.get(pk=uid)  
-        except(TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):  
+        try:
+            uid = force_str(urlsafe_base64_decode(self.kwargs['uidb64']))
+            user = CustomUser.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
             user = None
-        if user is not None and account_activation_token.check_token(user, self.kwargs['token']):  
-            user.is_verified = True  
+        if user is not None and account_activation_token.check_token(user, self.kwargs['token']):
+            user.is_verified = True
             user.save()
         return {'is_verified': user.is_verified}
 
@@ -188,7 +188,7 @@ class LandmarkCommentList(generics.ListCreateAPIView):
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).comments
         except Landmark.DoesNotExist:
             raise Http404
-    def post(self, request, pk_lm, format=None):        
+    def post(self, request, pk_lm, format=None):
         serializer = serializers.LandmarkCommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(landmark_id=pk_lm, owner=request.user)
@@ -226,6 +226,21 @@ class LandmarkContentList(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class ContentList(generics.ListCreateAPIView):
+    serializer_class = serializers.ContentSerializer
+    permission_classes = [IsActivatedOrReadOnly]
+    def get_queryset(self):
+        return Content.objects.all()
+    def post(self, request, format=None):
+        serializer = serializers.ContentSerializer(data=request.data)
+        if serializer.is_valid():
+            if request.user.is_staff:
+                serializer.save(owner=request.user, is_visible=True)
+            else:
+                serializer.save(owner=request.user, is_visible=False)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class ContentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ContentSerializer
     permission_classes = [(IsAdminUserOrReadOnly)]
@@ -244,7 +259,7 @@ class ContentImageList(generics.ListCreateAPIView):
             return Content.objects.get(pk=self.kwargs['pk_ct']).images
         except Content.DoesNotExist:
             raise Http404
-    def post(self, request, pk_ct, format=None):        
+    def post(self, request, pk_ct, format=None):
         serializer = serializers.ContentImageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(content_id=pk_ct, owner=request.user)
@@ -272,7 +287,7 @@ class ContentCommentList(generics.ListCreateAPIView):
             return Content.objects.get(pk=self.kwargs['pk_ct']).comments
         except Content.DoesNotExist:
             raise Http404
-    def post(self, request, pk_ct, format=None):        
+    def post(self, request, pk_ct, format=None):
         serializer = serializers.ContentCommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(content_id=pk_ct, owner=request.user)
@@ -301,7 +316,7 @@ class Search(APIView):
         lat             float       map center lat
         lng             float       map center lng
         count           int         top {count} results will be returned
-        thres           int         minimum score threshold 
+        thres           int         minimum score threshold
     '''
     permission_classes = [permissions.AllowAny]
     def post(self, request):

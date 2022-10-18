@@ -22,7 +22,7 @@ class Image(models.Model): # Landmark and content images
         self.created = timezone.now()
         return super(Image, self).save(*args, **kwargs)
 
-class Comment(models.Model): # Landmark and content comments    
+class Comment(models.Model): # Landmark and content comments
     created = models.DateTimeField(editable=False)
     modified = models.DateTimeField(editable=False)
     text = models.CharField(max_length=500, blank=True)
@@ -52,7 +52,7 @@ class Landmark(models.Model):
     def contentCount(self):
         cnt = 0
         for content in self.contents.all():
-            if content.isGoing():
+            if content.isGoing() and content.is_visible:
                 cnt += 1
         return cnt
     def avgRating(self):
@@ -87,7 +87,7 @@ class Content(models.Model):
             return False
         if self.endDate and self.endDate < curTime:
             return False
-        return True     
+        return True
     def strDateInterval(self):
         return self.startDate.strftime('%B %d %Y') + " ~ " + self.endDate.strftime('%B %d %Y')
     def avgRating(self):
