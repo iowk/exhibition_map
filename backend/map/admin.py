@@ -17,8 +17,8 @@ class LandmarkCommentInline(admin.TabularInline):
 	model = LandmarkComment
 
 class LandmarkAdmin(admin.ModelAdmin):
-	fields = ['owner', 'name', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc', 'is_visible']
-	list_display = ['owner', 'name', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc', 'is_visible']
+	fields = ['name', 'owner', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc', 'is_visible']
+	list_display = ['name', 'owner', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc', 'is_visible']
 	inlines = [ContentInline, LandmarkImageInline, LandmarkCommentInline]
 
 class ContentImageInline(admin.TabularInline):
@@ -28,8 +28,8 @@ class ContentCommentInline(admin.TabularInline):
 	model = ContentComment
 
 class ContentAdmin(admin.ModelAdmin):
-	fields = ['owner', 'landmark', 'name', 'startDate', 'endDate', 'link', 'description', 'coverImageSrc', 'is_visible']
-	list_display = ['owner', 'landmark', 'name', 'startDate', 'endDate', 'link', 'description', 'coverImageSrc', 'is_visible']
+	fields = ['landmark', 'owner','name', 'startDate', 'endDate', 'link', 'description', 'coverImageSrc', 'is_visible']
+	list_display = ['landmark', 'owner', 'name', 'startDate', 'endDate', 'link', 'description', 'coverImageSrc', 'is_visible']
 	inlines = [ContentImageInline, ContentCommentInline]
 
 admin.site.register(Landmark, LandmarkAdmin)

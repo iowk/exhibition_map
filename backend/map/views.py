@@ -129,16 +129,17 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class LandmarkList(generics.ListCreateAPIView):
     serializer_class = serializers.LandmarkSerializer
-    permission_classes = [IsActivatedOrReadOnly] # Might be changed
+    permission_classes = [IsActivatedOrReadOnly]
     def get_queryset(self):
         return Landmark.objects.all()
     def post(self, request, format=None):
         serializer = serializers.LandmarkSerializer(data=request.data)
         if serializer.is_valid():
-            if(request.user.is_staff):
+            if request.user.is_staff:
                 serializer.save(owner=request.user, is_visible=True)
             else:
                 serializer.save(owner=request.user, is_visible=False)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LandmarkDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -218,7 +219,7 @@ class LandmarkContentList(generics.ListCreateAPIView):
     def post(self, request, pk_lm, format=None):
         serializer = serializers.ContentSerializer(data=request.data)
         if serializer.is_valid():
-            if(request.user.is_staff):
+            if request.user.is_staff:
                 serializer.save(landmark_id=pk_lm, owner=request.user, is_visible=True)
             else:
                 serializer.save(landmark_id=pk_lm, owner=request.user, is_visible=False)
