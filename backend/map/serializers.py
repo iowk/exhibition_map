@@ -58,10 +58,11 @@ class ContentSerializer(serializers.ModelSerializer):
     lat = serializers.ReadOnlyField(source='landmark.lat')
     lng = serializers.ReadOnlyField(source='landmark.lng')
     landmark_name = serializers.ReadOnlyField(source='landmark.name')
-    class Meta:
+    class Meta:        
         model = models.Content
         fields = ['id', 'owner', 'landmark_id', 'landmark_name', 'lat', 'lng', 'name', 'startDate', 'endDate', 'link', 'description', 'coverImageSrc', 'isGoing', 'avgRating']
-
+        ordering = ['avgRating', 'startDate', 'endDate']
+        
     def validate_start_date(self, data):
         if data['startDate'] > data['endDate']:
             raise serializers.ValidationError("Start date should be earlier than end date")

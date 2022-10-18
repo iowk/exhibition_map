@@ -79,10 +79,6 @@ class Content(models.Model):
     link = models.CharField(max_length=200, blank=True)
     description = models.CharField(max_length=3000, blank=True)
     coverImageSrc = models.ImageField(upload_to='images/', default='images/empty.jpg')
-
-    class Meta:
-        ordering = ['startDate', 'endDate']
-
     def __str__(self):
         return self.name
     def isGoing(self):
