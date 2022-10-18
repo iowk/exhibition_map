@@ -12,14 +12,14 @@ import AddContent from './components/addContent';
 
 function Main(props) {
     // Full main page
-    const [phase, setPhase] = useState('initial');    
+    const [phase, setPhase] = useState('initial');
     const [user, setUser] = useState(null);
     const [landmarks, setLandmarks] = useState({});
     const [addedMarker, setAddedMarker] = useState(null); //latlng
     const [curLandmark, setCurLandmark] = useState({});
     const [curContent, setCurContent] = useState({}); // Currently clicked content
     const [center, setCenter] = useState({
-        lat: 25.04452274013203, 
+        lat: 25.04452274013203,
         lng: 121.52982217234694,
     }); // Map center coordinates
     const [searchResult, setSearchResult] = useState([]);
@@ -27,7 +27,7 @@ function Main(props) {
     useEffect(() => {
         // Set initial search results
         const fetchData = async() => {
-            try{                          
+            try{
                 const res = await axios().post('/map/search/', JSON.stringify({
                     lat: center['lat'],
                     lng: center['lng'],
@@ -39,7 +39,7 @@ function Main(props) {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                });  
+                });
                 const res_data = await res.data;
                 setInitialSearchResult(res_data);
             }
@@ -47,13 +47,13 @@ function Main(props) {
                 console.log(e);
             }
         }
-        if(phase==='initial') fetchData();        
+        if(phase==='initial') fetchData();
     }, [center, phase])
     useEffect(() => {
         // GET all landmarks on the map
         const fetchData = async() => {
-            try{                          
-                const res = await axios().get('/map/landmarks/');  
+            try{
+                const res = await axios().get('/map/landmarks/');
                 const landmarks = await res.data;
                 setLandmarks(landmarks);
             }
@@ -61,7 +61,7 @@ function Main(props) {
                 console.log(e);
             }
         }
-        if(phase==='initial' || phase==='landmark') fetchData();        
+        if(phase==='initial' || phase==='landmark') fetchData();
     }, [phase])
     useEffect(() => {
         jwtVerify()
@@ -71,10 +71,10 @@ function Main(props) {
         })
         .catch((e) => {
             console.log(e);
-        });   
+        });
     }, [phase])
     function handleClickLandmark(lmid){
-        // Landmark is clicked on        
+        // Landmark is clicked on
         setPhase('landmark');
         if(lmid!==curLandmark.id){
             axios().get('/map/landmarks/'+lmid)
@@ -84,14 +84,14 @@ function Main(props) {
             .catch(e => {
                 console.log(e);
             });
-        }        
+        }
     }
     function handleAddLandmark(added_marker){
         setAddedMarker(added_marker);
         setPhase('addLandmark');
     }
     function handleToInitial() {
-        setPhase('initial');        
+        setPhase('initial');
     }
     function handleSearch(pattern) {
         if(pattern===''){
@@ -111,20 +111,20 @@ function Main(props) {
                     'Content-Type': 'application/json'
                 },
             })
-            .then(res => {            
+            .then(res => {
                 setSearchResult(res.data);
             })
             .catch(e => {
                 console.log(e);
-            }); 
-        }           
+            });
+        }
     }
-    function handleToLandmark(lm) { 
+    function handleToLandmark(lm) {
         setCurLandmark(lm);
         setCenter({lat: lm.lat, lng: lm.lng});
         setPhase('landmark');
     }
-    function handleToContent(ct) {   
+    function handleToContent(ct) {
         setCurContent(ct);
         if(ct.landmark_id!==curLandmark.id){
             axios().get('/map/landmarks/'+ct.landmark_id)
@@ -134,7 +134,7 @@ function Main(props) {
             .catch(e => {
                 console.log(e);
             });
-        }  
+        }
         setCenter({lat: ct.lat, lng: ct.lng});
         setPhase('content');
     }
@@ -142,7 +142,7 @@ function Main(props) {
         setPhase('addContent');
     }
     var child;
-    if(phase==='initial'){        
+    if(phase==='initial'){
         child = <SearchResultList
             searchResult = {initialSearchResult}
             handleToLandmark = {handleToLandmark}
@@ -163,7 +163,7 @@ function Main(props) {
             landmark = {curLandmark}
             handleToInitial = {handleToInitial}
             handleToContent = {handleToContent}
-            handleToAddContent = {handleToAddContent}             
+            handleToAddContent = {handleToAddContent}
         />;
     }
     else if(phase==='content'){
@@ -190,7 +190,7 @@ function Main(props) {
             handleToLandmark = {handleToLandmark}
         />;
     }
-    return(            
+    return(
         <div id="main">
             <div id="navbar">
                 {<NavBar user = {user}/>}
@@ -206,7 +206,7 @@ function Main(props) {
             </div>
             <div id="map">
                 {/* Map */}
-                <Map 
+                <Map
                     phase = {phase}
                     center = {center}
                     landmarks = {landmarks}

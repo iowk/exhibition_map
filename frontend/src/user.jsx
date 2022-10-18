@@ -10,26 +10,28 @@ function User(props){
     const [user, setUser] = useState({});
     const [verifyDone, setVerifyDone] = useState(false);
     useEffect(() =>{
-        let isMounted = true;        
-        const fetchData = async() => {
+        let isMounted = true;
+        const fetchUser = async() => {
             try{
                 const is_valid = await jwtVerify();
                 if(isMounted){
                     if(is_valid){
                         setUser(JSON.parse(getLSItem('user')));
                     }
-                    else setUser(null);
+                    else{
+                        setUser(null);
+                    }
                 }
             }
             catch (e) {
                 console.log(e);
                 if(isMounted) setUser(null);
             }
-        }        
-        fetchData().then(() => {
+        };
+        fetchUser().then(() => {
             setVerifyDone(true);
         });
-        return () => { isMounted = false }; 
+        return () => { isMounted = false };
     }, [props])
     function logoutOnClick() {
         logout();
@@ -53,15 +55,15 @@ function User(props){
     else if(user) {
         return(
             <div className='userPage'>
-                {<NavBar user = {user}/>}
+                <NavBar user = {user}/>
                 <div className='userInfo'>
                     <div className='username'>
                         <span className='title'>User</span>
-                        <span>{user.username}</span>                        
+                        <span>{user.username}</span>
                     </div>
                     <div className='email'>
                         <span className='title'>Email</span>
-                        <span>{user.email}</span>                        
+                        <span>{user.email}</span>
                     </div>
                     {user.is_verified &&
                     <div className='status'>
@@ -76,11 +78,20 @@ function User(props){
                         <button className='activationButton' onClick={activateOnClick}>
                             Send activation mail
                         </button>
-                    </div>       
-                    }                    
+                    </div>
+                    }
                     <div><Link to="/user/comments/"><button className='toCommentButton'>
                         Your comments
                     </button></Link></div>
+                    {user.is_staff &&
+                    <div>
+                        <Link to="/admin/landmarks/"><button className='toLandmarkRequestButton'>
+                            Manage landmark suggestions
+                        </button></Link>
+                        <Link to="/admin/contents/"><button className='toContentRequestButton'>
+                            Manage content suggestions
+                        </button></Link>
+                    </div>}
                     <div><button onClick={logoutOnClick} className='logoutButton'>
                         Logout
                     </button></div>

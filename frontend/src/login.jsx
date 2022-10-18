@@ -15,13 +15,13 @@ function Login(props){
             .then((is_valid) => {
                 if(is_valid){
                     setLoginStatus('success');
-                    <Navigate to = '/'/>;
+                    <Navigate to = '/map/'/>;
                 }
                 else{
                     setLoginStatus('fail');
                 }
             })
-            .catch((e) => {                
+            .catch((e) => {
                 console.log(e);
             })
         })
@@ -38,7 +38,7 @@ function Login(props){
                 <form className='regform' onSubmit={handleSubmit}>
                     <div className='inpDiv'>
                         <span  className='regspan'>Username</span>
-                        <input 
+                        <input
                             type='text'
                             ref={usernameRef}
                             className='inpBox'
@@ -46,7 +46,7 @@ function Login(props){
                     </div>
                     <div className='inpDiv'>
                         <span  className='regspan'>Password</span>
-                        <input 
+                        <input
                             type='password'
                             ref={passwordRef}
                             className='inpBox'
@@ -59,11 +59,11 @@ function Login(props){
                         <button  className='regbutton'>
                             Register
                         </button>
-                    </Link>                   
+                    </Link>
                 </form>
                 <div className='bottomMessage'>{loginStatus==='fail' && 'Username or password incorrect'}</div>
                 {loginStatus==='success' && (
-                    <Navigate to="/" replace={true} />
+                    <Navigate to="/map/" replace={true} />
                 )}
             </div>
         </div>);

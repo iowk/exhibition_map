@@ -56,7 +56,7 @@ function AddContent(props){
     }
     var child;
     if(props.user){
-        child = 
+        child =
             <div className='addContent'>
                 <div>
                     <textarea
@@ -70,14 +70,14 @@ function AddContent(props){
                         placeholder='Link'
                         ref={linkRef}
                         className='linkBox'
-                    />   
+                    />
                 </div>
                 <div>
                     <textarea
                         placeholder='Description'
                         ref={descriptionRef}
                         className='descriptionBox'
-                    />   
+                    />
                 </div>
                 <div className='dateDiv'>
                     <div><span>Start date: </span><DatePicker onChange={setStartDate} format='yyyy-MM-dd' value={startDate}/></div>

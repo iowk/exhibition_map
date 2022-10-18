@@ -1,0 +1,133 @@
+.adminLandmark{
+    position: absolute;
+    top: 50px;
+    width: calc(100% - 40px);
+    padding: 20px;
+}
+.adminLandmark .landmarkBox{
+    height: 110px;
+    width: 100%;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: solid black;
+}
+.adminLandmark .landmarkBox > div{
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    padding: 12px;
+}
+.adminLandmark .landmarkBox > div > *{
+    padding: 2px;
+}
+.adminLandmark .landmarkBox .imageDiv{
+    width: 160px;
+    padding: 5px;
+    background-color: rgb(245, 245, 245);
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.adminLandmark .landmarkBox .imageDiv > img{
+    max-height: 100%;
+    max-width: 100%;
+}
+.adminLandmark .landmarkBox .titleDiv{
+    width: calc(30% - 160px);
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.adminLandmark .landmarkBox .titleDiv .landmarkName{
+    margin-top: 4px;
+    margin-bottom: 4px;
+    height: 60px;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.adminLandmark .landmarkBox .infoDiv{
+    width: calc(70% - 160px);
+}
+.adminLandmark .landmarkBox .infoDiv > a .link{
+    overflow-wrap: break-word;
+}
+.adminLandmark .landmarkBox .buttonDiv{
+    width: 160px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.adminContent{
+    position: absolute;
+    top: 50px;
+    width: calc(100% - 40px);
+    padding: 20px;
+}
+.adminContent .contentBox{
+    height: 110px;
+    width: 100%;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: solid black;
+}
+.adminContent .contentBox > div{
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    padding: 12px;
+}
+.adminContent .contentBox > div > *{
+    padding: 2px;
+}
+.adminContent .contentBox .imageDiv{
+    width: 160px;
+    padding: 5px;
+    background-color: rgb(245, 245, 245);
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.adminContent .contentBox .imageDiv > img{
+    max-height: 100%;
+    max-width: 100%;
+}
+.adminContent .contentBox .titleDiv{
+    width: calc(30% - 160px);
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.adminContent .contentBox .titleDiv .contentName{
+    margin-top: 4px;
+    margin-bottom: 4px;
+    height: 60px;
+    font-size: 20px;
+    font-weight: bold;
+    color: darkred;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.adminContent .contentBox .infoDiv{
+    width: calc(35% - 80px);
+}
+.adminContent .contentBox .infoDiv > a .link{
+    overflow-wrap: break-word;
+}
+.adminContent .contentBox .desDiv{
+    width: calc(35% - 80px);
+}
+.adminContent .contentBox .buttonDiv{
+    width: 160px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    justify-content: space-between;
+    align-items: center;
+}
