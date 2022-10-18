@@ -13,7 +13,7 @@ ReactDOM.render(
     <BrowserRouter>
         <Routes>
             <Redirect to="/" />
-            <Route path="/" element={<Main />}></Route>
+            <Route path="/map" element={<Main />}></Route>
             <Route path="/register" element={<Register />}></Route>
             <Route path="/activate/:uidb64/:token" element={<Activate/>}></Route>
             <Route path="/login" element={<Login />}></Route>
