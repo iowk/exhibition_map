@@ -57,7 +57,7 @@ function Map(props) {
         props.handleAddLandmark(e.latLng);
     }
     var children = [];
-    if(props.addedMarker) {
+    if(props.phase==='addLandmark' && props.addedMarker) {
         children.push(setAddedMarker(props.addedMarker));
     }
     for(var key in props.landmarks) {

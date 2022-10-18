@@ -176,11 +176,9 @@ function Main(props) {
         />;
     }
     else if(phase==='addLandmark'){
-        console.log(addedMarker);
         child = <AddLandmark
             user = {user}
             handleSetUser = {setUser}
-            handleSetAddedMarker= {setAddedMarker}
             addedMarker = {addedMarker}
         />;
     }
@@ -209,6 +207,7 @@ function Main(props) {
             <div id="map">
                 {/* Map */}
                 <Map 
+                    phase = {phase}
                     center = {center}
                     landmarks = {landmarks}
                     addedMarker = {addedMarker}
