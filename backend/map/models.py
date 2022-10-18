@@ -46,16 +46,15 @@ class Landmark(models.Model):
     zIndex = models.IntegerField(default = 1)
     link = models.CharField(max_length=200, blank=True)
     coverImageSrc = models.ImageField(upload_to='images/', default='images/empty.jpg')
+    is_visible = models.BooleanField(default=False)
     def __str__(self):
         return self.name
-
     def contentCount(self):
         cnt = 0
         for content in self.contents.all():
             if content.isGoing():
                 cnt += 1
         return cnt
-
     def avgRating(self):
         return list(self.comments.all().aggregate(Avg('rating')).values())[0]
 
@@ -79,6 +78,7 @@ class Content(models.Model):
     link = models.CharField(max_length=200, blank=True)
     description = models.CharField(max_length=3000, blank=True)
     coverImageSrc = models.ImageField(upload_to='images/', default='images/empty.jpg')
+    is_visible = models.BooleanField(default=False)
     def __str__(self):
         return self.name
     def isGoing(self):

@@ -40,7 +40,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class LandmarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Landmark
-        fields = ['id', 'owner', 'name', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc', 'contentCount', 'avgRating']
+        fields = ['id', 'owner', 'name', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc', 'is_visible', 'contentCount', 'avgRating']
 
 class LandmarkImageSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -60,9 +60,9 @@ class ContentSerializer(serializers.ModelSerializer):
     landmark_name = serializers.ReadOnlyField(source='landmark.name')
     class Meta:        
         model = models.Content
-        fields = ['id', 'owner', 'landmark_id', 'landmark_name', 'lat', 'lng', 'name', 'startDate', 'endDate', 'link', 'description', 'coverImageSrc', 'isGoing', 'avgRating']
+        fields = ['id', 'owner', 'landmark_id', 'landmark_name', 'lat', 'lng', 'name', 'startDate', 'endDate', 'link', 'description', 'is_visible', 'coverImageSrc', 'isGoing', 'avgRating']
         ordering = ['avgRating', 'startDate', 'endDate']
-        
+
     def validate_start_date(self, data):
         if data['startDate'] > data['endDate']:
             raise serializers.ValidationError("Start date should be earlier than end date")

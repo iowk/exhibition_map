@@ -135,13 +135,15 @@ class LandmarkList(generics.ListCreateAPIView):
     def post(self, request, format=None):
         serializer = serializers.LandmarkSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(owner=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            if(request.user.is_staff):
+                serializer.save(owner=request.user, is_visible=True)
+            else:
+                serializer.save(owner=request.user, is_visible=False)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LandmarkDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.LandmarkSerializer
-    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    permission_classes = [(IsAdminUserOrReadOnly)]
     def get_queryset(self):
         return Landmark.objects.all()
     def get_object(self):
@@ -166,7 +168,7 @@ class LandmarkImageList(generics.ListCreateAPIView):
 
 class LandmarkImageDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.LandmarkImageSerializer
-    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    permission_classes = [(IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             return Landmark.objects.get(pk=self.kwargs['pk_lm']).images
@@ -216,13 +218,16 @@ class LandmarkContentList(generics.ListCreateAPIView):
     def post(self, request, pk_lm, format=None):
         serializer = serializers.ContentSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(landmark_id=pk_lm, owner=request.user)
+            if(request.user.is_staff):
+                serializer.save(landmark_id=pk_lm, owner=request.user, is_visible=True)
+            else:
+                serializer.save(landmark_id=pk_lm, owner=request.user, is_visible=False)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ContentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ContentSerializer
-    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    permission_classes = [(IsAdminUserOrReadOnly)]
     def get_queryset(self):
         return Content.objects.all()
     def get_object(self):
@@ -247,7 +252,7 @@ class ContentImageList(generics.ListCreateAPIView):
 
 class ContentImageDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ContentImageSerializer
-    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    permission_classes = [(IsAdminUserOrReadOnly)]
     def get_queryset(self):
         try:
             return Content.objects.get(pk=self.kwargs['pk_ct']).images
