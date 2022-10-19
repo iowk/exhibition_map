@@ -1,6 +1,7 @@
 import React from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import './map.css';
+import { GOOGLE_MAP_API_KEY } from '../settings';
 
 const zoom = 15;
 
@@ -63,11 +64,11 @@ function Map(props) {
     for(var key in props.landmarks) {
         if(props.landmarks[key]['is_visible']){
             children.push(setMarker(props.landmarks[key]));
-        }        
+        }
     }
     return (
         <LoadScript
-            googleMapsApiKey={''}//{process.env.REACT_APP_GOOGLE_MAP_API_KEY}
+            googleMapsApiKey={GOOGLE_MAP_API_KEY}//{process.env.REACT_APP_GOOGLE_MAP_API_KEY}
         >
             <GoogleMap
                 mapContainerStyle={containerStyle}
