@@ -13,7 +13,7 @@ function Landmark(props){
         const fetchData = async() => {
             try{
                 // GET contents
-                const res_cons = await axios().get('/map/landmarks/'+props.landmark.id+'/contents/');            
+                const res_cons = await axios().get('/map/landmarks/'+props.landmark.id+'/contents/');
                 const ct = await res_cons.data;
                 // Set state
                 setContents(ct);
@@ -30,7 +30,7 @@ function Landmark(props){
             .catch((e) => {
                 console.log(e);
             });
-        }        
+        }
     }, [props])
     function handleDeleteLandmark(){
         jwtVerify()
@@ -49,12 +49,12 @@ function Landmark(props){
         })
         .catch((e) => {
             console.log(e);
-        });        
+        });
     }
     function genLandmark(){
         return (
             <div className="landmarkInfo" key='lm'>
-                <h1>{props.landmark.name}</h1>         
+                <h1>{props.landmark.name}</h1>
                 <img src={props.landmark.coverImageSrc} alt=""></img>
                 <div className='link-rating'>
                     <a href={props.landmark.link}>
@@ -64,11 +64,11 @@ function Landmark(props){
                         <div className='rating'>
                         <img className='starImage' src={star} alt='Rating:'></img>
                         <span className='ratingNum'>{props.landmark.avgRating.toFixed(1)}</span></div>}
-                </div>                
+                </div>
             </div>
         );
     }
-    
+
     if(props.landmark){
         var children = [];
         children.push(genLandmark());
@@ -102,28 +102,28 @@ function Landmark(props){
                 handleSetUser={props.handleSetUser}
                 buttonName='Upload photo'
             />)
-        }        
+        }
+        if(props.user && props.user.is_verified){
+            buttons.push(
+                <div key='addContentButton'><button className='addContentButton' onClick={props.handleToAddContent}>
+                    Suggest content
+                </button></div>)
+        }
         if(props.user && (props.user.is_staff)){
             buttons.push(
                 <div key='deleteLandmarkButton'><button className='deleteLandmarkButton' onClick={handleDeleteLandmark}>
                     Delete landmark
                 </button></div>)
         }
-        if(props.user && (props.user.is_staff || props.user.id===props.landmark.owner)){
-            buttons.push(
-                <div key='addContentButton'><button className='addContentButton' onClick={props.handleToAddContent}>
-                    Add content
-                </button></div>)
-        }
         children.push(
             <div key='landmarkButtons' className='landmarkButtons'>
                 {buttons}
             </div>
-        )        
+        )
         for(let key in contents) {
-            if(contents[key]['isGoing'] && contents[key]['is_visible']){ 
-                // Ongoing and visible content       
-                children.push(<ContentOverview 
+            if(contents[key]['isGoing'] && contents[key]['is_visible']){
+                // Ongoing and visible content
+                children.push(<ContentOverview
                     key={contents[key].id}
                     content={contents[key]}
                     handleToContent={props.handleToContent}
