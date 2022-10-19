@@ -10,6 +10,7 @@ function AdminLandmark(props){
     const [user, setUser] = useState({});
     const [verifyDone, setVerifyDone] = useState(false);
     const [landmarks, setLandmarks] = useState([]);
+    const [children, setChildren] = useState([]);
     useEffect(() =>{
         let isMounted = true;
         const fetchUser = async() => {
@@ -52,7 +53,38 @@ function AdminLandmark(props){
         }
         fetchData();
     }, [])
-    function handleChangeVisibility(lmkey, lmid, is_verify){
+    useEffect(() => {
+        function setLandmarkBox(landmark){
+            return(
+                <div key={landmark.id} className='landmarkBox'>
+                    <div className='imageDiv'>
+                        <img src={landmark.coverImageSrc} alt=""></img>
+                    </div>
+                    <div className='titleDiv'>
+                        <span className='landmarkName'>{landmark.name}</span>
+                        <span>Contributor: {landmark.owner}</span>
+                    </div>
+                    <div className='infoDiv'>
+                        <span>lat: {landmark.lat}</span>
+                        <span>lng: {landmark.lng}</span>
+                        <a href={landmark.link}>
+                            <div className="link">{landmark.link}</div>
+                        </a>
+                    </div>
+                    <div className='buttonDiv'>
+                        <button className='buttonVerify' onClick={() => handleChangeVisibility(landmark.id, true)}>Verify</button>
+                        <button className='buttonDelete' onClick={() => handleChangeVisibility(landmark.id, false)}>Delete</button>
+                    </div>
+                </div>
+            );
+        }
+        let chs = [];
+        for(let key in landmarks) {
+            chs.push(setLandmarkBox(landmarks[key]));
+        }
+        setChildren(chs);
+    }, [landmarks]);
+    function handleChangeVisibility(lmid, is_verify){
         jwtVerify()
         .then(() => {
             if(is_verify){
@@ -66,7 +98,9 @@ function AdminLandmark(props){
                 })
                 .then(() => {
                     alert("Landmark verified");
-                    window.location.reload();
+                    setLandmarks((current) =>
+                        current.filter((landmark) => landmark.id!==lmid)
+                    );
                 })
                 .catch((e) => {
                     console.log(e);
@@ -82,7 +116,9 @@ function AdminLandmark(props){
                 })
                 .then(() => {
                     alert("Landmark deleted");
-                    window.location.reload();
+                    setLandmarks((current) =>
+                        current.filter((landmark) => landmark.id!==lmid)
+                    );
                 })
                 .catch((e) => {
                     console.log(e);
@@ -93,34 +129,6 @@ function AdminLandmark(props){
         .catch((e) => {
             console.log(e);
         });
-    }
-    function setLandmarkBox(key, landmark){
-        return(
-            <div key={landmark.id} className='landmarkBox'>
-                <div className='imageDiv'>
-                    <img src={landmark.coverImageSrc} alt=""></img>
-                </div>
-                <div className='titleDiv'>
-                    <span className='landmarkName'>{landmark.name}</span>
-                    <span>Contributor: {landmark.owner}</span>
-                </div>
-                <div className='infoDiv'>
-                    <span>lat: {landmark.lat}</span>
-                    <span>lng: {landmark.lng}</span>
-                    <a href={landmark.link}>
-                        <div className="link">{landmark.link}</div>
-                    </a>
-                </div>
-                <div className='buttonDiv'>
-                    <button className='buttonVerify' onClick={() => handleChangeVisibility(key, landmark.id, true)}>Verify</button>
-                    <button className='buttonDelete' onClick={() => handleChangeVisibility(key, landmark.id, false)}>Delete</button>
-                </div>
-            </div>
-        );
-    }
-    var children = [];
-    for(var key in landmarks) {
-        children.push(setLandmarkBox(key, landmarks[key]));
     }
     if(!verifyDone){
         return(<NavBar user = {user}/>);
@@ -154,6 +162,7 @@ function AdminContent(props){
     const [user, setUser] = useState({});
     const [verifyDone, setVerifyDone] = useState(false);
     const [contents, setContents] = useState([]);
+    const [children, setChildren] = useState([]);
     useEffect(() =>{
         let isMounted = true;
         const fetchUser = async() => {
@@ -196,7 +205,40 @@ function AdminContent(props){
         }
         fetchData();
     }, [])
-    function handleChangeVisibility(ctkey, ctid, is_verify){
+    useEffect(() => {
+        function setContentBox(content){
+            return(
+                <div key={content.id} className='contentBox'>
+                    <div className='imageDiv'>
+                        <img src={content.coverImageSrc} alt=""></img>
+                    </div>
+                    <div className='titleDiv'>
+                        <span className='contentName'>{content.landmark_name}-{content.name}</span>
+                        <span>Contributor: {content.owner}</span>
+                    </div>
+                    <div className='infoDiv'>
+                        <span>{content.startDate} ~ {content.endDate}</span>
+                        <a href={content.link}>
+                            <span className="link">{content.link}</span>
+                        </a>
+                    </div>
+                    <div className='desDiv'>
+                        <span>{content.description}</span>
+                    </div>
+                    <div className='buttonDiv'>
+                        <button className='buttonVerify' onClick={() => handleChangeVisibility(content.id, true)}>Verify</button>
+                        <button className='buttonDelete' onClick={() => handleChangeVisibility(content.id, false)}>Delete</button>
+                    </div>
+                </div>
+            );
+        }
+        let chs = [];
+        for(let key in contents) {
+            chs.push(setContentBox(contents[key]));
+        }
+        setChildren(chs);
+    }, [contents]);
+    function handleChangeVisibility(ctid, is_verify){
         jwtVerify()
         .then(() => {
             if(is_verify){
@@ -210,7 +252,9 @@ function AdminContent(props){
                 })
                 .then(() => {
                     alert("Content verified");
-                    window.location.reload();
+                    setContents((current) =>
+                        current.filter((content) => content.id!==ctid)
+                    );
                 })
                 .catch((e) => {
                     console.log(e);
@@ -226,7 +270,9 @@ function AdminContent(props){
                 })
                 .then(() => {
                     alert("Content deleted");
-                    window.location.reload();
+                    setContents((current) =>
+                        current.filter((content) => content.id!==ctid)
+                    );
                 })
                 .catch((e) => {
                     console.log(e);
@@ -237,36 +283,6 @@ function AdminContent(props){
         .catch((e) => {
             console.log(e);
         });
-    }
-    function setContentBox(key, content){
-        return(
-            <div key={content.id} className='contentBox'>
-                <div className='imageDiv'>
-                    <img src={content.coverImageSrc} alt=""></img>
-                </div>
-                <div className='titleDiv'>
-                    <span className='contentName'>{content.landmark_name}-{content.name}</span>
-                    <span>Contributor: {content.owner}</span>
-                </div>
-                <div className='infoDiv'>
-                    <span>{content.startDate} ~ {content.endDate}</span>
-                    <a href={content.link}>
-                        <span className="link">{content.link}</span>
-                    </a>
-                </div>
-                <div className='desDiv'>
-                    <span>{content.description}</span>
-                </div>
-                <div className='buttonDiv'>
-                    <button className='buttonVerify' onClick={() => handleChangeVisibility(key, content.id, true)}>Verify</button>
-                    <button className='buttonDelete' onClick={() => handleChangeVisibility(key, content.id, false)}>Delete</button>
-                </div>
-            </div>
-        );
-    }
-    var children = [];
-    for(var key in contents) {
-        children.push(setContentBox(key, contents[key]));
     }
     if(!verifyDone){
         return(<NavBar user = {user}/>);
