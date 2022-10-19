@@ -1,6 +1,6 @@
 import {React} from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Main from './main'
 import Register from './register'
 import Activate from './activate'
@@ -12,7 +12,6 @@ import {AdminLandmark, AdminContent} from './admin'
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
-            <Redirect to="/" />
             <Route path="/map" element={<Main />}></Route>
             <Route path="/register" element={<Register />}></Route>
             <Route path="/activate/:uidb64/:token" element={<Activate/>}></Route>
