@@ -8,6 +8,8 @@ import { UploadImage } from './image'
 function AddLandmark(props) {
     const nameRef = useRef();
     const linkRef = useRef();
+    const latRef = useRef(props.addedMarker.lat());
+    const lngRef = useRef(props.addedMarker.lng());
     const [image, setImage] = useState(null);
     function handleSubmit(){
         jwtVerify()
@@ -17,8 +19,8 @@ function AddLandmark(props) {
                 if(image) form_data.append('coverImageSrc', image, image.name);
                 form_data.append('name', nameRef.current.value);
                 form_data.append('link', linkRef.current.value);
-                form_data.append('lat', props.addedMarker.lat());
-                form_data.append('lng', props.addedMarker.lng());
+                form_data.append('lat', latRef.current.value);
+                form_data.append('lng', lngRef.current.value);
                 axios(getToken()).post('/map/landmarks/', form_data,
                 {
                     headers: {
@@ -27,6 +29,10 @@ function AddLandmark(props) {
                 })
                 .then(() => {
                     alert("Your request will be validated soon.\nThank you for your contribution.");
+                    props.handleSetCenter({
+                        lat: latRef.current.value,
+                        lng: lngRef.current.value
+                    });
                 })
                 .catch((e) =>{
                     console.log(e);
@@ -39,13 +45,23 @@ function AddLandmark(props) {
             }
         })
         .catch(e => {
-            console.log(e);            
+            console.log(e);
         })
     }
     if(props.addedMarker && props.user && props.user.is_verified){
         return(
             <div className='addLandmark'>
-                <div className='dtop'>Suggest a new landmark at <br/> ({props.addedMarker.lat()}, {props.addedMarker.lng()})</div>
+                <div className='dtop'>
+                    <span>Suggest a new landmark at: <br/></span>
+                    (<input
+                        defaultValue={props.addedMarker.lat()}
+                        ref={latRef}
+                    />,
+                    <input
+                        defaultValue={props.addedMarker.lng()}
+                        ref={lngRef}
+                    />)
+                </div>
                 <div>
                     <textarea
                         placeholder='Name'

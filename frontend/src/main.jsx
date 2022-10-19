@@ -73,6 +73,11 @@ function Main(props) {
             console.log(e);
         });
     }, [phase])
+    useEffect(() => {
+        if(Object.keys(curLandmark).length > 0){
+            setCenter({lat: curLandmark.lat, lng: curLandmark.lng});
+        }
+    }, [curLandmark])
     function handleClickLandmark(lmid){
         // Landmark is clicked on
         setPhase('landmark');
@@ -179,6 +184,7 @@ function Main(props) {
         child = <AddLandmark
             user = {user}
             handleSetUser = {setUser}
+            handleSetCenter = {setCenter}
             addedMarker = {addedMarker}
         />;
     }
