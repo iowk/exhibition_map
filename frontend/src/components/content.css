@@ -22,17 +22,17 @@
     align-items: center;
     justify-content: center;
     margin-top: 5px;
-    margin-bottom: 5px; 
+    margin-bottom: 5px;
 }
 .contentDetail .link-rating .rating{
     display: flex;
     flex-direction: row;
     align-items: center;
     padding-left: 15px;
-    height: 30px;   
+    height: 30px;
 }
 .contentDetail .link{
-    font-size: larger;    
+    font-size: larger;
 }
 .contentDetail .link:hover{
     background-color: rgb(245, 245, 245);
@@ -40,7 +40,8 @@
 .contentDetail .date{
     width: 100%;
     text-align: center;
-    margin: 0px;    
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 .contentDetail .contentButtons{
     padding: 5px;
