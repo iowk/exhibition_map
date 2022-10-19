@@ -27,6 +27,7 @@
     width: calc(100% - 190px);
     margin-left: 20px;
     height: 100%;
+    overflow: auto;
 }
 .overview .des:hover{
     background-color: rgb(245, 245, 245);
