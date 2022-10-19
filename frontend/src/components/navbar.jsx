@@ -11,7 +11,7 @@ function NavBar(props){
     if(user) {
         return(
             <div className="navbar">
-                <Link to="/">
+                <Link to="/map">
                     <button className="navbutton">
                         Map
                     </button>
@@ -27,7 +27,7 @@ function NavBar(props){
     else{
         return(
             <div className="navbar">
-                <Link to="/">
+                <Link to="/map">
                     <button className="navbutton">
                         Map
                     </button>
