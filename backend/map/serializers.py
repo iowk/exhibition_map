@@ -13,11 +13,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CustomUser
         fields = ['id', 'username', 'email', 'password']
-    def validate_password(self, value): 
+    def validate_password(self, value):
         try:
             validators.validate_password(value)
         except exceptions.ValidationError as e:
-            raise serializers.ValidationError(list(e.messages))          
+            raise serializers.ValidationError(list(e.messages))
         return value
 
 class UserActivateSerializer(serializers.ModelSerializer):
@@ -41,6 +41,7 @@ class LandmarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Landmark
         fields = ['id', 'owner', 'name', 'lat', 'lng', 'zIndex', 'link', 'coverImageSrc', 'is_visible', 'contentCount', 'avgRating']
+        ordering = ['avgRating', 'startDate', 'endDate']
 
 class LandmarkImageSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -58,7 +59,7 @@ class ContentSerializer(serializers.ModelSerializer):
     lat = serializers.ReadOnlyField(source='landmark.lat')
     lng = serializers.ReadOnlyField(source='landmark.lng')
     landmark_name = serializers.ReadOnlyField(source='landmark.name')
-    class Meta:        
+    class Meta:
         model = models.Content
         fields = ['id', 'owner', 'landmark_id', 'landmark_name', 'lat', 'lng', 'name', 'startDate', 'endDate', 'link', 'description', 'is_visible', 'coverImageSrc', 'isGoing', 'avgRating']
         ordering = ['avgRating', 'startDate', 'endDate']
