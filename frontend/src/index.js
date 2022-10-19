@@ -12,6 +12,7 @@ import {AdminLandmark, AdminContent} from './admin'
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
+            <Route path="/" element={<Navigate to="/map" />} />
             <Route path="/map" element={<Main />}></Route>
             <Route path="/register" element={<Register />}></Route>
             <Route path="/activate/:uidb64/:token" element={<Activate/>}></Route>
