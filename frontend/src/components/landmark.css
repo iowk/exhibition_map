@@ -2,7 +2,7 @@
     margin-left: 0%;
     margin-right: 0%;
 }
-.landmarkInfo > h1{   
+.landmarkInfo > h1{
     margin: 20px;
     text-align: center;
 }
@@ -17,14 +17,14 @@
     align-items: center;
     justify-content: center;
     margin-top: 5px;
-    margin-bottom: 5px;      
+    margin-bottom: 5px;
 }
 .landmarkInfo .link-rating .rating{
     display: flex;
     flex-direction: row;
     align-items: center;
     padding-left: 15px;
-    height: 30px;  
+    height: 30px;
 }
 .landmarkInfo .link{
     font-size: larger;
@@ -33,7 +33,7 @@
     background-color: rgb(245, 245, 245);
 }
 .landmarkButtons{
-    padding: 5px;
+    padding-top: 5px;
     display: inline-flex;
     flex-wrap: wrap;
     justify-content: center;
