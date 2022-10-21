@@ -18,7 +18,7 @@ function AdminLandmark(props){
                 const is_valid = await jwtVerify();
                 if(isMounted){
                     if(is_valid){
-                        setUser(JSON.parse(getLSItem('user')));
+                        setUser(getLSItem('user'));
                     }
                     else{
                         setUser(null);
@@ -170,7 +170,7 @@ function AdminContent(props){
                 const is_valid = await jwtVerify();
                 if(isMounted){
                     if(is_valid){
-                        setUser(JSON.parse(getLSItem('user')));
+                        setUser(getLSItem('user'));
                     }
                     else{
                         setUser(null);

@@ -29,8 +29,8 @@ function Main(props) {
         const fetchData = async() => {
             try{
                 const res = await axios().post('/map/search/', JSON.stringify({
-                    lat: center['lat'],
-                    lng: center['lng'],
+                    lat: center.lat,
+                    lng: center.lng,
                     pattern: '',
                     count: 100,
                     thres: 0
@@ -66,7 +66,7 @@ function Main(props) {
     useEffect(() => {
         jwtVerify()
         .then((is_valid) => {
-            if(is_valid) setUser(JSON.parse(getLSItem('user')));
+            if(is_valid) setUser(getLSItem('user'));
             else setUser(null);
         })
         .catch((e) => {

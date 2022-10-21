@@ -100,7 +100,7 @@ function UserComment(props){
                 const is_valid = await jwtVerify();
                 if(isMounted){
                     if(is_valid){
-                        setUser(JSON.parse(getLSItem('user')));
+                        setUser(getLSItem('user'));
                         const res = await axios(getToken()).get('/map/users/'+getLSItem('user','id')+'/comments/');
                         const comments = await res.data;
                         setLandmarkComments(comments.landmarkComments);
