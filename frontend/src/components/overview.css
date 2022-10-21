@@ -6,7 +6,7 @@
 .overview .contentImage{
     clear: left;
     float: left;
-    width: 40%;
+    width: 30%;
     height: calc(15vh - 10px);
     padding: 5px;
     background-color: rgb(245, 245, 245);
