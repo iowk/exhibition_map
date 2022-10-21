@@ -16,7 +16,7 @@ function Main(props) {
     const [user, setUser] = useState(null);
     const [landmarks, setLandmarks] = useState({});
     const [addedMarker, setAddedMarker] = useState(null); //latlng
-    const [curLandmark, setCurLandmark] = useState({});
+    const [curLandmark, setCurLandmark] = useState({}); // Currently clicked landmark
     const [curContent, setCurContent] = useState({}); // Currently clicked content
     const [center, setCenter] = useState({
         lat: 25.04452274013203,
@@ -24,6 +24,11 @@ function Main(props) {
     }); // Map center coordinates
     const [searchResult, setSearchResult] = useState([]);
     const [initialSearchResult, setInitialSearchResult] = useState([]);
+    useEffect(() => {
+        // Load center from localstorage if exists
+        const ls_center = getLSItem('map_center');
+        if(ls_center && ls_center.lat && ls_center.lng) setCenter(ls_center);
+    }, [])
     useEffect(() => {
         // Set initial search results
         const fetchData = async() => {
@@ -75,9 +80,13 @@ function Main(props) {
     }, [phase])
     useEffect(() => {
         if(Object.keys(curLandmark).length > 0){
-            setCenter({lat: curLandmark.lat, lng: curLandmark.lng});
+            handleSetCenter({lat: curLandmark.lat, lng: curLandmark.lng});
         }
     }, [curLandmark])
+    function handleSetCenter(center_){
+        setCenter(center_);
+        localStorage.setItem('map_center', JSON.stringify(center_));
+    }
     function handleClickLandmark(lmid){
         // Landmark is clicked on
         setPhase('landmark');
@@ -126,7 +135,7 @@ function Main(props) {
     }
     function handleToLandmark(lm) {
         setCurLandmark(lm);
-        setCenter({lat: lm.lat, lng: lm.lng});
+        handleSetCenter({lat: lm.lat, lng: lm.lng});
         setPhase('landmark');
     }
     function handleToContent(ct) {
@@ -140,7 +149,7 @@ function Main(props) {
                 console.log(e);
             });
         }
-        setCenter({lat: ct.lat, lng: ct.lng});
+        handleSetCenter({lat: ct.lat, lng: ct.lng});
         setPhase('content');
     }
     function handleToAddContent() {
@@ -184,7 +193,7 @@ function Main(props) {
         child = <AddLandmark
             user = {user}
             handleSetUser = {setUser}
-            handleSetCenter = {setCenter}
+            handleSetCenter = {handleSetCenter}
             addedMarker = {addedMarker}
         />;
     }
