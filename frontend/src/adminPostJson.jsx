@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {jwtVerify, getToken} from './auth';
 import axios from './axios';
-import './general.css';
 
 function AdminPostJson(props){
     const [file, setFile] = useState({});

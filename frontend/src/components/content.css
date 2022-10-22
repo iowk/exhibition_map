@@ -1,15 +1,11 @@
-.contentDetail{
-    margin: 0%;
-    height: 100%;
+.contentDetail > h1{
+    margin: 20px;
+    text-align: center;
+    font-weight: bold;
 }
 .contentDetail .backButton{
     z-index: 1;
     overflow: auto;
-}
-.contentDetail > h1{
-    margin: 20px;
-    text-align: center;
-    color: darkred;
 }
 .contentDetail > img{
     margin-left: 0%;
@@ -43,25 +39,12 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
-.contentDetail .contentButtons{
-    padding: 5px;
+.contentButtons{
+    width: 100%;
     display: inline-flex;
     flex-wrap: wrap;
     justify-content: center;
 }
-.contentDetail .addDesButton{
-    width: 150px;
-    margin: 5px;
-    margin-left: 25px;
-    margin-right: 25px;
-}
-.contentDetail .contentDeleteButton{
-    width: 150px;
-    margin: 5px;
-    margin-left: 25px;
-    margin-right: 25px;
-}
-.contentDetail .contentDescription{
-    padding: 5px;
-    padding-bottom: 20px;
+.contentButtons > button{
+    margin: 10px;
 }

@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
 import './register.css';
-import './general.css';
 import axios from './axios';
 import {login, getToken, getLSItem} from './auth';
-import NavBar from './components/navbar'
+import Navigation from './components/navbar';
 
 function Register(props){
     // Full register page
@@ -28,7 +27,7 @@ function Register(props){
         }
         setErr(errCopy);
         setPassword(e.target.value);
-    }    
+    }
     function handleOnChangePasswordConf(e){
         let errCopy = err;
         if(password===e.target.value){
@@ -39,7 +38,7 @@ function Register(props){
         }
         setErr(errCopy);
         setPasswordConf(e.target.value);
-    }    
+    }
     function clearErr(){
         let err_cpy = {};
         for(var key in err){
@@ -81,13 +80,13 @@ function Register(props){
                     })
                     .finally(() => {
                         clearInput();
-                    })  
+                    })
                 })
                 .catch(e => {
                     console.log(e);
                     alert(e);
-                    clearInput();                 
-                })                         
+                    clearInput();
+                })
             })
             .catch(e => {
                 console.log(e);
@@ -96,54 +95,62 @@ function Register(props){
         }
         event.preventDefault();
     }
-    return(     
-        <div>
-            <NavBar user={getLSItem('user')}/>
-            <div id="register">                
-                <form className='regform' onSubmit={handleSubmit}>
-                <div className='inpDiv'>
-                    <span className='regspan'>Username</span>
-                    <input
-                        type='text'
-                        ref={usernameRef}
-                        className='inpBox'
-                    />
-                </div>
-                <div className='errDiv'>{err.username}</div>
-                <div className='inpDiv'>
-                    <span className='regspan'>Email</span>
-                    <input
-                        type='text'
-                        ref={emailRef}
-                        className='inpBox'
-                    />
-                </div>
-                <div className='errDiv'>{err.email}</div>
-                <div className='inpDiv'>
-                    <span className='regspan'>Password</span>
-                    <input
-                        type='password'
-                        value={password} 
-                        onChange={handleOnChangePassword}
-                        className='inpBox'
-                    />
-                </div>
-                <div className='errDiv'>{err.password}</div>
-                <div className='inpDiv'>
-                    <span className='regspan'>Confirm Password</span>
-                    <input
-                        type='password'
-                        value={passwordConf} 
-                        onChange={handleOnChangePasswordConf}
-                        className='inpBox'
-                    />
-                </div>
-                <div className='errDiv'>{err.passwordConf}</div>
-                <button className='regbutton' type="submit">
-                    Register
-                </button>
+    return(
+        <div className='register'>
+            <Navigation user={getLSItem('user')}/>
+            <div className="Auth-form-container d-flex justify-content-center register-container">
+                <form className="Auth-form w-25">
+                    <div className="Auth-form-content">
+                        <div className="form-group mt-3">
+                            <label>Username</label>
+                            <input
+                            type="username"
+                            className="form-control mt-1"
+                            placeholder="Enter username"
+                            ref={usernameRef}
+                            />
+                        </div>
+                        <p className='text-center text-danger mt-2' style={{height: '24px'}}>{err.username}</p>
+                        <div className="form-group mt-3">
+                            <label>Email</label>
+                            <input
+                            type="emaile"
+                            className="form-control mt-1"
+                            placeholder="Enter email address"
+                            ref={emailRef}
+                            />
+                        </div>
+                        <p className='text-center text-danger mt-2' style={{height: '24px'}}>{err.email}</p>
+                        <div className="form-group mt-3">
+                            <label>Password</label>
+                            <input
+                            type="password"
+                            className="form-control mt-1"
+                            placeholder="Enter password"
+                            value={password}
+                            onChange={handleOnChangePassword}
+                            />
+                        </div>
+                        <p className='text-center text-danger mt-2' style={{height: '24px'}}>{err.password}</p>
+                        <div className="form-group mt-3">
+                            <label>Confirm password</label>
+                            <input
+                            type="password"
+                            className="form-control mt-1"
+                            placeholder="Confirm password"
+                            value={passwordConf}
+                            onChange={handleOnChangePasswordConf}
+                            />
+                        </div>
+                        <p className='text-center text-danger mt-2' style={{height: '24px'}}>{err.passwordConf}</p>
+                        <div className="d-grid gap-2 mt-3">
+                            <button onClick={handleSubmit} className="btn btn-primary">
+                                Register
+                            </button>
+                        </div>
+                        <p className='text-center text-success mt-2'>{bottomMessage}</p>
+                    </div>
                 </form>
-                <div className='bottomMessage'>{bottomMessage}</div>
             </div>
         </div>);
 }

@@ -1,8 +1,6 @@
 import React, { useState ,useEffect, useRef } from 'react';
-import Popup from 'reactjs-popup';
 import { Navigate } from "react-router-dom";
 import './comment.css';
-import '../general.css';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
 import star from '../media/star.png'
@@ -32,16 +30,20 @@ function WriteRatingBlock(props) {
     }
     return(
         setRatingBox()
-    );    
+    );
 }
 function CommentListPopup(props){
     const [comments, setComments] = useState([]);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     useEffect(() => {
         let isMounted = true;
         var apiPath = '';
         if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/comments/';
         else apiPath = '/map/landmarks/'+props.lmid+'/comments/';
-        const fetchData = async () => {            
+        const fetchData = async () => {
             try{
                 const res = await axios().get(apiPath);
                 const res_comments = await res.data;
@@ -57,13 +59,41 @@ function CommentListPopup(props){
         };
     }, [props.lmid, props.ctid])
     return(
+        <>
+            <Button variant="primary" onClick={handleShow}>
+                {props.buttonName}
+            </Button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{props.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className='w-100'>
+                        <input
+                            placeholder='Title'
+                            ref={imageTitleRef}
+                            className='w-100'
+                        />
+                    </div>
+                    <div className='mt-2 imagePreviewBox'>
+                        <UploadImage handleSetImage={setImage}/>
+                    </div>
+                    <div className='buttonDiv'>
+                        <Button variant="primary" onClick={handleSubmit} className='mt-2'>
+                            Upload
+                        </Button>
+                    </div>
+                </Modal.Body>
+            </Modal>
+        </>
+        /*
         <div id='commentList'><Popup trigger={<button className='defaultButton'>{props.buttonName}</button>}
         position="right center"
         modal>
             {close => (
             <div className="modal">
-                <button className="close" onClick={close}> 
-                    &times; 
+                <button className="close" onClick={close}>
+                    &times;
                 </button>
                 <div className='name'> {props.name} </div>
                 {comments.map((comment, index)=>(
@@ -79,7 +109,7 @@ function CommentListPopup(props){
                     </div>
                 ))}
             </div>)}
-        </Popup></div>
+        </Popup></div>*/
     );
 }
 function CommentPostPopup(props){
@@ -207,6 +237,8 @@ function CommentPostPopup(props){
     }
     const closeModal = () => setOpen(false);
     return(
+        <></>
+        /*
         <div id='commentPost'>
             <button className='addCommentButton' onClick={handleOpen}>{props.buttonName}</button>
             <Popup
@@ -216,8 +248,8 @@ function CommentPostPopup(props){
             onClose={closeModal}
             modal>
                 <div className="modal">
-                    <button className="close" onClick={closeModal}>                    
-                        &times; 
+                    <button className="close" onClick={closeModal}>
+                        &times;
                     </button>
                     <div className="name">
                         {props.name}
@@ -246,6 +278,7 @@ function CommentPostPopup(props){
                 </div>
             </Popup>
         </div>
+        */
     );
 }
 

@@ -1,27 +1,17 @@
-*{
-    font-family: Sans-serif;
-}
 #main {
-    height: 98vh;
+    height: 100vh;
     width: 100vw;
-}
-#navbar {
-    position: absolute;
-    right: 0px;
-    padding-top: 10px;
-    padding-right: 70px;
-    z-index: 2;    
-    overflow: auto;
+    background-color: rgb(163, 195, 255);
 }
 #searchBar {
     position: absolute;
     left: 15px;
-    top: 15px;
-    height: 45px;
+    top: 60px;
+    height: 60px;
     width: 30%;
     padding: 10px;
     z-index: 1;
-    background-color: lightgrey;
+    background-color: lightblue;
     font-size: larger;
     word-wrap: break-word;
     overflow: auto;
@@ -30,8 +20,8 @@
 #infoBlock {
     position: absolute;
     left: 15px;
-    top: 85px;
-    height: calc(98vh - 110px);
+    top: 125px;
+    height: calc(100vh - 135px);
     width: 30%;
     padding: 10px;
     z-index: 1;
@@ -42,7 +32,8 @@
     border-radius: 15px;
 }
 #map {
-    position: absolute;
-    width: 99%;
+    float: right;
+    height: calc(100vh - 60px);
+    width: 70%;
     z-index: 0;
 }

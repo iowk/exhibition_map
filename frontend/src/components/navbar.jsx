@@ -1,49 +1,45 @@
 import React, {useState, useEffect} from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 import './navbar.css';
-import '../general.css';
 
-function NavBar(props){
+function Navigation(props){
     const [user, setUser] = useState({});
     useEffect(() => {
         setUser(props.user);
     }, [props.user])
     if(user) {
         return(
-            <div className="navbar">
-                <Link to="/map">
-                    <button className="navbutton">
-                        Map
-                    </button>
-                </Link>
-                <Link to="/user">
-                    <button className="navbutton">
-                        {user.username}
-                    </button>
-                </Link>
-            </div>
+            <Navbar bg="light" expand="lg">
+                <Container>
+                    <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="ms-auto">
+                        <Nav.Link as={Link} to="/about">About</Nav.Link>
+                        <Nav.Link as={Link} to="/map">Map</Nav.Link>
+                        <Nav.Link as={Link} to="/user">{user.username}</Nav.Link>
+                    </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
         );
     }
     else{
         return(
-            <div className="navbar">
-                <Link to="/map">
-                    <button className="navbutton">
-                        Map
-                    </button>
-                </Link>
-                <Link to="/login">
-                    <button className="navbutton">
-                        Login
-                    </button>
-                </Link>
-                <Link to="/register">
-                    <button className="navbutton">
-                        Register
-                    </button>
-                </Link>
-            </div>
+            <Navbar bg="light" expand="lg">
+                <Container>
+                    <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="ms-auto">
+                        <Nav.Link as={Link} to="/about">About</Nav.Link>
+                        <Nav.Link as={Link} to="/map">Map</Nav.Link>
+                        <Nav.Link as={Link} to="/login">Login</Nav.Link>
+                        <Nav.Link as={Link} to="/register">Register</Nav.Link>
+                    </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
         );
     }
 }
-export default NavBar;
+export default Navigation;

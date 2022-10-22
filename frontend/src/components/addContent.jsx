@@ -6,7 +6,6 @@ import { jwtVerify, getToken } from '../auth';
 import { formatDate } from '../utils';
 import { UploadImage } from './image'
 import axios from '../axios';
-import '../general.css';
 import './addContent.css';
 
 function AddContent(props){

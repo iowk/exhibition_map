@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Navigate, Link } from "react-router-dom";
 import {jwtVerify, logout, getLSItem, getToken} from './auth';
 import axios from './axios';
-import NavBar from './components/navbar'
+import Navigation from './components/navbar'
 import './user.css';
-import './general.css';
+;
 
 function User(props){
     const [user, setUser] = useState({});
@@ -55,7 +55,7 @@ function User(props){
     else if(user) {
         return(
             <div className='userPage'>
-                <NavBar user = {user}/>
+                <Navigation user = {user}/>
                 <div className='userInfo'>
                     <div className='username'>
                         <span className='title'>User</span>
@@ -75,24 +75,24 @@ function User(props){
                     <div className='status'>
                         <span className='title'>Status</span>
                         <span>Unactivated</span>
-                        <button className='activationButton' onClick={activateOnClick}>
+                        <button  className="btn btn-primary ms-2" onClick={activateOnClick}>
                             Send activation mail
                         </button>
                     </div>
                     }
-                    <div><Link to="/user/comments/"><button className='toCommentButton'>
+                    <div><Link className="btn btn-primary" role="button" to="/user/comments/">
                         Your comments
-                    </button></Link></div>
+                    </Link></div>
                     {user.is_staff &&
                     <div>
-                        <Link to="/admin/landmarks/"><button className='toLandmarkRequestButton'>
+                        <Link className="btn btn-primary" role="button" to="/admin/landmarks/">
                             Manage landmark suggestions
-                        </button></Link>
-                        <Link to="/admin/contents/"><button className='toContentRequestButton'>
+                        </Link>
+                        <Link className="btn btn-primary ms-2" role="button" to="/admin/contents/">
                             Manage content suggestions
-                        </button></Link>
+                        </Link>
                     </div>}
-                    <div><button onClick={logoutOnClick} className='logoutButton'>
+                    <div><button className="btn btn-primary" onClick={logoutOnClick}>
                         Logout
                     </button></div>
                 </div>

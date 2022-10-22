@@ -1,14 +1,16 @@
 import {React} from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import Main from './main'
-import Register from './register'
-import Activate from './activate'
-import Login from './login'
-import User from './user'
-import UserComment from './userComment'
-import {AdminLandmark, AdminContent} from './admin'
-import AdminPostJson from './adminPostJson'
+import Main from './main';
+import Register from './register';
+import Activate from './activate';
+import Login from './login';
+import User from './user';
+import UserComment from './userComment';
+import {AdminLandmark, AdminContent} from './admin';
+import AdminPostJson from './adminPostJson';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './general.css';
 
 ReactDOM.render(
     <BrowserRouter>

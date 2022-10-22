@@ -2,28 +2,20 @@
     height: 80%;
     width: 60%;
 }
-.modal {
-    font-size: 12px;
-    height: 100%;
-    width: 100%;
-    background-color: white;
-    border-radius: 15px;
-    border: solid #cfcece;
-}
 .modal > div{
-    margin: 30px;    
+    margin: 30px;
 }
-.modal > .close {  
-    cursor: pointer;  
-    position: absolute;  
-    display: block;  
-    padding: 2px 5px;  
-    line-height: 20px;  
-    right: -10px;  
-    top: -10px;  
-    font-size: 24px;  
+.modal > .close {
+    cursor: pointer;
+    position: absolute;
+    display: block;
+    padding: 2px 5px;
+    line-height: 20px;
+    right: -10px;
+    top: -10px;
+    font-size: 24px;
     background: #ffffff;
-    border-radius: 18px;  
+    border-radius: 18px;
     border: 1px solid #cfcece;
 }
 .modal .name{

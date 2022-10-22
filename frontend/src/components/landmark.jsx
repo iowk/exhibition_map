@@ -3,20 +3,21 @@ import './landmark.css';
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
 import { jwtVerify, getToken } from './../auth';
-import {ContentOverview} from './overview'
+import {ContentOverview} from './overview';
 import axios from './../axios';
-import star from '../media/star.png'
+import star from '../media/star.png';
 
 function Landmark(props){
     const [contents, setContents] = useState(null); // Contents of the currently clicked landmark
     useEffect(() => {
+        let isMounted = true;
         const fetchData = async() => {
             try{
                 // GET contents
                 const res_cons = await axios().get('/map/landmarks/'+props.landmark.id+'/contents/');
                 const ct = await res_cons.data;
                 // Set state
-                setContents(ct);
+                if(isMounted) setContents(ct);
             } catch (e) {
                 console.log(e);
             }
@@ -25,12 +26,15 @@ function Landmark(props){
         if(props.user){
             jwtVerify()
             .then((is_valid) => {
-                if(!is_valid) props.handleSetUser(null);
+                if(!is_valid) if(isMounted) props.handleSetUser(null);
             })
             .catch((e) => {
                 console.log(e);
             });
         }
+        return () => {
+            isMounted = false;
+        };
     }, [props])
     function handleDeleteLandmark(){
         jwtVerify()
@@ -57,8 +61,8 @@ function Landmark(props){
                 <h1>{props.landmark.name}</h1>
                 <img src={props.landmark.coverImageSrc} alt=""></img>
                 <div className='link-rating'>
-                    <a href={props.landmark.link}>
-                        <div className="link">Website</div>
+                    <a className="link" href={props.landmark.link}>
+                        <div>Source</div>
                     </a>
                     {props.landmark.avgRating &&
                         <div className='rating'>
@@ -92,12 +96,14 @@ function Landmark(props){
         buttons.push(<ImageListPopup
             key='ImageListPopup'
             lmid={props.landmark.id}
+            name={props.landmark.name}
             buttonName='Show photos'
         />)
         if(props.user && props.user.is_verified){
             buttons.push(<ImagePostPopup
                 key='ImagePostPopup'
                 lmid={props.landmark.id}
+                name={props.landmark.name}
                 user={props.user}
                 handleSetUser={props.handleSetUser}
                 buttonName='Upload photo'
@@ -105,15 +111,15 @@ function Landmark(props){
         }
         if(props.user && props.user.is_verified){
             buttons.push(
-                <div key='addContentButton'><button className='addContentButton' onClick={props.handleToAddContent}>
+                <button className="btn btn-primary" onClick={props.handleToAddContent}>
                     Suggest content
-                </button></div>)
+                </button>)
         }
         if(props.user && (props.user.is_staff)){
             buttons.push(
-                <div key='deleteLandmarkButton'><button className='deleteLandmarkButton' onClick={handleDeleteLandmark}>
+                <button className="btn btn-primary" onClick={handleDeleteLandmark}>
                     Delete landmark
-                </button></div>)
+                </button>)
         }
         children.push(
             <div key='landmarkButtons' className='landmarkButtons'>

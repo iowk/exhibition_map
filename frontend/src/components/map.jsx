@@ -7,8 +7,8 @@ const zoom = 15;
 
 const containerStyle = {
     // Map container style
-    width: '98vw',
-    height: '98vh'
+    width: '100%',
+    height: '100%'
 };
 
 const mapOptions = {

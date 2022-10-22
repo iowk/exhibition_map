@@ -1,8 +1,6 @@
 import React, { useState, useRef } from 'react';
-import Popup from 'reactjs-popup';
 import { Navigate } from "react-router-dom";
 import './description.css';
-import '../general.css';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
 
@@ -47,6 +45,8 @@ function DesPostPopup(props){
     }
     const closeModal = () => setOpen(false);
     return(
+        <></>
+        /*
         <div id='desPost'>
             <button className='addDesButton' onClick={handleOpen}>{props.buttonName}</button>
             <Popup
@@ -56,8 +56,8 @@ function DesPostPopup(props){
             onClose={closeModal}
             modal>
                 <div className="modal">
-                    <button className="close" onClick={closeModal}>                    
-                        &times; 
+                    <button className="close" onClick={closeModal}>
+                        &times;
                     </button>
                     <div className="name">
                         {props.name}
@@ -77,7 +77,7 @@ function DesPostPopup(props){
                     </div>
                 </div>
             </Popup>
-        </div>
+        </div>*/
     );
 }
 

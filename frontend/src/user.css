@@ -5,7 +5,8 @@
     right: 100px;
     bottom: 100px;
     padding: 40px;
-    border: solid black;
+    border-radius: 30px;
+    background-color: rgb(255, 255, 188);
 }
 .userInfo > div{
     height: 50px;

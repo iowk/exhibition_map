@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
-import './register.css';
+import './login.css';
 import { login, jwtVerify, getLSItem } from './auth';
 import { Link, Navigate } from "react-router-dom";
-import NavBar from './components/navbar'
+import Navigation from './components/navbar';
 
 function Login(props){
     const usernameRef = useRef();
@@ -15,7 +15,6 @@ function Login(props){
             .then((is_valid) => {
                 if(is_valid){
                     setLoginStatus('success');
-                    <Navigate to = '/map/'/>;
                 }
                 else{
                     setLoginStatus('fail');
@@ -32,39 +31,43 @@ function Login(props){
         event.preventDefault();
     }
     return(
-        <div>
-            <NavBar user={getLSItem('user')}/>
-            <div id='login'>
-                <form className='regform' onSubmit={handleSubmit}>
-                    <div className='inpDiv'>
-                        <span  className='regspan'>Username</span>
-                        <input
-                            type='text'
+        <div className='login'>
+            <Navigation user={getLSItem('user')}/>
+            <div className="Auth-form-container d-flex justify-content-center login-container">
+                <form className="Auth-form w-25">
+                    <div className="Auth-form-content">
+                        <div className="form-group mt-3">
+                            <label>Username</label>
+                            <input
+                            type="username"
+                            className="form-control mt-1"
+                            placeholder="Enter username"
                             ref={usernameRef}
-                            className='inpBox'
-                        />
-                    </div>
-                    <div className='inpDiv'>
-                        <span  className='regspan'>Password</span>
-                        <input
-                            type='password'
+                            />
+                        </div>
+                        <div className="form-group mt-3">
+                            <label>Password</label>
+                            <input
+                            type="password"
+                            className="form-control mt-1"
+                            placeholder="Enter password"
                             ref={passwordRef}
-                            className='inpBox'
-                        />
+                            />
+                        </div>
+                        <div className="d-grid gap-2 mt-3">
+                            <button onClick={handleSubmit} className="btn btn-primary">
+                                Login
+                            </button>
+                        </div>
+                        <div className="d-grid gap-2 mt-3">
+                            <Link className="btn btn-primary" role="button" to="/register">
+                                Register
+                            </Link>
+                        </div>
+                        {loginStatus==='success' && <p className='text-center text-success mt-2'>Login success<Navigate to='/map'/>;</p>}
+                        {loginStatus==='fail' && <p className='text-center text-danger mt-2'>Username or password incorrect</p>}
                     </div>
-                    <button type="submit" className='regbutton'>
-                        Login
-                    </button>
-                    <Link to="/register">
-                        <button  className='regbutton'>
-                            Register
-                        </button>
-                    </Link>
                 </form>
-                <div className='bottomMessage'>{loginStatus==='fail' && 'Username or password incorrect'}</div>
-                {loginStatus==='success' && (
-                    <Navigate to="/map/" replace={true} />
-                )}
             </div>
         </div>);
 }

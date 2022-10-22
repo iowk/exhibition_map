@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './main.css';
 import axios from './axios';
-import NavBar from './components/navbar'
+import Navigation from './components/navbar'
 import Map from './components/map'
 import { getLSItem, jwtVerify } from './auth';
 import { SearchBar, SearchResultList } from './components/search';
@@ -208,7 +208,7 @@ function Main(props) {
     return(
         <div id="main">
             <div id="navbar">
-                {<NavBar user = {user}/>}
+                {<Navigation user = {user}/>}
             </div>
             <div id='searchBar'>
                 <SearchBar
@@ -216,7 +216,7 @@ function Main(props) {
                 />
             </div>
             <div id="infoBlock">
-                {/* Block containing landmark information */}
+                {/* Block containing information */}
                 {child}
             </div>
             <div id="map">

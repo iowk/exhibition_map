@@ -1,12 +1,12 @@
 import React from 'react';
 import './content.css';
+import Button from 'react-bootstrap/Button';
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
 import { DesPostPopup } from './description';
 import { jwtVerify, getToken } from '../auth';
 import axios from '../axios';
-import star from '../media/star.png'
-import '../general.css';
+import star from '../media/star.png';
 
 function Content(props){
     function handleDeleteContent(){
@@ -26,18 +26,18 @@ function Content(props){
         })
         .catch((e) => {
             console.log(e);
-        });       
+        });
     }
     function handleBack(){
         props.handleToLandmark(props.landmark);
     }
     return(
-        <div className='contentDetail'>            
-            <button onClick={handleBack} className='backButton'>
+        <div className='contentDetail'>
+            <Button variant="secondary" onClick={handleBack} className='backButton'>
                 {props.landmark.name}
-            </button>
+            </Button>
             <h1>{props.content.name}</h1>
-            <img src={props.content.coverImageSrc} alt="Not found"></img>    
+            <img src={props.content.coverImageSrc} alt="Not found"></img>
             <p className='date'>{props.content.startDate} ~ {props.content.endDate}</p>
             <div className='link-rating'>
                 <a href={props.content.link}>
@@ -56,7 +56,7 @@ function Content(props){
                     buttonName='Show comments'
                 />
                 {props.user && props.user.is_verified && (
-                    // Comment button for activated user                         
+                    // Comment button for activated user
                     <CommentPostPopup
                         key='CommentPostPopup'
                         ctid={props.content.id}
@@ -69,17 +69,19 @@ function Content(props){
                 <ImageListPopup
                     key='ImageListPopup'
                     ctid={props.content.id}
+                    name={props.content.name}
                     buttonName='Show photos'
                 />
-                {props.user && props.user.is_verified &&      
+                {props.user && props.user.is_verified &&
                 <ImagePostPopup
                     key='ImagePostPopup'
                     ctid={props.content.id}
+                    name={props.content.name}
                     user={props.user}
                     handleSetUser={props.handleSetUser}
                     buttonName='Upload photo'
                 />}
-                {props.user && (props.user.is_staff) && 
+                {props.user && (props.user.is_staff) &&
                 <DesPostPopup
                     key='DesPostPopup'
                     ctid={props.content.id}
@@ -88,18 +90,16 @@ function Content(props){
                     description={props.content.description}
                     handleSetUser={props.handleSetUser}
                     buttonName='Modify description'
-                />}  
+                />}
                 {props.user && (props.user.is_staff) &&
-                <div className='contentDelete'>
-                    <button className='contentDeleteButton' onClick={handleDeleteContent}>
-                        Delete content
-                    </button>
-                </div>} 
+                <button className='contentDeleteButton' onClick={handleDeleteContent}>
+                    Delete content
+                </button>}
             </div>
             <div className='contentDescription'>
                 {props.content.description}
             </div>
-        </div>                
+        </div>
     );
 }
 

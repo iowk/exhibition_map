@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate } from "react-router-dom";
-import NavBar from './components/navbar'
+import Navigation from './components/navbar'
 import {jwtVerify, getLSItem, getToken} from './auth';
 import axios from './axios';
 import './admin.css';
-import './general.css';
 
 function AdminLandmark(props){
     const [user, setUser] = useState({});
@@ -131,20 +130,20 @@ function AdminLandmark(props){
         });
     }
     if(!verifyDone){
-        return(<NavBar user = {user}/>);
+        return(<Navigation user = {user}/>);
     }
     else if(user && user.is_staff) {
         if(children.length === 0){
             return(
                 <div>
-                    <NavBar user = {user}/>
+                    <Navigation user = {user}/>
                     No pending suggestion
                 </div>
             );
         }
         return(
             <div>
-                <NavBar user = {user}/>
+                <Navigation user = {user}/>
                 <div className='adminLandmark'>
                     {children}
                 </div>
@@ -285,20 +284,20 @@ function AdminContent(props){
         });
     }
     if(!verifyDone){
-        return(<NavBar user = {user}/>);
+        return(<Navigation user = {user}/>);
     }
     else if(user && user.is_staff) {
         if(children.length === 0){
             return(
                 <div>
-                    <NavBar user = {user}/>
+                    <Navigation user = {user}/>
                     No pending suggestion
                 </div>
             );
         }
         return(
             <div>
-                <NavBar user = {user}/>
+                <Navigation user = {user}/>
                 <div className='adminContent'>
                     {children}
                 </div>

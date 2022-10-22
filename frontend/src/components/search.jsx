@@ -1,15 +1,15 @@
 import React, {useRef} from 'react';
-import './search.css'
-import search from '../media/search.png'
-import {ContentOverview, LandmarkOverview} from './overview'
+import './search.css';
+import search from '../media/search.png';
+import {ContentOverview, LandmarkOverview} from './overview';
 
 function SearchResultList(props){
     var children = [];
     for(let key in props.searchResult) {
         if(props.searchResult[key]['is_visible']){
-            if(props.searchResult[key]['landmark_id'] && props.searchResult[key]['isGoing']){ 
-                // Content       
-                children.push(<ContentOverview 
+            if(props.searchResult[key]['landmark_id'] && props.searchResult[key]['isGoing']){
+                // Content
+                children.push(<ContentOverview
                     key={key}
                     content={props.searchResult[key]}
                     handleToContent={props.handleToContent}
@@ -17,7 +17,7 @@ function SearchResultList(props){
             }
             else{
                 // Landmark
-                children.push(<LandmarkOverview 
+                children.push(<LandmarkOverview
                     key={key}
                     landmark={props.searchResult[key]}
                     handleToLandmark={props.handleToLandmark}
@@ -33,7 +33,7 @@ function SearchBar(props){
     return(
         <div className='searchBar'>
             <form>
-            <input 
+            <input
                 className='inputBox'
                 placeholder='Search a landmark or content'
                 ref={patternRef}

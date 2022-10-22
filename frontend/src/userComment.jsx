@@ -3,14 +3,13 @@ import { Navigate } from "react-router-dom";
 import {jwtVerify, getLSItem, getToken} from './auth';
 import { CommentPostPopup} from './components/comment';
 import axios from './axios';
-import NavBar from './components/navbar'
+import Navigation from './components/navbar';
 import './userComment.css';
-import './general.css';
-import star from './media/star.png'
+import star from './media/star.png';
 
 function EachUserLandmarkComment(props){
     const [lmname, setLMName] = useState(null);
-    useEffect(() => {      
+    useEffect(() => {
         const fetchData = async() => {
             try{
                 const res_lm = await axios().get('/map/landmarks/'+props.comment.landmark_id);
@@ -20,13 +19,13 @@ function EachUserLandmarkComment(props){
             catch (e) {
                 console.log(e);
             }
-        }        
+        }
         fetchData();
     }, [props])
 
     return(
         <div className='each-user-comment'>
-            <div className='title'> 
+            <div className='title'>
                 <span className='name'>{lmname}</span>
                 <div className='rating'>
                     <img className='starImage' src={star} alt='Rating:'></img>
@@ -50,7 +49,7 @@ function EachUserLandmarkComment(props){
 function EachUserContentComment(props){
     const [lmname, setLMName] = useState(null);
     const [ctname, setCTName] = useState(null);
-    useEffect(() => {      
+    useEffect(() => {
         const fetchData = async() => {
             try{
                 const res_ct = await axios().get('/map/contents/'+props.comment.content_id);
@@ -61,13 +60,13 @@ function EachUserContentComment(props){
             catch (e) {
                 console.log(e);
             }
-        }        
+        }
         fetchData();
     }, [props])
 
     return(
         <div className='each-user-comment'>
-            <div className='title'> 
+            <div className='title'>
                 <span className='name'>{lmname + '-' + ctname}</span>
                 <div className='rating'>
                     <img className='starImage' src={star} alt='Rating:'></img>
@@ -94,7 +93,7 @@ function UserComment(props){
     const [landmarkComments, setLandmarkComments] = useState({});
     const [contentComments, setContentComments] = useState({});
     useEffect(() => {
-        let isMounted = true;        
+        let isMounted = true;
         const fetchData = async() => {
             try{
                 const is_valid = await jwtVerify();
@@ -113,11 +112,11 @@ function UserComment(props){
                 console.log(e);
                 if(isMounted) setUser(null);
             }
-        }        
+        }
         fetchData().then(() => {
             setVerifyDone(true);
         });
-        return () => { isMounted = false }; 
+        return () => { isMounted = false };
     }, [props])
     if(!verifyDone){
         return(<></>);
@@ -131,7 +130,7 @@ function UserComment(props){
                 comment={landmarkComments[key]}
                 user={user}
                 handleSetUser={setUser}
-            />);            
+            />);
         }
         for(let key in contentComments) {
             let ch_key = 'c_' + contentComments[key].id
@@ -140,11 +139,11 @@ function UserComment(props){
                 comment={contentComments[key]}
                 user={user}
                 handleSetUser={setUser}
-            />);            
+            />);
         }
         return(
             <div className='userPage'>
-                {<NavBar user = {user}/>}
+                {<Navigation user = {user}/>}
                 <div className='userComment'>
                     {children}
                 </div>
