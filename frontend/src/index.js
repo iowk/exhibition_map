@@ -8,6 +8,7 @@ import Login from './login'
 import User from './user'
 import UserComment from './userComment'
 import {AdminLandmark, AdminContent} from './admin'
+import AdminPostJson from './adminPostJson'
 
 ReactDOM.render(
     <BrowserRouter>
@@ -21,6 +22,7 @@ ReactDOM.render(
             <Route path="/user/comments" element={<UserComment />}></Route>
             <Route path="/admin/landmarks" element={<AdminLandmark />}></Route>
             <Route path="/admin/contents" element={<AdminContent />}></Route>
+            <Route path="/admin/post_json" element={<AdminPostJson />}></Route>
         </Routes>
     </BrowserRouter>,
 

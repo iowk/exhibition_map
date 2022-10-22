@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Navigate } from "react-router-dom";
 import './addLandmark.css';
 import axios from '../axios';
@@ -8,13 +8,17 @@ import { UploadImage } from './image'
 function AddLandmark(props) {
     const nameRef = useRef();
     const linkRef = useRef();
-    const latRef = useRef();
-    const lngRef = useRef();
+    const [lat, setLat] = useState();
+    const [lng, setLng] = useState();
     const [image, setImage] = useState(null);
+    useEffect(() => {
+        setLat(props.addedMarker.lat());
+        setLng(props.addedMarker.lng());
+    }, [props])
     function handleSubmit(){
-        if(!latRef.current.value || !lngRef.current.value) alert("Please specify the coordinates of the landmark");
-        else if(latRef.current.value<-90 || latRef.current.value>90) alert("Latitude should be between -90 and 90");
-        else if(latRef.current.value<-180 || latRef.current.value>180) alert("Longitude should be between -90 and 90");
+        if(!lat || !lng) alert("Please specify the coordinates of the landmark");
+        else if(lat<-90 || lat>90) alert("Latitude should be between -90 and 90");
+        else if(lng<-180 || lng>180) alert("Longitude should be between -90 and 90");
         else{
             jwtVerify()
             .then((is_valid) => {
@@ -23,8 +27,8 @@ function AddLandmark(props) {
                     if(image) form_data.append('coverImageSrc', image, image.name);
                     form_data.append('name', nameRef.current.value);
                     form_data.append('link', linkRef.current.value);
-                    form_data.append('lat', parseFloat(latRef.current.value));
-                    form_data.append('lng', parseFloat(lngRef.current.value));
+                    form_data.append('lat', parseFloat(lat));
+                    form_data.append('lng', parseFloat(lng));
                     axios(getToken()).post('/map/landmarks/', form_data,
                     {
                         headers: {
@@ -34,8 +38,8 @@ function AddLandmark(props) {
                     .then(() => {
                         alert("Your request will be validated soon.\nThank you for your contribution.");
                         props.handleSetCenter({
-                            lat: parseFloat(latRef.current.value),
-                            lng: parseFloat(lngRef.current.value)
+                            lat: parseFloat(lat),
+                            lng: parseFloat(lng)
                         });
                     })
                     .catch((e) =>{
@@ -51,7 +55,7 @@ function AddLandmark(props) {
             .catch(e => {
                 console.log(e);
             })
-        }        
+        }
     }
     if(props.addedMarker && props.user && props.user.is_verified){
         return(
@@ -60,13 +64,13 @@ function AddLandmark(props) {
                     <span>Suggest a new landmark at: <br/></span>
                     (<input
                         type='number'
-                        defaultValue={props.addedMarker.lat()}
-                        ref={latRef}
+                        value={lat}
+                        onChange={(e)=>(setLat(e.target.value))}
                     />,
                     <input
                         type='number'
-                        defaultValue={props.addedMarker.lng()}
-                        ref={lngRef}
+                        value={lng}
+                        onChange={(e)=>(setLng(e.target.value))}
                     />)
                 </div>
                 <div>

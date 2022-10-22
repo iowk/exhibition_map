@@ -6,7 +6,7 @@ const axios = (token) => {
     else delete _axios.defaults.headers.common["Authorization"];
     return _axios.create({
         baseURL: backendPath,
-        timeout: 10000,
+        timeout: 100000,
     })
 }
 export default axios;

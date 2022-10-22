@@ -24,7 +24,7 @@
 .overview .des{
     margin: 0px;
     float: left;
-    width: calc(60% - 30px);
+    width: calc(70% - 30px);
     margin-left: 20px;
     height: 100%;
     overflow: auto;

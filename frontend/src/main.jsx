@@ -37,7 +37,7 @@ function Main(props) {
                     lat: center.lat,
                     lng: center.lng,
                     pattern: '',
-                    count: 100,
+                    count: 10,
                     thres: 0
                 }),
                 {
@@ -117,7 +117,7 @@ function Main(props) {
                 lat: center['lat'],
                 lng: center['lng'],
                 pattern: pattern,
-                count: 100,
+                count: 10,
                 thres: 0.001
             }),
             {
