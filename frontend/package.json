@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@react-google-maps/api": "^2.10.0",
+    "@react-google-maps/marker-clusterer": "^2.11.8",
     "@svgr/plugin-svgo": "^6.5.0",
     "@svgr/webpack": "^6.5.0",
     "@testing-library/jest-dom": "^5.14.1",
