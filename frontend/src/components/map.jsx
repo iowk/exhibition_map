@@ -32,9 +32,26 @@ const mapOptions = {
     streetViewControl: false,
 }
 
+function ClusterCalculator(markers, numStyles){
+    let count = 0;
+    markers.forEach((marker) => {
+        count += parseInt(marker.label.text);
+        //console.log("Marker",marker.contentCount);
+    })
+    const numberOfDigits = count.toString().length;
+
+    let index = 1;
+    if(count > 0) index = Math.min(numberOfDigits+1, numStyles)
+
+    return {
+        text: count.toString(),
+        index,
+        title: '',
+    }
+  }
 const markerClusterOptions = {
-    imagePath:
-        'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m', // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
+    imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m', // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
+    calculator: ClusterCalculator
 }
 
 function Map(props) {
