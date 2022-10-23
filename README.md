@@ -40,6 +40,7 @@ EXmap is a collaboration-based map that displays museum and exhibition informati
 
 ## TODO
 <ul>
+    <li>User change password, recover password</li>
     <li>OAuth2 authentication for logging in with Google, Facebook, etc.</li>
     <li>Multilanguage support</li>
     <li>Caching</li>
