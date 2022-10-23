@@ -67,7 +67,7 @@ function EachUserContentComment(props){
     return(
         <div className='each-user-comment'>
             <div className='title'>
-                <span className='name'>{lmname + '-' + ctname}</span>
+                <span className='name'>{lmname}</span>
                 <div className='rating'>
                     <img className='starImage' src={star} alt='Rating:'></img>
                     <span className='ratingNum'>{props.comment.rating}</span>

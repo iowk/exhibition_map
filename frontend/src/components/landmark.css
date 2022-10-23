@@ -37,5 +37,6 @@
     justify-content: center;
 }
 .landmarkButtons > button{
+    width: 160px;
     margin: 10px;
 }

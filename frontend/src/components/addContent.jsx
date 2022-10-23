@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import DatePicker from 'react-date-picker';
 import './content.css';
 import { jwtVerify, getToken } from '../auth';
+import Button from 'react-bootstrap/Button';
 import { formatDate } from '../utils';
 import { UploadImage } from './image'
 import axios from '../axios';
@@ -86,9 +87,9 @@ function AddContent(props){
                     <UploadImage handleSetImage={setImage}/>
                 </div>
                 <div className='buttonDiv'>
-                    <button onClick={handleSubmit} className='submitButton'>
+                    <Button onClick={handleSubmit} variant="primary">
                         Upload
-                    </button>
+                    </Button>
                 </div>
             </div>;
     }
@@ -97,9 +98,9 @@ function AddContent(props){
     }
     return(
     <div className='addContentParent'>
-        <button onClick={handleBack} className='backButton'>
+        <Button onClick={handleBack} variant="secondary">
             {props.landmark.name}
-        </button>
+        </Button>
         {child}
      </div>);
 }

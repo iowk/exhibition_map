@@ -3,19 +3,21 @@ import { Navigate } from "react-router-dom";
 import './description.css';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 function DesPostPopup(props){
     // Pop up when user clicks the add description button for landmark or content
-    const [open, setOpen] = useState(false);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     const desRef = useRef();
 
     let apiPath = '';
     if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/';
     else apiPath = '/map/landmarks/'+props.lmid+'/';
 
-    function handleOpen(){
-        setOpen(true);
-    }
     function handleSubmit(){
         jwtVerify()
         .then((is_valid) => {
@@ -43,41 +45,30 @@ function DesPostPopup(props){
             console.log(e);
         });
     }
-    const closeModal = () => setOpen(false);
     return(
-        <></>
-        /*
-        <div id='desPost'>
-            <button className='addDesButton' onClick={handleOpen}>{props.buttonName}</button>
-            <Popup
-            open={open}
-            position="right center"
-            closeOnDocumentClick
-            onClose={closeModal}
-            modal>
-                <div className="modal">
-                    <button className="close" onClick={closeModal}>
-                        &times;
-                    </button>
-                    <div className="name">
-                        {props.name}
+        <>
+            <Button variant="primary" onClick={handleShow}>
+                {props.buttonName}
+            </Button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{props.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <textarea
+                        placeholder='Write description'
+                        ref={desRef}
+                        defaultValue={props.description}
+                        className='desBox'
+                    />
+                    <div className='buttonDiv'>
+                        <Button variant="primary" onClick={handleSubmit} className='mt-2'>
+                            Submit
+                        </Button>
                     </div>
-                    <div className='popupForm'>
-                        <textarea
-                            placeholder='Write description'
-                            ref={desRef}
-                            defaultValue={props.description}
-                            className='desBox'
-                        />
-                        <div className='buttonDiv'>
-                            <button onClick={handleSubmit} className='popupSubmitButton'>
-                                Submit
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </Popup>
-        </div>*/
+                </Modal.Body>
+            </Modal>
+        </>
     );
 }
 

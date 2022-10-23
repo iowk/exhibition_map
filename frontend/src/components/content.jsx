@@ -40,8 +40,8 @@ function Content(props){
             <img src={props.content.coverImageSrc} alt="Not found"></img>
             <p className='date'>{props.content.startDate} ~ {props.content.endDate}</p>
             <div className='link-rating'>
-                <a href={props.content.link}>
-                    <div className="link">Website</div>
+                <a className="link" href={props.content.link}>
+                    <div>Source</div>
                 </a>
                 {props.content.avgRating &&
                     <div className='rating'>
@@ -92,9 +92,9 @@ function Content(props){
                     buttonName='Modify description'
                 />}
                 {props.user && (props.user.is_staff) &&
-                <button className='contentDeleteButton' onClick={handleDeleteContent}>
+                <Button variant="primary" onClick={handleDeleteContent}>
                     Delete content
-                </button>}
+                </Button>}
             </div>
             <div className='contentDescription'>
                 {props.content.description}

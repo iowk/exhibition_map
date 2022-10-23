@@ -17,7 +17,8 @@
     cursor: pointer;
 }
 .overview .des{
-    margin: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     width: calc(65% - 30px);
     margin-left: 20px;
     height: 100%;

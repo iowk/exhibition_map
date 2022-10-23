@@ -12,7 +12,7 @@ function Navigation(props){
     }, [props.user])
     if(user) {
         return(
-            <Navbar bg="light" expand="lg">
+            <Navbar bg="light" expand="lg" sticky="top">
                 <Container>
                     <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto">
@@ -27,7 +27,7 @@ function Navigation(props){
     }
     else{
         return(
-            <Navbar bg="light" expand="lg">
+            <Navbar bg="light" expand="lg" sticky="top">
                 <Container>
                     <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto">

@@ -29,6 +29,8 @@
 }
 .contentDetail .link{
     font-size: larger;
+    color: blue;
+    text-decoration: none;
 }
 .contentDetail .link:hover{
     background-color: rgb(245, 245, 245);
@@ -46,5 +48,6 @@
     justify-content: center;
 }
 .contentButtons > button{
+    width: 160px;
     margin: 10px;
 }

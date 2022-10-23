@@ -1,58 +1,9 @@
-.popup-content {
-    height: 80%;
-    width: 60%;
-}
-.modal > div{
-    margin: 30px;
-}
-.modal > .close {
-    cursor: pointer;
-    position: absolute;
-    display: block;
-    padding: 2px 5px;
-    line-height: 20px;
-    right: -10px;
-    top: -10px;
-    font-size: 24px;
-    background: #ffffff;
-    border-radius: 18px;
-    border: 1px solid #cfcece;
-}
-.modal .name{
-    height: 60px;
-    margin-bottom: 0px;
-    font-size: 36px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-}
-.modal .popupForm {
-    margin-top: 15px;
-    height: calc(100% - 135px);
-}
-.modal .popupForm .desBox {
+.modal-body .desBox {
     font-size: 16px;
     padding: 10px;
-    height: calc(100% - 130px);
+    height: calc(100% - 60px);
     width: calc(100% - 20px);
     border: solid 2px black;
     border-radius: 5px;
     resize: none;
-}
-.modal .popupForm .buttonDiv{
-    margin-top: 15px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-.modal .popupForm .buttonDiv > button{
-    margin-left: 30px;
-}
-#desPost > button{
-    width: 150px;
-    margin: 5px;
-    margin-left: 25px;
-    margin-right: 25px;
 }

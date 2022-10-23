@@ -75,24 +75,24 @@ function User(props){
                     <div className='status'>
                         <span className='title'>Status</span>
                         <span>Unactivated</span>
-                        <button  className="btn btn-primary ms-2" onClick={activateOnClick}>
+                        <button  className="btn btn-primary ms-2 userInfo-button" onClick={activateOnClick}>
                             Send activation mail
                         </button>
                     </div>
                     }
-                    <div><Link className="btn btn-primary" role="button" to="/user/comments/">
+                    <div><Link className="btn btn-primary userInfo-button" role="button" to="/user/comments/">
                         Your comments
                     </Link></div>
                     {user.is_staff &&
                     <div>
-                        <Link className="btn btn-primary" role="button" to="/admin/landmarks/">
+                        <Link className="btn btn-primary userInfo-button" role="button" to="/admin/landmarks/">
                             Manage landmark suggestions
                         </Link>
-                        <Link className="btn btn-primary ms-2" role="button" to="/admin/contents/">
+                        <Link className="btn btn-primary ms-2 userInfo-button" role="button" to="/admin/contents/">
                             Manage content suggestions
                         </Link>
                     </div>}
-                    <div><button className="btn btn-primary" onClick={logoutOnClick}>
+                    <div><button className="btn btn-primary userInfo-button" onClick={logoutOnClick}>
                         Logout
                     </button></div>
                 </div>

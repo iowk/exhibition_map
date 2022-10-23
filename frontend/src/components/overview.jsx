@@ -7,7 +7,7 @@ function LandmarkOverview(props){
         props.handleToLandmark(props.landmark);
     }
     return (
-        <div className="card-horizontal overview mb-2" style={{height: 9+'rem'}} onClick={handleOnClick}>
+        <div className="card-horizontal overview mt-2" style={{height: 9+'rem'}} onClick={handleOnClick}>
             <div className="img-square-wrapper coverImage">
                 <img src={props.landmark.coverImageSrc} alt="Not found"></img>
             </div>

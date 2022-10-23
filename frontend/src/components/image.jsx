@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Navigate } from "react-router-dom";
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
@@ -13,9 +13,7 @@ function ImageListPopup(props){
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    useEffect(() => {
-        let isMounted = true;
+    const handleShow = () => {
         var apiPath = '';
         if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/images/';
         else apiPath = '/map/landmarks/'+props.lmid+'/images/';
@@ -23,17 +21,15 @@ function ImageListPopup(props){
             try{
                 const res = await axios().get(apiPath);
                 const res_images = await res.data;
-                if(isMounted) setImages(res_images);
+                setImages(res_images);
             }
             catch(e){
                 console.log(e);
             }
         }
         if(props.ctid || props.lmid) fetchData();
-        return () => {
-            isMounted = false;
-        };
-    }, [props.lmid, props.ctid])
+        setShow(true);
+    }
     return(
         <>
             <Button variant="primary" onClick={handleShow}>
@@ -137,7 +133,7 @@ function ImagePostPopup(props) {
                             className='w-100'
                         />
                     </div>
-                    <div className='mt-2 imagePreviewBox'>
+                    <div className='mt-3 imagePreviewBox'>
                         <UploadImage handleSetImage={setImage}/>
                     </div>
                     <div className='buttonDiv'>

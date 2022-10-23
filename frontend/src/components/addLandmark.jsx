@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import './addLandmark.css';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
+import Button from 'react-bootstrap/Button';
 import { UploadImage } from './image'
 
 function AddLandmark(props) {
@@ -91,9 +92,9 @@ function AddLandmark(props) {
                     <UploadImage handleSetImage={setImage}/>
                 </div>
                 <div className='buttonDiv'>
-                    <button onClick={handleSubmit} className='submitButton'>
+                    <Button onClick={handleSubmit} variant="primary">
                         Upload
-                    </button>
+                    </Button>
                 </div>
             </div>
         );
