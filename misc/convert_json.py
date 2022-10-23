@@ -18,6 +18,10 @@ def ConvertCctwLandmark(inp_dic, ownerid):
         out_dic['link'] = inp_dic['website']
     elif 'facebook' in inp_dic.keys():
         out_dic['link'] = inp_dic['facebook']
+    if 'name_eng' in inp_dic.keys():
+        out_dic['name_eng'] = inp_dic['name_eng']
+    if 'ticketPrice' in inp_dic.keys():
+        out_dic['price'] = inp_dic['ticketPrice']
     return out_dic
 
 if __name__=='__main__':
@@ -37,7 +41,6 @@ if __name__=='__main__':
             # From cloud.culture.tw
             out_dic = ConvertCctwLandmark(inp_dic, args.ownerid)
         if len(out_dic) > 0:
-            out_dic['is_visible'] = True
             print(out_dic['name'], "added")
             out.append(out_dic)
     print(len(out), "items added")
