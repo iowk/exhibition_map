@@ -9,7 +9,7 @@ import Login from './login';
 import User from './user';
 import UserComment from './userComment';
 import {AdminLandmark, AdminContent} from './admin';
-import AdminPostJson from './adminPostJson';
+import {AdminPostLandmarks} from './adminPostJson';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './general.css';
 
@@ -26,7 +26,7 @@ ReactDOM.render(
             <Route path="/user/comments" element={<UserComment />}></Route>
             <Route path="/admin/landmarks" element={<AdminLandmark />}></Route>
             <Route path="/admin/contents" element={<AdminContent />}></Route>
-            <Route path="/admin/post_json" element={<AdminPostJson />}></Route>
+            <Route path="/admin/post_landmarks" element={<AdminPostLandmarks />}></Route>
         </Routes>
     </BrowserRouter>,
 

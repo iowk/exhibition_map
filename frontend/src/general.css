@@ -34,3 +34,6 @@
 .modal-dialog{
     float: left;
 }
+textarea{
+    resize: none;
+}

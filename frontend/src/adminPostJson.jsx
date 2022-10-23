@@ -3,7 +3,7 @@ import {jwtVerify, getToken} from './auth';
 import Button from 'react-bootstrap/Button';
 import axios from './axios';
 
-function AdminPostJson(props){
+function AdminPostLandmarks(props){
     const [file, setFile] = useState({});
     function handleOnChange(e){
         const fileReader = new FileReader();
@@ -23,7 +23,7 @@ function AdminPostJson(props){
         for(let i = 0; i < file.length; ++i){
             let item = file[i];
             console.log("Posting", item.name);
-            await delay(100);
+            await delay(10);
             let is_valid = await jwtVerify();
             if(is_valid){
                 try{
@@ -51,4 +51,4 @@ function AdminPostJson(props){
         </div>
     );
 }
-export default AdminPostJson;
+export {AdminPostLandmarks};

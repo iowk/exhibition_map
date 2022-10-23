@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Navigate } from "react-router-dom";
 import Navigation from './components/navbar'
 import {jwtVerify, getLSItem, getToken} from './auth';
@@ -6,6 +6,87 @@ import Button from 'react-bootstrap/Button';
 import axios from './axios';
 import './admin.css';
 
+function VerifyLandmark(props){
+    const nameRef = useRef();
+    const nameEngRef = useRef();
+    const latRef = useRef();
+    const lngRef = useRef();
+    const linkRef = useRef();
+    const priceRef  = useRef();
+    return(
+        <div key={props.landmark.id} className='adminBox'>
+            <div className='imageDiv'>
+                <img src={props.landmark.coverImageSrc} alt=""></img>
+            </div>
+            <div className='titleDiv'>
+                <div>Name:</div><input ref={nameRef} defaultValue={props.landmark.name}/>
+                <div>English name:</div><input ref={nameEngRef} defaultValue={props.landmark.name_eng}/>
+                <div>Contributor: {props.landmark.owner}</div>
+            </div>
+            <div className='infoDiv'>
+                <div>lat: </div><input ref={latRef} defaultValue={props.landmark.lat}/>
+                <div>lng: </div><input ref={lngRef} defaultValue={props.landmark.lng}/>
+                <div>Source: </div><input className="link" ref={linkRef} defaultValue={props.landmark.link}/>
+            </div>
+            <div className='desDiv'>
+                <div className='name'>Price:</div><textarea ref={priceRef} defaultValue={props.landmark.price}/>
+            </div>
+            <div className='buttonDiv'>
+                <Button variant="primary" className='buttonVerify' onClick={() => props.handleSubmit(props.landmark.id,
+                    {name: nameRef.current.value,
+                    name_eng: nameEngRef.current.value,
+                    lat: latRef.current.value,
+                    lng: lngRef.current.value,
+                    link: linkRef.current.value,
+                    price: priceRef.current.value,
+                    is_visible: true}, true)}>Verify</Button>
+                <Button variant="primary" className='buttonDelete' onClick={() => props.handleSubmit(props.landmark.id, {}, false)}>Delete</Button>
+            </div>
+        </div>
+    );
+}
+function VerifyContent(props){
+    const nameRef = useRef();
+    const nameEngRef = useRef();
+    const startDateRef = useRef();
+    const endDateRef = useRef();
+    const linkRef = useRef();
+    const priceRef  = useRef();
+    const desRef  = useRef();
+    return(
+        <div key={props.content.id} className='adminBox'>
+            <div className='imageDiv'>
+                <img src={props.content.coverImageSrc} alt=""></img>
+            </div>
+            <div className='titleDiv'>
+                <div>Name:</div><input ref={nameRef} defaultValue={props.content.name}/>
+                <div>English name:</div><input ref={nameEngRef} defaultValue={props.content.name_eng}/>
+                <div>Contributor: {props.content.owner}</div>
+            </div>
+            <div className='infoDiv'>
+                <div>Start date: </div><input ref={startDateRef} defaultValue={props.content.startDate}/>
+                <div>End date: </div><input ref={endDateRef} defaultValue={props.content.endDate}/>
+                <div>Source: </div><input className="link" ref={linkRef} defaultValue={props.content.link}/>
+            </div>
+            <div className='desDiv'>
+                <div className='name'>Description:</div><textarea ref={desRef} defaultValue={props.content.des}/>
+                <div className='name'>Price:</div><textarea ref={priceRef} defaultValue={props.content.price}/>
+            </div>
+            <div className='buttonDiv'>
+                <Button variant="primary" className='buttonVerify' onClick={() => props.handleSubmit(props.content.id,
+                    {name: nameRef.current.value,
+                    name_eng: nameEngRef.current.value,
+                    startDate: startDateRef.current.value,
+                    endDate: endDateRef.current.value,
+                    link: linkRef.current.value,
+                    price: priceRef.current.value,
+                    description: desRef.current.value,
+                    is_visible: true}, true)}>Verify</Button>
+                <Button variant="primary" className='buttonDelete' onClick={() => props.handleSubmit(props.content.id, {}, false)}>Delete</Button>
+            </div>
+        </div>
+    );
+}
 function AdminLandmark(props){
     const [user, setUser] = useState({});
     const [verifyDone, setVerifyDone] = useState(false);
@@ -54,43 +135,17 @@ function AdminLandmark(props){
         fetchData();
     }, [])
     useEffect(() => {
-        function setLandmarkBox(landmark){
-            return(
-                <div key={landmark.id} className='landmarkBox'>
-                    <div className='imageDiv'>
-                        <img src={landmark.coverImageSrc} alt=""></img>
-                    </div>
-                    <div className='titleDiv'>
-                        <span className='landmarkName'>{landmark.name}</span>
-                        <span>Contributor: {landmark.owner}</span>
-                    </div>
-                    <div className='infoDiv'>
-                        <span>lat: {landmark.lat}</span>
-                        <span>lng: {landmark.lng}</span>
-                        <a href={landmark.link}>
-                            <div className="link">{landmark.link}</div>
-                        </a>
-                    </div>
-                    <div className='buttonDiv'>
-                        <Button variant="primary" className='buttonVerify' onClick={() => handleChangeVisibility(landmark.id, true)}>Verify</Button>
-                        <Button variant="primary" className='buttonDelete' onClick={() => handleChangeVisibility(landmark.id, false)}>Delete</Button>
-                    </div>
-                </div>
-            );
-        }
         let chs = [];
         for(let key in landmarks) {
-            chs.push(setLandmarkBox(landmarks[key]));
+            chs.push(<VerifyLandmark key={key} landmark={landmarks[key]} handleSubmit={handleSubmit}/>);
         }
         setChildren(chs);
     }, [landmarks]);
-    function handleChangeVisibility(lmid, is_verify){
+    function handleSubmit(lmid, dic, is_verify){
         jwtVerify()
         .then(() => {
             if(is_verify){
-                axios(getToken()).patch('/map/landmarks/'+lmid+'/', JSON.stringify({
-                    is_visible: true
-                }),
+                axios(getToken()).patch('/map/landmarks/'+lmid+'/', JSON.stringify(dic),
                 {
                     headers: {
                         'Content-Type': 'application/json'
@@ -145,7 +200,7 @@ function AdminLandmark(props){
         return(
             <div>
                 <Navigation user = {user}/>
-                <div className='adminLandmark'>
+                <div className='admin'>
                     {children}
                 </div>
             </div>
@@ -206,45 +261,17 @@ function AdminContent(props){
         fetchData();
     }, [])
     useEffect(() => {
-        function setContentBox(content){
-            return(
-                <div key={content.id} className='contentBox'>
-                    <div className='imageDiv'>
-                        <img src={content.coverImageSrc} alt=""></img>
-                    </div>
-                    <div className='titleDiv'>
-                        <span className='contentName'>{content.landmark_name}-{content.name}</span>
-                        <span>Contributor: {content.owner}</span>
-                    </div>
-                    <div className='infoDiv'>
-                        <span>{content.startDate} ~ {content.endDate}</span>
-                        <a href={content.link}>
-                            <span className="link">{content.link}</span>
-                        </a>
-                    </div>
-                    <div className='desDiv'>
-                        <span>{content.description}</span>
-                    </div>
-                    <div className='buttonDiv'>
-                        <Button variant="primary" className='buttonVerify' onClick={() => handleChangeVisibility(content.id, true)}>Verify</Button>
-                        <Button variant="primary" className='buttonDelete' onClick={() => handleChangeVisibility(content.id, false)}>Delete</Button>
-                    </div>
-                </div>
-            );
-        }
         let chs = [];
         for(let key in contents) {
-            chs.push(setContentBox(contents[key]));
+            chs.push(<VerifyContent key={key} content={contents[key]} handleSubmit={handleSubmit}/>);
         }
         setChildren(chs);
     }, [contents]);
-    function handleChangeVisibility(ctid, is_verify){
+    function handleSubmit(ctid, dic, is_verify){
         jwtVerify()
         .then(() => {
             if(is_verify){
-                axios(getToken()).patch('/map/contents/'+ctid+'/', JSON.stringify({
-                    is_visible: true
-                }),
+                axios(getToken()).patch('/map/contents/'+ctid+'/', JSON.stringify(dic),
                 {
                     headers: {
                         'Content-Type': 'application/json'
@@ -299,7 +326,7 @@ function AdminContent(props){
         return(
             <div>
                 <Navigation user = {user}/>
-                <div className='adminContent'>
+                <div className='admin'>
                     {children}
                 </div>
             </div>
