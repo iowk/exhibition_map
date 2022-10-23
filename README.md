@@ -17,22 +17,23 @@ EXmap is a collaboration-based map that displays museum and exhibition informati
 </ul>
 
 ## Functions
-### Guest users
+### Guest user
 <ul>
     <li>Display map information: museums, exhibitions, comments, photos</li>
     <li>Search utility</li>
     <li>User registration + email verification</li>
 </ul>
 
-### Authenticated users
+### Authenticated user
 <ul>
     <li>JWT authentication</li>
     <li>Suggest museums or exhibitions</li>
     <li>Write or modify comments and give ratings</li>
+    <li>Manage comments on user page<li>
     <li>Upload photos</li>
 </ul>
 
-### Staffs
+### Staff
 <ul>
     <li>Create, update, delete contents</li>
     <li>Verify suggested museums or exhibitions</li>
