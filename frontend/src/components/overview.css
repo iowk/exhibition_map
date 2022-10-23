@@ -17,10 +17,9 @@
     cursor: pointer;
 }
 .overview .des{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    width: calc(65% - 30px);
-    margin-left: 20px;
+    padding: 10px;
+    width: calc(65% - 20px);
+    margin-left: 10px;
     height: 100%;
     overflow: auto;
 }
