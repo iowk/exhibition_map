@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {jwtVerify, getToken} from './auth';
+import Button from 'react-bootstrap/Button';
 import axios from './axios';
 
 function AdminPostJson(props){
@@ -46,7 +47,7 @@ function AdminPostJson(props){
         <div>
             Upload json file:
             <input type='file' onChange={handleOnChange}/>
-            <button onClick={handleSubmit}>Submit</button>
+            <Button variant="primary" onClick={handleSubmit}>Submit</Button>
         </div>
     );
 }

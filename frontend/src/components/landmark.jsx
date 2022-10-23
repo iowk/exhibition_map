@@ -111,13 +111,13 @@ function Landmark(props){
         }
         if(props.user && props.user.is_verified){
             buttons.push(
-                <button className="btn btn-primary" onClick={props.handleToAddContent}>
+                <button className="btn btn-primary" key='AddContentButton' onClick={props.handleToAddContent}>
                     Suggest content
                 </button>)
         }
         if(props.user && (props.user.is_staff)){
             buttons.push(
-                <button className="btn btn-primary" onClick={handleDeleteLandmark}>
+                <button className="btn btn-primary" key='DeleteLandmarkButton' onClick={handleDeleteLandmark}>
                     Delete landmark
                 </button>)
         }

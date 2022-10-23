@@ -42,6 +42,8 @@ function AddLandmark(props) {
                             lat: parseFloat(lat),
                             lng: parseFloat(lng)
                         });
+                        props.handleToInitial();
+
                     })
                     .catch((e) =>{
                         console.log(e);

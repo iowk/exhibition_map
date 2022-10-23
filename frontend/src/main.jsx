@@ -14,7 +14,7 @@ function Main(props) {
     // Full main page
     const [phase, setPhase] = useState('initial');
     const [user, setUser] = useState(null);
-    const [landmarks, setLandmarks] = useState({});
+    const [landmarks, setLandmarks] = useState([]);
     const [addedMarker, setAddedMarker] = useState(null); //latlng
     const [curLandmark, setCurLandmark] = useState({}); // Currently clicked landmark
     const [curContent, setCurContent] = useState({}); // Currently clicked content
@@ -192,8 +192,9 @@ function Main(props) {
     else if(phase==='addLandmark'){
         child = <AddLandmark
             user = {user}
+            handleToInitial = {handleToInitial}
             handleSetUser = {setUser}
-            handleSetCenter = {handleSetCenter}
+            handleSetCenter = {setCenter}
             addedMarker = {addedMarker}
         />;
     }
