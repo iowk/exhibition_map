@@ -72,15 +72,15 @@ function Map(props) {
                 />}
                 <MarkerClusterer options={markerClusterOptions}>
                 {(clusterer) =>
-                    props.landmarks.map((landmark) => (
-                    <Marker key={landmark['id']}
-                        position={{lat: landmark['lat'], lng: landmark['lng']}}
-                        title={landmark['name']}
-                        zIndex={landmark['zIndex']}
+                    props.markers.map((marker) => (
+                    <Marker key={marker['id']}
+                        position={{lat: marker['lat'], lng: marker['lng']}}
+                        title={marker['name']}
+                        zIndex={marker['zIndex']}
                         label={
-                            {text: landmark['contentCount'].toString(), color: "white", fontWeight: 'bold'}
+                            {text: marker['contentCount'].toString(), color: "white", fontWeight: 'bold'}
                         }
-                        onClick={() => {props.handleClickLandmark(landmark['id'])}}
+                        onClick={() => {props.handleClickLandmark(marker['id'])}}
                         clusterer={clusterer} />
                     ))
                 }

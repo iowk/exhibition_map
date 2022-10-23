@@ -22,7 +22,8 @@ function About(props){
                     <Card.Title>Collaboration</Card.Title>
                         <Card.Text>
                             <p>Users are welcome to contribute to the website by suggesting museums and exhibitions.
-                                The contents will be shown publicly after being verified by the administrator.</p>
+                                The contents will be shown publicly after being verified by the administrator.
+                                Users can also report incorrect information by clicking the report button.</p>
                             <p> If you are the administrator of a museum, you can contact exhibitionmap@gmail.com
                                 to grant access to manage the museum's information.</p>
                         </Card.Text>

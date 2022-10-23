@@ -37,7 +37,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['name'] = user.username
         return token
 
+class MarkerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Landmark
+        fields = ['id', 'name', 'lat', 'lng', 'zIndex', 'is_visible', 'contentCount']
+
 class LandmarkSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = models.Landmark
         fields = ['id', 'owner', 'name', 'name_eng', 'lat', 'lng', 'zIndex', 'link', 'price', 'coverImageSrc', 'is_visible', 'contentCount', 'avgRating']
@@ -56,9 +62,11 @@ class LandmarkCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'owner', 'created', 'modified', 'text', 'rating', 'landmark_id']
 
 class ContentSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
     lat = serializers.ReadOnlyField(source='landmark.lat')
     lng = serializers.ReadOnlyField(source='landmark.lng')
     landmark_name = serializers.ReadOnlyField(source='landmark.name')
+    landmark_name_eng = serializers.ReadOnlyField(source='landmark.name_eng')
     class Meta:
         model = models.Content
         fields = ['id', 'owner', 'landmark_id', 'landmark_name', 'landmark_name_eng', 'lat', 'lng', 'name', 'name_eng', 'startDate', 'endDate', 'link', 'description', 'price', 'coverImageSrc', 'is_visible', 'isGoing', 'avgRating']
@@ -87,3 +95,15 @@ class UserCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CustomUser
         fields = ['id', 'landmarkComments', 'contentComments']
+
+class LandmarkReportSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    class Meta:
+        model = models.LandmarkReport
+        fields = ['id', 'owner', 'created', 'text', 'landmark_id']
+
+class ContentReportSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    class Meta:
+        model = models.ContentReport
+        fields = ['id', 'owner', 'created', 'text', 'content_id']

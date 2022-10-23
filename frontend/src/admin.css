@@ -79,10 +79,10 @@
     width: calc(40% - 50px);
 }
 .admin .adminBox .desDiv > div{
-    width: 80px;
+    width:100px;
 }
 .admin .adminBox .desDiv > input{
-    width: calc(100% - 90px);
+    width: calc(100% - 110px);
 }
 .admin .adminBox .buttonDiv{
     width: 160px;

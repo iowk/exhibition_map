@@ -38,6 +38,15 @@ class Comment(models.Model): # Landmark and content comments
         self.modified = timezone.now()
         return super(Comment, self).save(*args, **kwargs)
 
+class Report(models.Model): # Landmark and content reports
+    created = models.DateTimeField(editable=False)
+    text = models.CharField(max_length=500, blank=True)
+    class Meta:
+        abstract = True
+    def save(self, *args, **kwargs):
+        self.created = timezone.now()
+        return super(Report, self).save(*args, **kwargs)
+
 class Landmark(models.Model):
     owner = models.ForeignKey(CustomUser, related_name='landmark', on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=1000)
@@ -70,6 +79,13 @@ class LandmarkComment(Comment):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=["owner", "landmark"], name='unique_owner_landmark_comment')]
+
+class LandmarkReport(Report):
+    owner = models.ForeignKey(CustomUser, related_name='landmarkReports', on_delete=models.CASCADE)
+    landmark = models.ForeignKey(Landmark, related_name='reports', on_delete=models.CASCADE)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["owner", "landmark"], name='unique_owner_landmark_report')]
 
 class Content(models.Model):
     owner = models.ForeignKey(CustomUser, related_name='content', on_delete=models.SET_NULL, null=True)
@@ -107,3 +123,10 @@ class ContentComment(Comment):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=["owner", "content"], name='unique_owner_content_comment')]
+
+class ContentReport(Report):
+    owner = models.ForeignKey(CustomUser, related_name='contentReports', on_delete=models.CASCADE)
+    content = models.ForeignKey(Content, related_name='reports', on_delete=models.CASCADE)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["owner", "content"], name='unique_owner_content_report')]

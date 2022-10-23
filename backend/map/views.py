@@ -11,7 +11,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenVerifyView
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-from .models import Landmark, Content, CustomUser
+from .models import Landmark, Content, CustomUser, LandmarkReport, ContentReport
 from .mail import SendAccActiveEmail
 from .token import account_activation_token
 from . import serializers
@@ -127,6 +127,12 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = serializers.MyTokenObtainPairSerializer
     permission_classes = [permissions.AllowAny]
 
+class MarkerList(generics.ListAPIView):
+    serializer_class = serializers.MarkerSerializer
+    permission_classes = [ReadOnly]
+    def get_queryset(self):
+        return Landmark.objects.all()
+
 class LandmarkList(generics.ListCreateAPIView):
     serializer_class = serializers.LandmarkSerializer
     permission_classes = [IsActivatedOrReadOnly]
@@ -207,6 +213,35 @@ class LandmarkCommentDetail(generics.RetrieveUpdateDestroyAPIView):
         queryset = self.get_queryset()
         filter = {'owner': self.kwargs['pk_user']}
         return get_object_or_404(queryset, **filter)
+
+class LandmarkReportCreate(generics.CreateAPIView):
+    serializer_class = serializers.LandmarkReportSerializer
+    permission_classes = [IsActivatedOrReadOnly]
+    def post(self, request, pk_lm, format=None):
+        serializer = serializers.LandmarkReportSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(landmark_id=pk_lm, owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LandmarkReportDetail(generics.RetrieveDestroyAPIView):
+    serializer_class = serializers.LandmarkReportSerializer
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    def get_queryset(self):
+        try:
+            return Landmark.objects.get(pk=self.kwargs['pk_lm']).reports
+        except Landmark.DoesNotExist:
+            raise Http404
+    def get_object(self):
+        queryset = self.get_queryset()
+        filter = {'owner': self.kwargs['pk_user']}
+        return get_object_or_404(queryset, **filter)
+
+class LandmarksReportList(generics.ListAPIView):
+    serializer_class = serializers.LandmarkReportSerializer
+    permission_classes = [permissions.IsAdminUser]
+    def get_queryset(self):
+        return LandmarkReport.objects.all()
 
 class LandmarkContentList(generics.ListCreateAPIView):
     serializer_class = serializers.ContentSerializer
@@ -306,6 +341,35 @@ class ContentCommentDetail(generics.RetrieveUpdateDestroyAPIView):
         queryset = self.get_queryset()
         filter = {'owner': self.kwargs['pk_user']}
         return get_object_or_404(queryset, **filter)
+
+class ContentReportCreate(generics.CreateAPIView):
+    serializer_class = serializers.ContentReportSerializer
+    permission_classes = [IsActivatedOrReadOnly]
+    def post(self, request, pk_ct, format=None):
+        serializer = serializers.ContentReportSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(content_id=pk_ct, owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ContentReportDetail(generics.RetrieveDestroyAPIView):
+    serializer_class = serializers.ContentReportSerializer
+    permission_classes = [(IsOwnerOrReadOnly | IsAdminUserOrReadOnly)]
+    def get_queryset(self):
+        try:
+            return Content.objects.get(pk=self.kwargs['pk_ct']).reports
+        except Content.DoesNotExist:
+            raise Http404
+    def get_object(self):
+        queryset = self.get_queryset()
+        filter = {'owner': self.kwargs['pk_user']}
+        return get_object_or_404(queryset, **filter)
+
+class ContentsReportList(generics.ListAPIView):
+    serializer_class = serializers.ContentReportSerializer
+    permission_classes = [permissions.IsAdminUser]
+    def get_queryset(self):
+        return ContentReport.objects.all()
 
 class Search(APIView):
     '''

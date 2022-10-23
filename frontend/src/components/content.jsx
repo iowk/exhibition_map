@@ -3,6 +3,7 @@ import './content.css';
 import Button from 'react-bootstrap/Button';
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
+import { ReportPostPopup } from './report';
 import { DesPostPopup } from './description';
 import { jwtVerify, getToken } from '../auth';
 import axios from '../axios';
@@ -80,6 +81,15 @@ function Content(props){
                     user={props.user}
                     handleSetUser={props.handleSetUser}
                     buttonName='Upload photo'
+                />}
+                {props.user && props.user.is_verified &&
+                <ReportPostPopup
+                    key='ReportPostPopup'
+                    ctid={props.content.id}
+                    name={props.content.name}
+                    user={props.user}
+                    handleSetUser={props.handleSetUser}
+                    buttonName='Report content'
                 />}
                 {props.user && (props.user.is_staff) &&
                 <DesPostPopup

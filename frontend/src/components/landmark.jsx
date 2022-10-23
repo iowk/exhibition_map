@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './landmark.css';
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
+import { ReportPostPopup } from './report';
 import { jwtVerify, getToken } from './../auth';
 import {ContentOverview} from './overview';
 import axios from './../axios';
@@ -107,6 +108,16 @@ function Landmark(props){
                 user={props.user}
                 handleSetUser={props.handleSetUser}
                 buttonName='Upload photo'
+            />)
+        }
+        if(props.user && props.user.is_verified){
+            buttons.push(<ReportPostPopup
+                key='ReportPostPopup'
+                lmid={props.landmark.id}
+                name={props.landmark.name}
+                user={props.user}
+                handleSetUser={props.handleSetUser}
+                buttonName='Report landmark'
             />)
         }
         if(props.user && props.user.is_verified){

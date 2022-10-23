@@ -14,7 +14,7 @@ function Main(props) {
     // Full main page
     const [phase, setPhase] = useState('initial');
     const [user, setUser] = useState(null);
-    const [landmarks, setLandmarks] = useState([]);
+    const [markers, setMarkers] = useState([]);
     const [addedMarker, setAddedMarker] = useState(null); //latlng
     const [curLandmark, setCurLandmark] = useState({}); // Currently clicked landmark
     const [curContent, setCurContent] = useState({}); // Currently clicked content
@@ -58,16 +58,16 @@ function Main(props) {
         // GET all landmarks on the map
         const fetchData = async() => {
             try{
-                const res = await axios().get('/map/landmarks/');
-                const landmarks = await res.data;
-                setLandmarks(landmarks);
+                const res = await axios().get('/map/markers/');
+                const markers = await res.data;
+                setMarkers(markers);
             }
             catch (e) {
                 console.log(e);
             }
         }
-        if(phase==='initial' || phase==='landmark') fetchData();
-    }, [phase])
+        fetchData();
+    }, [])
     useEffect(() => {
         jwtVerify()
         .then((is_valid) => {
@@ -135,7 +135,6 @@ function Main(props) {
     }
     function handleToLandmark(lm) {
         setCurLandmark(lm);
-        handleSetCenter({lat: lm.lat, lng: lm.lng});
         setPhase('landmark');
     }
     function handleToContent(ct) {
@@ -225,7 +224,7 @@ function Main(props) {
                 <Map
                     phase = {phase}
                     center = {center}
-                    landmarks = {landmarks}
+                    markers = {markers}
                     addedMarker = {addedMarker}
                     handleClickLandmark = {handleClickLandmark}
                     handleAddLandmark = {handleAddLandmark}
