@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navigate } from "react-router-dom";
 import Navigation from './components/navbar'
 import {jwtVerify, getLSItem, getToken} from './auth';
+import Button from 'react-bootstrap/Button';
 import axios from './axios';
 import './admin.css';
 
@@ -71,8 +72,8 @@ function AdminLandmark(props){
                         </a>
                     </div>
                     <div className='buttonDiv'>
-                        <button className='buttonVerify' onClick={() => handleChangeVisibility(landmark.id, true)}>Verify</button>
-                        <button className='buttonDelete' onClick={() => handleChangeVisibility(landmark.id, false)}>Delete</button>
+                        <Button variant="primary" className='buttonVerify' onClick={() => handleChangeVisibility(landmark.id, true)}>Verify</Button>
+                        <Button variant="primary" className='buttonDelete' onClick={() => handleChangeVisibility(landmark.id, false)}>Delete</Button>
                     </div>
                 </div>
             );
@@ -225,8 +226,8 @@ function AdminContent(props){
                         <span>{content.description}</span>
                     </div>
                     <div className='buttonDiv'>
-                        <button className='buttonVerify' onClick={() => handleChangeVisibility(content.id, true)}>Verify</button>
-                        <button className='buttonDelete' onClick={() => handleChangeVisibility(content.id, false)}>Delete</button>
+                        <Button variant="primary" className='buttonVerify' onClick={() => handleChangeVisibility(content.id, true)}>Verify</Button>
+                        <Button variant="primary" className='buttonDelete' onClick={() => handleChangeVisibility(content.id, false)}>Delete</Button>
                     </div>
                 </div>
             );
