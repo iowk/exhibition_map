@@ -13,7 +13,7 @@ function About(props){
                 <Card.Body>
                     <Card.Title>About EXmap</Card.Title>
                         <Card.Text>
-                            EXmap is a non-profit website that displays museums and exhibitions mainly in Taiwan.
+                            <p>EXmap is a non-profit website that organizes museum and exhibition information on a map.</p>
                         </Card.Text>
                 </Card.Body>
             </Card>
@@ -22,9 +22,9 @@ function About(props){
                     <Card.Title>Collaboration</Card.Title>
                         <Card.Text>
                             <p>Users are welcome to contribute to the website by suggesting museums and exhibitions.
-                                After the contents are verified by the administrator, they will be shown publicly.</p>
+                                The contents will be shown publicly after being verified by the administrator.</p>
                             <p> If you are the administrator of a museum, you can contact exhibitionmap@gmail.com
-                                to grant access on managing the museum's information.</p>
+                                to grant access to manage the museum's information.</p>
                         </Card.Text>
                 </Card.Body>
             </Card>
@@ -32,9 +32,9 @@ function About(props){
                 <Card.Body>
                     <Card.Title>Copyright</Card.Title>
                         <Card.Text>
-                            All contents on the website are authorized by the <i>Disclaimer on Openning Government Website Information</i> (政府網站資料開放宣告).
-                            The link to of each museum or exhibition can be accessed by clicking "Source" in the information panel.
-                            Explicit database sources are listed in the section below.
+                            <p>All contents on the website are authorized by the <i>Disclaimer on Openning Government Website Information</i> (政府網站資料開放宣告).
+                            The link to each museum or exhibition can be accessed by clicking "Source" in the information panel.
+                            Other database sources are listed in the section below.</p>
                         </Card.Text>
                 </Card.Body>
             </Card>
