@@ -28,6 +28,7 @@ EXmap is a collaboration-based map that displays museum and exhibition informati
 <ul>
     <li>JWT authentication</li>
     <li>Suggest museums or exhibitions</li>
+    <li>Report incorrect information</li>
     <li>Write or modify comments and give ratings</li>
     <li>Manage comments on user page<li>
     <li>Upload photos</li>
@@ -37,6 +38,7 @@ EXmap is a collaboration-based map that displays museum and exhibition informati
 <ul>
     <li>Create, update, delete contents</li>
     <li>Verify suggested museums or exhibitions</li>
+    <li>Manage user reports</li>
 </ul>
 
 ## TODO
