@@ -133,6 +133,12 @@ class MarkerList(generics.ListAPIView):
     def get_queryset(self):
         return Landmark.objects.all()
 
+class LandmarkOverviewList(generics.ListAPIView):
+    serializer_class = serializers.LandmarkOverviewSerializer
+    permission_classes = [ReadOnly]
+    def get_queryset(self):
+        return Landmark.objects.all()
+
 class LandmarkList(generics.ListCreateAPIView):
     serializer_class = serializers.LandmarkSerializer
     permission_classes = [IsActivatedOrReadOnly]
@@ -147,6 +153,16 @@ class LandmarkList(generics.ListCreateAPIView):
                 serializer.save(owner=request.user, is_visible=False)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LandmarkOverviewDetail(generics.RetrieveAPIView):
+    serializer_class = serializers.LandmarkOverviewSerializer
+    permission_classes = [ReadOnly]
+    def get_queryset(self):
+        return Landmark.objects.all()
+    def get_object(self):
+        queryset = self.get_queryset()
+        filter = {'pk': self.kwargs['pk_lm']}
+        return get_object_or_404(queryset, **filter)
 
 class LandmarkDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.LandmarkSerializer
@@ -261,6 +277,21 @@ class LandmarkContentList(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class LandmarkContentOverviewList(generics.ListAPIView):
+    serializer_class = serializers.ContentOverviewSerializer
+    permission_classes = [ReadOnly]
+    def get_queryset(self):
+        try:
+            return Landmark.objects.get(pk=self.kwargs['pk_lm']).contents
+        except Landmark.DoesNotExist:
+            raise Http404
+
+class ContentOverviewList(generics.ListAPIView):
+    serializer_class = serializers.ContentOverviewSerializer
+    permission_classes = [ReadOnly]
+    def get_queryset(self):
+        return Content.objects.all()
+
 class ContentList(generics.ListCreateAPIView):
     serializer_class = serializers.ContentSerializer
     permission_classes = [IsActivatedOrReadOnly]
@@ -275,6 +306,16 @@ class ContentList(generics.ListCreateAPIView):
                 serializer.save(owner=request.user, is_visible=False)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ContentOverviewDetail(generics.RetrieveAPIView):
+    serializer_class = serializers.ContentOverviewSerializer
+    permission_classes = [ReadOnly]
+    def get_queryset(self):
+        return Content.objects.all()
+    def get_object(self):
+        queryset = self.get_queryset()
+        filter = {'pk': self.kwargs['pk_ct']}
+        return get_object_or_404(queryset, **filter)
 
 class ContentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ContentSerializer
@@ -373,7 +414,7 @@ class ContentsReportList(generics.ListAPIView):
 
 class Search(APIView):
     '''
-    Compare the searched pattern with landmark, content names, and return a list of landmarks, contents sorted by Dice coefficient.
+    Compare the searched pattern with landmark, content names, and return a list of landmark, content overviews sorted by f(Dice coefficient, distance to map center).
     request.data
         Argument        Type        Description
         pattern         string      searched pattern
@@ -385,7 +426,7 @@ class Search(APIView):
     permission_classes = [permissions.AllowAny]
     def post(self, request):
         rq = request.data
-        ls = serializers.LandmarkSerializer(Landmark.objects.all(), context={"request": request}, many=True).data + serializers.ContentSerializer(Content.objects.all(), context={"request": request}, many=True).data
+        ls = serializers.LandmarkOverviewSerializer(Landmark.objects.all(), context={"request": request}, many=True).data + serializers.ContentOverviewSerializer(Content.objects.all(), context={"request": request}, many=True).data
         for i, dic in enumerate(ls):
             if('isGoing' in dic.keys() and not dic['isGoing']): ls[i]['score'] = -1000 # Non ongoing content
             else: ls[i]['score'] = search_score(dic, rq)
