@@ -86,8 +86,8 @@ class UserRegister(generics.CreateAPIView):
 class SendUserActivationMail(APIView):
     permission_classes = [permissions.AllowAny]
     def get(self, request):
-        current_site = get_current_site(request)
         try:
+            current_site = get_current_site(request)
             SendAccActiveEmail(request.user, current_site)
             return Response(status=status.HTTP_200_OK)
         except:
