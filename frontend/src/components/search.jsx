@@ -11,7 +11,7 @@ function SearchResultList(props){
                 // Content
                 children.push(<ContentOverview
                     key={key}
-                    content={props.searchResult[key]}
+                    contentOverview={props.searchResult[key]}
                     handleToContent={props.handleToContent}
                     showLandmarkName={true}/>);
             }
@@ -19,7 +19,7 @@ function SearchResultList(props){
                 // Landmark
                 children.push(<LandmarkOverview
                     key={key}
-                    landmark={props.searchResult[key]}
+                    landmarkOverview={props.searchResult[key]}
                     handleToLandmark={props.handleToLandmark}
                 />)
             }

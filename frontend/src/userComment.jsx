@@ -12,7 +12,7 @@ function EachUserLandmarkComment(props){
     useEffect(() => {
         const fetchData = async() => {
             try{
-                const res_lm = await axios().get('/map/landmarks/'+props.comment.landmark_id);
+                const res_lm = await axios().get('/map/landmarks_overview/'+props.comment.landmark_id);
                 const landmark = await res_lm.data;
                 setLMName(landmark.name);
             }
@@ -52,7 +52,7 @@ function EachUserContentComment(props){
     useEffect(() => {
         const fetchData = async() => {
             try{
-                const res_ct = await axios().get('/map/contents/'+props.comment.content_id);
+                const res_ct = await axios().get('/map/contents_overview/'+props.comment.content_id);
                 const content = await res_ct.data;
                 setCTName(content.name);
                 setLMName(content.landmark_name);

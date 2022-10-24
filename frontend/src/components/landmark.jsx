@@ -9,39 +9,38 @@ import axios from './../axios';
 import star from '../media/star.png';
 
 function Landmark(props){
-    const [contents, setContents] = useState(null); // Contents of the currently clicked landmark
+    const [landmark, setLandmark] = useState({});
+    const [contentsOverview, setContentsOverview] = useState(null); // Contents of the currently clicked landmark
     useEffect(() => {
         let isMounted = true;
         const fetchData = async() => {
             try{
+                // GET landmarks
+                const res_lm = await axios().get('/map/landmarks/'+props.lmid);
+                const lm = await res_lm.data;
                 // GET contents
-                const res_cons = await axios().get('/map/landmarks/'+props.landmark.id+'/contents/');
-                const ct = await res_cons.data;
+                const res_cts = await axios().get('/map/landmarks/'+props.lmid+'/contents_overview/');
+                const cts = await res_cts.data;
                 // Set state
-                if(isMounted) setContents(ct);
+                if(isMounted){
+                    setLandmark(lm);
+                    setContentsOverview(cts);
+                    props.handleSetCenter({lat: lm.lat, lng: lm.lng});
+                }
             } catch (e) {
                 console.log(e);
             }
         }
-        if(props.landmark.id) fetchData();
-        if(props.user){
-            jwtVerify()
-            .then((is_valid) => {
-                if(!is_valid) if(isMounted) props.handleSetUser(null);
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-        }
+        if(props.lmid && props.lmid!==landmark.id) fetchData();
         return () => {
             isMounted = false;
         };
-    }, [props])
+    }, [props, landmark.id])
     function handleDeleteLandmark(){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getToken()).delete('/map/landmarks/'+props.landmark.id+'/')
+                axios(getToken()).delete('/map/landmarks/'+landmark.id+'/')
                 .then(() => {
                     alert("Landmark deleted");
                     props.handleToInitial();
@@ -59,36 +58,36 @@ function Landmark(props){
     function genLandmark(){
         return (
             <div className="landmarkInfo" key='lm'>
-                <h1>{props.landmark.name}</h1>
-                <img src={props.landmark.coverImageSrc} alt=""></img>
+                <h1>{landmark.name}</h1>
+                <img src={landmark.coverImageSrc} alt=""></img>
                 <div className='link-rating'>
-                    {props.landmark.link && <a className="link" href={props.landmark.link}>
+                    {landmark.link && <a className="link" href={landmark.link}>
                         <div>Source</div>
                     </a>}
-                    {props.landmark.avgRating &&
+                    {landmark.avgRating &&
                         <div className='rating'>
                         <img className='starImage' src={star} alt='Rating:'></img>
-                        <span className='ratingNum'>{props.landmark.avgRating.toFixed(1)}</span></div>}
+                        <span className='ratingNum'>{landmark.avgRating.toFixed(1)}</span></div>}
                 </div>
             </div>
         );
     }
 
-    if(props.landmark){
+    if(landmark){
         var children = [];
         children.push(genLandmark());
         var buttons = [];
         buttons.push(<CommentListPopup
             key='commentListPopup'
-            lmid={props.landmark.id}
-            name={props.landmark.name}
+            lmid={landmark.id}
+            name={landmark.name}
             buttonName='Show comments'
         />)
         if(props.user && props.user.is_verified){
             buttons.push(<CommentPostPopup
                 key='commentPostPopup'
-                lmid={props.landmark.id}
-                name={props.landmark.name}
+                lmid={landmark.id}
+                name={landmark.name}
                 user={props.user}
                 handleSetUser={props.handleSetUser}
                 buttonName='Write comment'
@@ -96,15 +95,15 @@ function Landmark(props){
         }
         buttons.push(<ImageListPopup
             key='ImageListPopup'
-            lmid={props.landmark.id}
-            name={props.landmark.name}
+            lmid={landmark.id}
+            name={landmark.name}
             buttonName='Show photos'
         />)
         if(props.user && props.user.is_verified){
             buttons.push(<ImagePostPopup
                 key='ImagePostPopup'
-                lmid={props.landmark.id}
-                name={props.landmark.name}
+                lmid={landmark.id}
+                name={landmark.name}
                 user={props.user}
                 handleSetUser={props.handleSetUser}
                 buttonName='Upload photo'
@@ -113,8 +112,8 @@ function Landmark(props){
         if(props.user && props.user.is_verified){
             buttons.push(<ReportPostPopup
                 key='ReportPostPopup'
-                lmid={props.landmark.id}
-                name={props.landmark.name}
+                lmid={landmark.id}
+                name={landmark.name}
                 user={props.user}
                 handleSetUser={props.handleSetUser}
                 buttonName='Report landmark'
@@ -137,13 +136,13 @@ function Landmark(props){
                 {buttons}
             </div>
         )
-        for(let key in contents) {
-            if(contents[key]['isGoing'] && contents[key]['is_visible']){
+        for(let key in contentsOverview) {
+            if(contentsOverview[key]['isGoing'] && contentsOverview[key]['is_visible']){
                 // Ongoing and visible content
                 children.push(<ContentOverview
-                    key={contents[key].id}
-                    content={contents[key]}
-                    handleToContent={props.handleToContent}
+                    key={contentsOverview[key].id}
+                    contentOverview={contentsOverview[key]}
+                    handleToContent={() => props.handleToContent(contentsOverview[key].id)}
                     showLandmarkName={false}/>);
             }
         }

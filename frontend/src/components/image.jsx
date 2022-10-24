@@ -41,8 +41,8 @@ function ImageListPopup(props){
                 </Modal.Header>
                 <Modal.Body>
                     <Carousel className="carousel-dark">
-                        {images.map(slideImage =>
-                            <Carousel.Item>
+                        {images.map((slideImage, key)=>
+                            <Carousel.Item key={key}>
                                 <img src={slideImage.src} className="d-flex mw-100 mh-100 carousel-image-center" alt="..."/>
                                 <Carousel.Caption>
                                     <p>{slideImage.name}</p>

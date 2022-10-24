@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Navigate } from "react-router-dom";
 import './addLandmark.css';
 import axios from '../axios';
@@ -9,13 +9,9 @@ import { UploadImage } from './image'
 function AddLandmark(props) {
     const nameRef = useRef();
     const linkRef = useRef();
-    const [lat, setLat] = useState();
-    const [lng, setLng] = useState();
+    const [lat, setLat] = useState(props.addedMarker.lat());
+    const [lng, setLng] = useState(props.addedMarker.lng());
     const [image, setImage] = useState(null);
-    useEffect(() => {
-        setLat(props.addedMarker.lat());
-        setLng(props.addedMarker.lng());
-    }, [props])
     function handleSubmit(){
         if(!lat || !lng) alert("Please specify the coordinates of the landmark");
         else if(lat<-90 || lat>90) alert("Latitude should be between -90 and 90");

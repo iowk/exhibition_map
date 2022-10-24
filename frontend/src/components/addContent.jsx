@@ -17,7 +17,7 @@ function AddContent(props){
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     function handleBack(){
-        props.handleToLandmark(props.landmark);
+        props.handleToLandmark(props.lmid);
     }
     function handleSubmit(){
         jwtVerify()
@@ -30,7 +30,7 @@ function AddContent(props){
                 form_data.append('description', descriptionRef.current.value);
                 form_data.append('startDate', formatDate(startDate));
                 form_data.append('endDate', formatDate(endDate));
-                axios(getToken()).post('/map/landmarks/'+props.landmark.id+'/contents/', form_data,
+                axios(getToken()).post('/map/landmarks/'+props.lmid+'/contents/', form_data,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -99,7 +99,7 @@ function AddContent(props){
     return(
     <div className='addContentParent'>
         <Button onClick={handleBack} variant="secondary">
-            {props.landmark.name}
+            Back
         </Button>
         {child}
      </div>);

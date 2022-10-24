@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './content.css';
 import Button from 'react-bootstrap/Button';
 import { CommentListPopup, CommentPostPopup} from './comment';
@@ -10,14 +10,36 @@ import axios from '../axios';
 import star from '../media/star.png';
 
 function Content(props){
+    const [content, setContent] = useState({});
+    useEffect(() => {
+        let isMounted = true;
+        const fetchData = async() => {
+            try{
+                // GET content
+                const res_ct = await axios().get('/map/contents/'+props.ctid);
+                const ct = await res_ct.data;
+                // Set state
+                if(isMounted){
+                    setContent(ct);
+                    props.handleSetCenter({lat: ct.lat, lng: ct.lng});
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        if(props.ctid && props.ctid!==content.id) fetchData();
+        return () => {
+            isMounted = false;
+        };
+    }, [props, content.id])
     function handleDeleteContent(){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getToken()).delete('/map/contents/'+props.content.id+'/')
+                axios(getToken()).delete('/map/contents/'+content.id+'/')
                 .then(() => {
                     alert("Content deleted");
-                    props.handleToLandmark(props.landmark);
+                    props.handleToLandmark(props.lmid);
                 })
                 .catch((e) => {
                     console.log(e);
@@ -30,38 +52,38 @@ function Content(props){
         });
     }
     function handleBack(){
-        props.handleToLandmark(props.landmark);
+        props.handleToLandmark(props.lmid);
     }
     return(
         <div className='contentDetail'>
             <Button variant="secondary" onClick={handleBack} className='backButton'>
-                {props.landmark.name}
+                {content.landmark_name}
             </Button>
-            <h1>{props.content.name}</h1>
-            <img src={props.content.coverImageSrc} alt="Not found"></img>
-            <p className='date'>{props.content.startDate} ~ {props.content.endDate}</p>
+            <h1>{content.name}</h1>
+            <img src={content.coverImageSrc} alt="Not found"></img>
+            <p className='date'>{content.startDate} ~ {content.endDate}</p>
             <div className='link-rating'>
-                {props.content.link &&<a className="link" href={props.content.link}>
+                {content.link &&<a className="link" href={content.link}>
                     <div>Source</div>
                 </a>}
-                {props.content.avgRating &&
+                {content.avgRating &&
                     <div className='rating'>
                     <img className='starImage' src={star} alt='Rating:'></img>
-                    <span className='ratingNum'>{props.content.avgRating.toFixed(1)}</span></div>}
+                    <span className='ratingNum'>{content.avgRating.toFixed(1)}</span></div>}
             </div>
             <div className='contentButtons'>
                 <CommentListPopup
                     key='CommentListPopup'
-                    ctid={props.content.id}
-                    name={props.content.name}
+                    ctid={content.id}
+                    name={content.name}
                     buttonName='Show comments'
                 />
                 {props.user && props.user.is_verified && (
                     // Comment button for activated user
                     <CommentPostPopup
                         key='CommentPostPopup'
-                        ctid={props.content.id}
-                        name={props.content.name}
+                        ctid={content.id}
+                        name={content.name}
                         user={props.user}
                         handleSetUser={props.handleSetUser}
                         buttonName='Write comment'
@@ -69,15 +91,15 @@ function Content(props){
                 )}
                 <ImageListPopup
                     key='ImageListPopup'
-                    ctid={props.content.id}
-                    name={props.content.name}
+                    ctid={content.id}
+                    name={content.name}
                     buttonName='Show photos'
                 />
                 {props.user && props.user.is_verified &&
                 <ImagePostPopup
                     key='ImagePostPopup'
-                    ctid={props.content.id}
-                    name={props.content.name}
+                    ctid={content.id}
+                    name={content.name}
                     user={props.user}
                     handleSetUser={props.handleSetUser}
                     buttonName='Upload photo'
@@ -85,8 +107,8 @@ function Content(props){
                 {props.user && props.user.is_verified &&
                 <ReportPostPopup
                     key='ReportPostPopup'
-                    ctid={props.content.id}
-                    name={props.content.name}
+                    ctid={content.id}
+                    name={content.name}
                     user={props.user}
                     handleSetUser={props.handleSetUser}
                     buttonName='Report content'
@@ -94,10 +116,10 @@ function Content(props){
                 {props.user && (props.user.is_staff) &&
                 <DesPostPopup
                     key='DesPostPopup'
-                    ctid={props.content.id}
-                    name={props.content.name}
+                    ctid={content.id}
+                    name={content.name}
                     user={props.user}
-                    description={props.content.description}
+                    description={content.description}
                     handleSetUser={props.handleSetUser}
                     buttonName='Modify description'
                 />}
@@ -107,7 +129,7 @@ function Content(props){
                 </Button>}
             </div>
             <div className='contentDescription'>
-                {props.content.description}
+                {content.description}
             </div>
         </div>
     );
