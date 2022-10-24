@@ -16,7 +16,7 @@ from .mail import SendAccActiveEmail
 from .token import account_activation_token
 from . import serializers
 from .permissions import ReadOnly, IsOwnerOrReadOnly, IsAdminUserOrReadOnly, IsActivatedOrReadOnly
-from .utils import search_score
+from .utils import search_score, find_nearest
 
 # Create your views here.
 class MapInfo:
@@ -380,11 +380,10 @@ class Search(APIView):
         lat             float       map center lat
         lng             float       map center lng
         count           int         top {count} results will be returned
-        thres           int         minimum score threshold
+        thres           float       minimum score threshold
     '''
     permission_classes = [permissions.AllowAny]
     def post(self, request):
-        #rq = {'lat': 24.2, 'lng': 122.2, 'pattern': 'huashan', 'count': 100, 'thres': 0.001}
         rq = request.data
         ls = serializers.LandmarkSerializer(Landmark.objects.all(), context={"request": request}, many=True).data + serializers.ContentSerializer(Content.objects.all(), context={"request": request}, many=True).data
         for i, dic in enumerate(ls):
@@ -395,3 +394,20 @@ class Search(APIView):
         while idx < min(len(ls), rq['count']) and ls[idx]['score'] >= rq['thres']:
             idx+=1
         return Response(ls[:idx], status=status.HTTP_200_OK)
+
+class FindNearestLandmark(APIView):
+    '''
+    Find which landmark a content belongs to using its lat and lng. Returns the landmark with minimum distance. Returns nothing if minimum distance > thres.
+    request.data
+        Argument        Type        Description
+        lat             float       content lat
+        lng             float       content lng
+        thres           float       minimum distance threshold
+    '''
+    permission_classes = [permissions.AllowAny]
+    def post(self, request):
+        #rq = {'lat': 25.041367, 'lng': 121.52861840740967, 'thres':0.001}
+        rq = request.data
+        landmarks = serializers.MarkerSerializer(Landmark.objects.all(), context={"request": request}, many=True).data
+        result = find_nearest(rq['lat'], rq['lng'], landmarks, rq['thres'])
+        return Response(result, status=status.HTTP_200_OK)
