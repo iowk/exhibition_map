@@ -3,7 +3,6 @@ import {jwtVerify, getToken} from './auth';
 import Button from 'react-bootstrap/Button';
 import axios from './axios';
 import { delay } from './utils';
-import { downloadUrl } from './utils';
 
 function AdminPostLandmarks(props){
     const [file, setFile] = useState({});
