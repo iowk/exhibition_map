@@ -59,8 +59,8 @@ function Main(props) {
         const fetchData = async() => {
             try{
                 const res = await axios().get('/map/markers/');
-                const markers = await res.data;
-                setMarkers(markers);
+                const markers_data = await res.data;
+                setMarkers(markers_data);
             }
             catch (e) {
                 console.log(e);

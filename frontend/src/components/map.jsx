@@ -35,8 +35,7 @@ const mapOptions = {
 function ClusterCalculator(markers, numStyles){
     let count = 0;
     markers.forEach((marker) => {
-        count += parseInt(marker.label.text);
-        //console.log("Marker",marker.contentCount);
+        if('text' in marker) count += parseInt(marker.label.text);
     })
     const numberOfDigits = count.toString().length;
 
