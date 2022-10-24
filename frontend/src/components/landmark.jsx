@@ -62,9 +62,9 @@ function Landmark(props){
                 <h1>{props.landmark.name}</h1>
                 <img src={props.landmark.coverImageSrc} alt=""></img>
                 <div className='link-rating'>
-                    <a className="link" href={props.landmark.link}>
+                    {props.landmark.link && <a className="link" href={props.landmark.link}>
                         <div>Source</div>
-                    </a>
+                    </a>}
                     {props.landmark.avgRating &&
                         <div className='rating'>
                         <img className='starImage' src={star} alt='Rating:'></img>

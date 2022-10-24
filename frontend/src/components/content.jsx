@@ -41,9 +41,9 @@ function Content(props){
             <img src={props.content.coverImageSrc} alt="Not found"></img>
             <p className='date'>{props.content.startDate} ~ {props.content.endDate}</p>
             <div className='link-rating'>
-                <a className="link" href={props.content.link}>
+                {props.content.link &&<a className="link" href={props.content.link}>
                     <div>Source</div>
-                </a>
+                </a>}
                 {props.content.avgRating &&
                     <div className='rating'>
                     <img className='starImage' src={star} alt='Rating:'></img>
