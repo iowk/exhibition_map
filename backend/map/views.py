@@ -91,7 +91,7 @@ class SendUserActivationMail(APIView):
             SendAccActiveEmail(request.user, current_site)
             return Response(status=status.HTTP_200_OK)
         except(e):
-            return Response(e, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+            return Response(e, status=status.HTTP_400_BAD_REQUEST)
 
 class UserActivate(generics.RetrieveAPIView):
     serializer_class = serializers.UserActivateSerializer
