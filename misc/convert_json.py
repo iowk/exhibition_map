@@ -43,7 +43,6 @@ def ConvertOctwContent(inp_dic):
     else: out_dic['endDate'] = DEFAULT_END_DATE
     if 'price' in inp_dic['showInfo'][0].keys(): out_dic['price'] = inp_dic['showInfo'][0]['price']
     if 'descriptionFilterHtml' in inp_dic.keys(): out_dic['description'] = inp_dic['descriptionFilterHtml']
-    if 'imageUrl' in inp_dic.keys(): out_dic['imageUrl'] = inp_dic['imageUrl']
     return out_dic
 
 if __name__=='__main__':

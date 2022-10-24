@@ -44,7 +44,8 @@ function About(props){
                     <Card.Title>Source</Card.Title>
                         <Card.Text>
                             <ul>
-                                <li><a href="https://data.gov.tw/">政府資料開放平台</a></li>
+                                <li><a href="https://data.gov.tw">政府資料開放平台</a></li>
+                                <li><a href="https://opendata.culture.tw/frontsite">文化資料開放服務網</a></li>
                             </ul>
                         </Card.Text>
                 </Card.Body>
