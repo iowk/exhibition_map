@@ -90,7 +90,7 @@ class SendUserActivationMail(APIView):
             current_site = get_current_site(request)
             SendAccActiveEmail(request.user, current_site)
             return Response(status=status.HTTP_200_OK)
-        except:
+        except Exception as e:
             return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
 class UserActivate(generics.RetrieveAPIView):

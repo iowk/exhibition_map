@@ -73,7 +73,8 @@ function Register(props){
                     while(!getToken());
                     axios(getToken()).get('/map/users/send_acc_email/')
                     .then(() => {
-                        setBottomMessage("Registration success. Activation mail is sent to " + emailRef.current.value);
+                        //setBottomMessage("Registration success. Activation mail is sent to " + emailRef.current.value);
+                        setBottomMessage("Registration success. Activation mail will be sent after verification by the administartor.");
                     })
                     .catch(e => {
                         console.log(e);
