@@ -1,7 +1,10 @@
 # EXmap
 http://exmap.org </br>
 ## About
-EXmap is a collaboration-based map that displays museum and exhibition information. Authenticated users are allowed to suggest contents to the map, which will be shown publicly upon verification by the staffs.
+EXmap is a collaboration-based map that displays museum and exhibition information. Authenticated users are allowed to suggest contents to the map, which will be shown publicly upon verification by the staffs. </br>
+To try the utilities for authenticated users, you can login with the shared guest account: </br>
+&nbsp;&nbsp;&nbsp;&nbsp;Username: guest</br>
+&nbsp;&nbsp;&nbsp;&nbsp;Password: exmapguest</br>
 
 ## Architecture
 ### Backend
