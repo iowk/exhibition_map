@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom";
 import {jwtVerify, getLSItem, getToken} from './auth';
 import { CommentPostPopup} from './components/comment';
 import axios from './axios';
-import Navigation from './components/navbar';
 import './userComment.css';
 import star from './media/star.png';
 
@@ -143,7 +142,6 @@ function UserComment(props){
         }
         return(
             <div className='userPage'>
-                {<Navigation user = {user}/>}
                 <div className='userComment'>
                     {children}
                 </div>

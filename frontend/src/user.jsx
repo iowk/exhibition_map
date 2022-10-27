@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navigate, Link } from "react-router-dom";
 import {jwtVerify, logout, getLSItem, getToken} from './auth';
 import axios from './axios';
-import Navigation from './components/navbar'
 import './user.css';
-;
 
 function User(props){
     const [user, setUser] = useState({});
@@ -56,7 +54,6 @@ function User(props){
     else if(user) {
         return(
             <div className='userPage'>
-                <Navigation user = {user}/>
                 <div className='userInfo'>
                     <div className='username'>
                         <span className='title'>User</span>

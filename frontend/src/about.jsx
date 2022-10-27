@@ -1,13 +1,10 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
-import Navigation from './components/navbar';
-import { getLSItem } from './auth';
 import './about.css'
 
 function About(props){
     return (
         <>
-        <Navigation user={getLSItem('user')}/>
         <div className='about'>
             <Card className="about-card bg-dark text-white">
                 <Card.Body>

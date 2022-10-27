@@ -1,8 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './login.css';
-import { login, jwtVerify, getLSItem } from './auth';
+import { login, jwtVerify } from './auth';
 import { Link, Navigate } from "react-router-dom";
-import Navigation from './components/navbar';
 
 function Login(props){
     const usernameRef = useRef();
@@ -32,7 +31,6 @@ function Login(props){
     }
     return(
         <div className='login'>
-            <Navigation user={getLSItem('user')}/>
             <div className="Auth-form-container d-flex justify-content-center login-container">
                 <form className="Auth-form w-25">
                     <div className="Auth-form-content">

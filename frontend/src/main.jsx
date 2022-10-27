@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './main.css';
 import axios from './axios';
-import Navigation from './components/navbar'
 import Map from './components/map'
 import { getLSItem, jwtVerify } from './auth';
 import { SearchBar, SearchResultList } from './components/search';
@@ -180,9 +179,6 @@ function Main(props) {
     }
     return(
         <div id="main">
-            <div id="navbar">
-                {<Navigation user = {user}/>}
-            </div>
             <div id='searchBar'>
                 <SearchBar
                     handleSearch = {handleSearch}

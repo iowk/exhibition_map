@@ -8,13 +8,16 @@ import Activate from './activate';
 import Login from './login';
 import User from './user';
 import UserComment from './userComment';
+import Navigation from './components/navbar'
 import {AdminLandmark, AdminContent} from './admin';
 import {AdminPostLandmarks, AdminPostContents} from './adminPostJson';
+import { getLSItem } from "./auth";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './general.css';
 
 ReactDOM.render(
     <BrowserRouter>
+        {<Navigation user = {getLSItem('user')}/>}
         <Routes>
             <Route path="/" element={<Navigate to="/map" />} />
             <Route path="/about" element={<About />}></Route>

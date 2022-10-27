@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Navigate } from "react-router-dom";
-import Navigation from './components/navbar'
 import {jwtVerify, getLSItem, getToken} from './auth';
 import Button from 'react-bootstrap/Button';
 import axios from './axios';
@@ -186,20 +185,18 @@ function AdminLandmark(props){
         });
     }
     if(!verifyDone){
-        return(<Navigation user = {user}/>);
+        return(<></>);
     }
     else if(user && user.is_staff) {
         if(children.length === 0){
             return(
                 <div>
-                    <Navigation user = {user}/>
                     No pending suggestion
                 </div>
             );
         }
         return(
             <div>
-                <Navigation user = {user}/>
                 <div className='admin'>
                     {children}
                 </div>
@@ -312,20 +309,18 @@ function AdminContent(props){
         });
     }
     if(!verifyDone){
-        return(<Navigation user = {user}/>);
+        return(<></>);
     }
     else if(user && user.is_staff) {
         if(children.length === 0){
             return(
                 <div>
-                    <Navigation user = {user}/>
                     No pending suggestion
                 </div>
             );
         }
         return(
             <div>
-                <Navigation user = {user}/>
                 <div className='admin'>
                     {children}
                 </div>

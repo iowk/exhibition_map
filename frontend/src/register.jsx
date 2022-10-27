@@ -1,8 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './register.css';
 import axios from './axios';
-import {login, getToken, getLSItem} from './auth';
-import Navigation from './components/navbar';
+import {login, getToken} from './auth';
 
 function Register(props){
     // Full register page
@@ -99,7 +98,6 @@ function Register(props){
     }
     return(
         <div className='register'>
-            <Navigation user={getLSItem('user')}/>
             <div className="Auth-form-container d-flex justify-content-center register-container">
                 <form className="Auth-form w-25">
                     <div className="Auth-form-content">
