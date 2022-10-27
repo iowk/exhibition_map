@@ -42,7 +42,8 @@ function User(props){
         .then(() => {
             axios(getToken()).get('/map/users/send_acc_email/')
             .then(() => {
-                alert("Activation mail will be sent after verification by the administartor.");
+                //alert("Activation mail will be sent after verification by the administartor.");
+                alert("Activation mail sent.");
             })
             .catch((e) => {
                 alert(e);

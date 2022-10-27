@@ -17,6 +17,6 @@ def SendAccActiveEmail(user, current_site):
         subject = mail_subject,
         message = message,
         from_email = settings.EMAIL_HOST_USER,
-        recipient_list=[settings.EMAIL_HOST_USER] # HOST_USER should transfer the mail to the user
-        #recipient_list=[user.email]
+        #recipient_list=[settings.EMAIL_HOST_USER] # HOST_USER should transfer the mail to the user
+        recipient_list=[user.email]
     )
