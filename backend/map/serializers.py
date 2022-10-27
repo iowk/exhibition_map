@@ -47,7 +47,6 @@ class LandmarkOverviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Landmark
         fields = ['id',  'owner', 'name', 'name_eng', 'lat', 'lng', 'zIndex', 'coverImageSrc', 'is_visible', 'contentCount', 'avgRating']
-        ordering = ['avgRating', 'startDate', 'endDate']
 
 class LandmarkSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -76,7 +75,6 @@ class ContentOverviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Content
         fields = ['id', 'owner', 'landmark_id', 'landmark_name', 'landmark_name_eng', 'lat', 'lng', 'name', 'name_eng', 'startDate', 'endDate', 'coverImageSrc', 'is_visible', 'isGoing', 'avgRating']
-        ordering = ['avgRating', 'startDate', 'endDate']
 
     def validate_start_date(self, data):
         if data['startDate'] > data['endDate']:
