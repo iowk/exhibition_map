@@ -4,6 +4,7 @@ import './addLandmark.css';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
 import Button from 'react-bootstrap/Button';
+import ClipLoader from "react-spinners/ClipLoader";
 import { UploadImage } from './image'
 
 function AddLandmark(props) {
@@ -12,6 +13,7 @@ function AddLandmark(props) {
     const [lat, setLat] = useState(props.addedMarker.lat());
     const [lng, setLng] = useState(props.addedMarker.lng());
     const [image, setImage] = useState(null);
+    const [loading, setLoading] = useState(false);
     function handleSubmit(){
         if(!lat || !lng) alert("Please specify the coordinates of the landmark");
         else if(lat<-90 || lat>90) alert("Latitude should be between -90 and 90");
@@ -20,6 +22,7 @@ function AddLandmark(props) {
             jwtVerify()
             .then((is_valid) => {
                 if(is_valid){
+                    setLoading(true);
                     let form_data = new FormData();
                     if(image) form_data.append('coverImageSrc', image, image.name);
                     form_data.append('name', nameRef.current.value);
@@ -44,6 +47,9 @@ function AddLandmark(props) {
                     .catch((e) =>{
                         console.log(e);
                         alert(JSON.stringify(e.response.data));
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
                 }
                 else{
@@ -93,6 +99,15 @@ function AddLandmark(props) {
                     <Button onClick={handleSubmit} variant="primary">
                         Upload
                     </Button>
+                </div>
+                <div className='loader'>
+                    <ClipLoader
+                        color='blue'
+                        loading={loading}
+                        size={50}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                    />
                 </div>
             </div>
         );

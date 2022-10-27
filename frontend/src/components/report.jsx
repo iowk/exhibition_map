@@ -58,6 +58,7 @@ function ReportPostPopup(props){
         jwtVerify()
         .then((is_valid) =>{
             if(is_valid){
+                setLoading(true);
                 if(isPatch){
                     axios(getToken()).patch(apiPath+props.user.id+'/', JSON.stringify({
                         text: reportRef.current.value
@@ -73,6 +74,9 @@ function ReportPostPopup(props){
                     .catch((e) =>{
                         console.log(e);
                         alert(e);
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
                 }
                 else{
@@ -90,6 +94,9 @@ function ReportPostPopup(props){
                     .catch((e) =>{
                         console.log(e);
                         alert(e);
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
                 }
             }
@@ -106,6 +113,7 @@ function ReportPostPopup(props){
         jwtVerify()
         .then((is_valid) =>{
             if(is_valid){
+                setLoading(true);
                 if(isPatch){
                     axios(getToken()).delete(apiPath+props.user.id+'/')
                     .then(() => {
@@ -114,6 +122,9 @@ function ReportPostPopup(props){
                     .catch((e) =>{
                         console.log(e);
                         alert(e);
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
                 }
             }

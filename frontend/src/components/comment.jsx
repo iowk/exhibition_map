@@ -155,6 +155,7 @@ function CommentPostPopup(props){
         jwtVerify()
         .then((is_valid) =>{
             if(is_valid){
+                setLoading(true);
                 if(isPatch){
                     axios(getToken()).patch(apiPath+props.user.id+'/', JSON.stringify({
                         rating: rating,
@@ -171,6 +172,9 @@ function CommentPostPopup(props){
                     .catch((e) =>{
                         console.log(e);
                         alert(e);
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
                 }
                 else{
@@ -189,6 +193,9 @@ function CommentPostPopup(props){
                     .catch((e) =>{
                         console.log(e);
                         alert(e);
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
                 }
             }
@@ -205,6 +212,7 @@ function CommentPostPopup(props){
         jwtVerify()
         .then((is_valid) =>{
             if(is_valid){
+                setLoading(true);
                 if(isPatch){
                     axios(getToken()).delete(apiPath+props.user.id+'/')
                     .then(() => {
@@ -213,6 +221,9 @@ function CommentPostPopup(props){
                     .catch((e) =>{
                         console.log(e);
                         alert(e);
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
                 }
             }

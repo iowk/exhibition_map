@@ -4,6 +4,7 @@ import DatePicker from 'react-date-picker';
 import './content.css';
 import { jwtVerify, getToken } from '../auth';
 import Button from 'react-bootstrap/Button';
+import ClipLoader from "react-spinners/ClipLoader";
 import { formatDate } from '../utils';
 import { UploadImage } from './image'
 import axios from '../axios';
@@ -16,6 +17,7 @@ function AddContent(props){
     const [image, setImage] = useState(null);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [loading, setLoading] = useState(false);
     function handleBack(){
         props.handleToLandmark(props.lmid);
     }
@@ -23,6 +25,7 @@ function AddContent(props){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
+                setLoading(true);
                 let form_data = new FormData();
                 if(image) form_data.append('coverImageSrc', image, image.name);
                 form_data.append('name', nameRef.current.value);
@@ -43,6 +46,9 @@ function AddContent(props){
                 .catch((e) =>{
                     console.log(e);
                     alert(JSON.stringify(e.response.data));
+                })
+                .finally(() => {
+                    setLoading(false);
                 });
             }
             else{
@@ -102,6 +108,15 @@ function AddContent(props){
             Back
         </Button>
         {child}
+        <div className='loader'>
+            <ClipLoader
+                color='blue'
+                loading={loading}
+                size={50}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+            />
+        </div>
      </div>);
 }
 
