@@ -35,7 +35,6 @@ function EachUserLandmarkComment(props){
                     lmid={props.comment.landmark_id}
                     name={lmname}
                     user={props.user}
-                    handleSetUser={props.handleSetUser}
                     buttonName='Modify comment'
                 />
             </div>
@@ -75,6 +74,7 @@ function EachUserContentComment(props){
                 <CommentPostPopup
                     ctid={props.comment.content_id}
                     name={lmname + '-' + ctname}
+                    user={props.user}
                     buttonName='Modify comment'
                 />
             </div>
@@ -118,6 +118,7 @@ function UserComment(props){
             let ch_key = 'l_' + landmarkComments[key].id
             children.push(<EachUserLandmarkComment
                 key={ch_key}
+                user={user}
                 comment={landmarkComments[key]}
             />);
         }
@@ -125,6 +126,7 @@ function UserComment(props){
             let ch_key = 'c_' + contentComments[key].id
             children.push(<EachUserContentComment
                 key={ch_key}
+                user={user}
                 comment={contentComments[key]}
             />);
         }
