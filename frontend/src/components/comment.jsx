@@ -5,8 +5,9 @@ import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import star from '../media/star.png'
-import star_empty from '../media/star_empty.png'
+import ClipLoader from "react-spinners/ClipLoader";
+import star from '../media/star.png';
+import star_empty from '../media/star_empty.png';
 
 function WriteRatingBlock(props) {
     // Inside PopupBlock
@@ -37,6 +38,7 @@ function WriteRatingBlock(props) {
 function CommentListPopup(props){
     const [comments, setComments] = useState([]);
     const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => {
@@ -44,6 +46,7 @@ function CommentListPopup(props){
         if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/comments/';
         else apiPath = '/map/landmarks/'+props.lmid+'/comments/';
         const fetchData = async () => {
+            setLoading(true);
             try{
                 const res = await axios().get(apiPath);
                 const res_comments = await res.data;
@@ -51,6 +54,9 @@ function CommentListPopup(props){
             }
             catch(e){
                 console.log(e);
+            }
+            finally{
+                setLoading(false);
             }
         }
         if(props.ctid || props.lmid) fetchData();
@@ -66,6 +72,15 @@ function CommentListPopup(props){
                     <Modal.Title>{props.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <div className='loader'>
+                        <ClipLoader
+                            color='blue'
+                            loading={loading}
+                            size={50}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
+                    </div>
                     {comments.map((comment, index)=>(
                         <div className="each-comment" key={index}>
                             <div className='title'>
@@ -91,6 +106,7 @@ function CommentPostPopup(props){
     const [oldComment, setOldComment] = useState('');
     const commentRef = useRef();
     const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     let apiPath = '';
     if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/comments/';
@@ -106,6 +122,7 @@ function CommentPostPopup(props){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
+                setLoading(true);
                 axios(getToken()).get(apiPath+props.user.id+'/')
                 .then(res => {
                     // This user already had a comment
@@ -118,16 +135,18 @@ function CommentPostPopup(props){
                     console.log("No comment exists for this user");
                     setIsPatch(false);
                 })
+                .finally(() => {
+                    setLoading(false);
+                });
             }
             else{
                 alert("Please login again");
-                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
         .catch((e) => {
             console.log(e);
-        });
+        })
     }
     function handleClickRating(rating){
         setRating(rating);
@@ -175,7 +194,6 @@ function CommentPostPopup(props){
             }
             else{
                 alert("Please login again");
-                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
@@ -200,7 +218,6 @@ function CommentPostPopup(props){
             }
             else{
                 alert("Please login again");
-                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
@@ -219,6 +236,15 @@ function CommentPostPopup(props){
                 </Modal.Header>
                 <Modal.Body>
                     <div className='popupForm'>
+                        <div className='loader'>
+                            <ClipLoader
+                                color='blue'
+                                loading={loading}
+                                size={50}
+                                aria-label="Loading Spinner"
+                                data-testid="loader"
+                            />
+                        </div>
                         <WriteRatingBlock
                             rating={rating}
                             maxRating={maxRating}

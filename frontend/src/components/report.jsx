@@ -5,6 +5,7 @@ import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import ClipLoader from "react-spinners/ClipLoader";
 
 function ReportPostPopup(props){
     // Pop up when user clicks the report button for landmark or content
@@ -12,6 +13,7 @@ function ReportPostPopup(props){
     const [oldReport, setOldReport] = useState('');
     const reportRef = useRef();
     const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     let apiPath = '';
     if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/reports/';
@@ -27,6 +29,7 @@ function ReportPostPopup(props){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
+                setLoading(true);
                 axios(getToken()).get(apiPath+props.user.id+'/')
                 .then(res => {
                     // This user already had a report
@@ -38,10 +41,12 @@ function ReportPostPopup(props){
                     console.log("No report exists for this user");
                     setIsPatch(false);
                 })
+                .finally(() => {
+                    setLoading(false);
+                });
             }
             else{
                 alert("Please login again");
-                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
@@ -90,7 +95,6 @@ function ReportPostPopup(props){
             }
             else{
                 alert("Please login again");
-                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
@@ -133,6 +137,15 @@ function ReportPostPopup(props){
                     <Modal.Title>{props.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <div className='loader'>
+                        <ClipLoader
+                            color='blue'
+                            loading={loading}
+                            size={50}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
+                    </div>
                     <div className='popupForm'>
                         <textarea
                             placeholder='Report message'

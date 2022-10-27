@@ -7,9 +7,11 @@ import { jwtVerify, getToken } from './../auth';
 import {ContentOverview} from './overview';
 import axios from './../axios';
 import star from '../media/star.png';
+import ClipLoader from "react-spinners/ClipLoader";
 
 function Landmark(props){
     const [landmark, setLandmark] = useState({});
+    const [loading, setLoading] = useState(true);
     const [contentsOverview, setContentsOverview] = useState(null); // Contents of the currently clicked landmark
     useEffect(() => {
         let isMounted = true;
@@ -29,6 +31,8 @@ function Landmark(props){
                 }
             } catch (e) {
                 console.log(e);
+            } finally{
+                setLoading(false);
             }
         }
         if(props.lmid && props.lmid!==landmark.id) fetchData();
@@ -49,7 +53,6 @@ function Landmark(props){
                     console.log(e);
                 });
             }
-            else props.handleSetUser(null);
         })
         .catch((e) => {
             console.log(e);
@@ -89,7 +92,6 @@ function Landmark(props){
                 lmid={landmark.id}
                 name={landmark.name}
                 user={props.user}
-                handleSetUser={props.handleSetUser}
                 buttonName='Write comment'
             />)
         }
@@ -105,7 +107,6 @@ function Landmark(props){
                 lmid={landmark.id}
                 name={landmark.name}
                 user={props.user}
-                handleSetUser={props.handleSetUser}
                 buttonName='Upload photo'
             />)
         }
@@ -115,7 +116,6 @@ function Landmark(props){
                 lmid={landmark.id}
                 name={landmark.name}
                 user={props.user}
-                handleSetUser={props.handleSetUser}
                 buttonName='Report landmark'
             />)
         }
@@ -147,9 +147,20 @@ function Landmark(props){
             }
         }
         return (
-            <div>
-                {children}
-            </div>
+            <>
+                <div>
+                    {children}
+                </div>
+                <div className='loader'>
+                    <ClipLoader
+                        color='blue'
+                        loading={loading}
+                        size={50}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                    />
+                </div>
+            </>
         );
     }
     else{

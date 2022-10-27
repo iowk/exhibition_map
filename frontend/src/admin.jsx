@@ -87,34 +87,8 @@ function VerifyContent(props){
     );
 }
 function AdminLandmark(props){
-    const [user, setUser] = useState({});
-    const [verifyDone, setVerifyDone] = useState(false);
     const [landmarks, setLandmarks] = useState([]);
     const [children, setChildren] = useState([]);
-    useEffect(() =>{
-        let isMounted = true;
-        const fetchUser = async() => {
-            try{
-                const is_valid = await jwtVerify();
-                if(isMounted){
-                    if(is_valid){
-                        setUser(getLSItem('user'));
-                    }
-                    else{
-                        setUser(null);
-                    }
-                }
-            }
-            catch (e) {
-                console.log(e);
-                if(isMounted) setUser(null);
-            }
-        };
-        fetchUser().then(() => {
-            setVerifyDone(true);
-        });
-        return () => { isMounted = false };
-    }, [props])
     useEffect(() => {
         // GET all landmarks on the map
         const fetchData = async() => {
@@ -184,10 +158,8 @@ function AdminLandmark(props){
             console.log(e);
         });
     }
-    if(!verifyDone){
-        return(<></>);
-    }
-    else if(user && user.is_staff) {
+    const user = getLSItem('user');
+    if(user && user.is_staff) {
         if(children.length === 0){
             return(
                 <div>
@@ -211,34 +183,8 @@ function AdminLandmark(props){
     }
 }
 function AdminContent(props){
-    const [user, setUser] = useState({});
-    const [verifyDone, setVerifyDone] = useState(false);
     const [contents, setContents] = useState([]);
     const [children, setChildren] = useState([]);
-    useEffect(() =>{
-        let isMounted = true;
-        const fetchUser = async() => {
-            try{
-                const is_valid = await jwtVerify();
-                if(isMounted){
-                    if(is_valid){
-                        setUser(getLSItem('user'));
-                    }
-                    else{
-                        setUser(null);
-                    }
-                }
-            }
-            catch (e) {
-                console.log(e);
-                if(isMounted) setUser(null);
-            }
-        };
-        fetchUser().then(() => {
-            setVerifyDone(true);
-        });
-        return () => { isMounted = false };
-    }, [props])
     useEffect(() => {
         // GET all contents on the map
         const fetchData = async() => {
@@ -308,10 +254,8 @@ function AdminContent(props){
             console.log(e);
         });
     }
-    if(!verifyDone){
-        return(<></>);
-    }
-    else if(user && user.is_staff) {
+    const user = getLSItem('user');
+    if(user && user.is_staff) {
         if(children.length === 0){
             return(
                 <div>

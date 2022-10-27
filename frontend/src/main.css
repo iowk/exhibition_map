@@ -1,5 +1,5 @@
 #main {
-    height: 100vh;
+    height: calc(100vh - 56px);
     width: 100vw;
     background-color: rgb(163, 195, 255);
 }
@@ -30,6 +30,13 @@
     word-wrap: break-word;
     overflow: auto;
     border-radius: 15px;
+}
+#infoBlock .loader{
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 #map {
     float: right;

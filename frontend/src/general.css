@@ -2,6 +2,9 @@
 *{
     font-family: 'Noto Sans TC',sans-serif !important;
 }
+.navbar{
+    height: 56px;
+}
 .starImage{
     height: 80%;
     background-color: transparent;

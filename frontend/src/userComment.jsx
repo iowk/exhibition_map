@@ -5,6 +5,7 @@ import { CommentPostPopup} from './components/comment';
 import axios from './axios';
 import './userComment.css';
 import star from './media/star.png';
+import ClipLoader from "react-spinners/ClipLoader";
 
 function EachUserLandmarkComment(props){
     const [lmname, setLMName] = useState(null);
@@ -74,8 +75,6 @@ function EachUserContentComment(props){
                 <CommentPostPopup
                     ctid={props.comment.content_id}
                     name={lmname + '-' + ctname}
-                    user={props.user}
-                    handleSetUser={props.handleSetUser}
                     buttonName='Modify comment'
                 />
             </div>
@@ -87,10 +86,10 @@ function EachUserContentComment(props){
 }
 
 function UserComment(props){
-    const [user, setUser] = useState({});
-    const [verifyDone, setVerifyDone] = useState(false);
+    const user = getLSItem('user');
     const [landmarkComments, setLandmarkComments] = useState({});
     const [contentComments, setContentComments] = useState({});
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         let isMounted = true;
         const fetchData = async() => {
@@ -98,37 +97,28 @@ function UserComment(props){
                 const is_valid = await jwtVerify();
                 if(isMounted){
                     if(is_valid){
-                        setUser(getLSItem('user'));
-                        const res = await axios(getToken()).get('/map/users/'+getLSItem('user','id')+'/comments/');
+                        const res = await axios(getToken()).get('/map/users/'+user.id+'/comments/');
                         const comments = await res.data;
                         setLandmarkComments(comments.landmarkComments);
                         setContentComments(comments.contentComments);
+                        setLoading(false);
                     }
-                    else setUser(null);
                 }
             }
             catch (e) {
                 console.log(e);
-                if(isMounted) setUser(null);
             }
         }
-        fetchData().then(() => {
-            setVerifyDone(true);
-        });
+        fetchData();
         return () => { isMounted = false };
-    }, [props])
-    if(!verifyDone){
-        return(<></>);
-    }
-    else if(user) {
+    }, [props, user.id])
+    if(user) {
         var children = [];
         for(let key in landmarkComments) {
             let ch_key = 'l_' + landmarkComments[key].id
             children.push(<EachUserLandmarkComment
                 key={ch_key}
                 comment={landmarkComments[key]}
-                user={user}
-                handleSetUser={setUser}
             />);
         }
         for(let key in contentComments) {
@@ -136,14 +126,21 @@ function UserComment(props){
             children.push(<EachUserContentComment
                 key={ch_key}
                 comment={contentComments[key]}
-                user={user}
-                handleSetUser={setUser}
             />);
         }
         return(
             <div className='userPage'>
                 <div className='userComment'>
                     {children}
+                </div>
+                <div className='loader'>
+                    <ClipLoader
+                        color='blue'
+                        loading={loading}
+                        size={50}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                    />
                 </div>
             </div>
         );

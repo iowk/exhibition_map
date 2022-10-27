@@ -5,6 +5,13 @@
     right: 10vw;
     padding: 40px;
 }
+.userPage .loader{
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .each-user-comment{
     height: 30vh;
     margin-top: 20px;

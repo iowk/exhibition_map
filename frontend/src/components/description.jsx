@@ -5,10 +5,12 @@ import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import ClipLoader from "react-spinners/ClipLoader";
 
 function DesPostPopup(props){
     // Pop up when user clicks the add description button for landmark or content
     const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -22,6 +24,7 @@ function DesPostPopup(props){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
+                setLoading(true);
                 axios(getToken()).patch(apiPath,JSON.stringify({description: desRef.current.value}),
                 {
                     headers: {
@@ -35,9 +38,12 @@ function DesPostPopup(props){
                     console.log(e);
                     alert(JSON.stringify(e.response.data));
                 })
+                .finally(() => {
+                    setLoading(false);
+                })
             }
             else{
-                props.handleSetUser(null);
+                alert("Please login again");
                 <Navigate to = '/login/'/>;
             }
         })
@@ -55,6 +61,15 @@ function DesPostPopup(props){
                     <Modal.Title>{props.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <div className='loader'>
+                        <ClipLoader
+                            color='blue'
+                            loading={loading}
+                            size={50}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
+                    </div>
                     <textarea
                         placeholder='Write description'
                         ref={desRef}

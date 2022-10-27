@@ -5,12 +5,14 @@ import { jwtVerify, getToken } from '../auth';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Carousel from 'react-bootstrap/Carousel';
+import ClipLoader from "react-spinners/ClipLoader";
 import 'react-slideshow-image/dist/styles.css';
 import './image.css';
 
 function ImageListPopup(props){
     const [images, setImages] = useState([]);
     const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => {
@@ -18,6 +20,7 @@ function ImageListPopup(props){
         if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/images/';
         else apiPath = '/map/landmarks/'+props.lmid+'/images/';
         const fetchData = async () => {
+            setLoading(true);
             try{
                 const res = await axios().get(apiPath);
                 const res_images = await res.data;
@@ -25,6 +28,9 @@ function ImageListPopup(props){
             }
             catch(e){
                 console.log(e);
+            }
+            finally{
+                setLoading(false);
             }
         }
         if(props.ctid || props.lmid) fetchData();
@@ -40,6 +46,15 @@ function ImageListPopup(props){
                     <Modal.Title>{props.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <div className='loader'>
+                        <ClipLoader
+                            color='blue'
+                            loading={loading}
+                            size={50}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
+                    </div>
                     <Carousel className="carousel-dark">
                         {images.map((slideImage, key)=>
                             <Carousel.Item key={key}>
@@ -79,6 +94,7 @@ function UploadImage(props){
 function ImagePostPopup(props) {
     const [image, setImage] = useState(null);
     const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -90,6 +106,7 @@ function ImagePostPopup(props) {
         jwtVerify()
         .then(is_valid => {
             if(is_valid){
+                setLoading(true);
                 let form_data = new FormData();
                 form_data.append('src', image, image.name);
                 form_data.append('name', imageTitleRef.current.value);
@@ -104,11 +121,13 @@ function ImagePostPopup(props) {
                 })
                 .catch((e) => {
                     alert(e)
+                })
+                .finally(()=>{
+                    setLoading(false);
                 });
             }
             else{
                 alert("Please login again");
-                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
@@ -126,6 +145,15 @@ function ImagePostPopup(props) {
                     <Modal.Title>{props.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <div className='loader'>
+                        <ClipLoader
+                            color='blue'
+                            loading={loading}
+                            size={50}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
+                    </div>
                     <div className='w-100'>
                         <input
                             placeholder='Title'

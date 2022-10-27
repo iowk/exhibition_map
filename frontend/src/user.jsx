@@ -1,39 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Navigate, Link } from "react-router-dom";
 import {jwtVerify, logout, getLSItem, getToken} from './auth';
 import axios from './axios';
 import './user.css';
 
 function User(props){
-    const [user, setUser] = useState({});
-    const [verifyDone, setVerifyDone] = useState(false);
-    useEffect(() =>{
-        let isMounted = true;
-        const fetchUser = async() => {
-            try{
-                const is_valid = await jwtVerify();
-                if(isMounted){
-                    if(is_valid){
-                        setUser(getLSItem('user'));
-                    }
-                    else{
-                        setUser(null);
-                    }
-                }
-            }
-            catch (e) {
-                console.log(e);
-                if(isMounted) setUser(null);
-            }
-        };
-        fetchUser().then(() => {
-            setVerifyDone(true);
-        });
-        return () => { isMounted = false };
-    }, [props])
     function logoutOnClick() {
         logout();
-        setUser(null);
+        window.location.reload();
     }
     function activateOnClick() {
         jwtVerify()
@@ -48,10 +22,8 @@ function User(props){
             })
         })
     }
-    if(!verifyDone){
-        return(<></>);
-    }
-    else if(user) {
+    if(getLSItem('user')) {
+        const user = getLSItem('user');
         return(
             <div className='userPage'>
                 <div className='userInfo'>
@@ -99,7 +71,7 @@ function User(props){
     }
     else{
         return(
-            <Navigate to="/login/" replace={true} />
+            <Navigate to="/login" replace={true} />
         );
     }
 }

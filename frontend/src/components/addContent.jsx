@@ -46,7 +46,7 @@ function AddContent(props){
                 });
             }
             else{
-                props.handleSetUser(null);
+                alert("Please login again");
                 <Navigate to = '/login/'/>;
             }
         })

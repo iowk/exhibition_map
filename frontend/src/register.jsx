@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import './register.css';
 import axios from './axios';
 import {login, getToken} from './auth';
+import ClipLoader from "react-spinners/ClipLoader";
 
 function Register(props){
     // Full register page
@@ -16,6 +17,7 @@ function Register(props){
         passwordConf: '',
     });
     const [bottomMessage, setBottomMessage] = useState('');
+    const [loading, setLoading] = useState(false);
     function handleOnChangePassword(e){
         let errCopy = err;
         if(passwordConf===e.target.value || passwordConf===''){
@@ -54,6 +56,7 @@ function Register(props){
     function handleSubmit(event){
         // POST username, email and password
         if(password===passwordConf){
+            setLoading(true);
             axios().post('/map/users/register/', JSON.stringify({
                 username: usernameRef.current.value,
                 email: emailRef.current.value,
@@ -92,6 +95,9 @@ function Register(props){
             .catch(e => {
                 console.log(e);
                 setErr(e.response.data);
+            })
+            .finally(() => {
+                setLoading(false);
             })
         }
         event.preventDefault();
@@ -151,6 +157,15 @@ function Register(props){
                         <p className='text-center text-success mt-2'>{bottomMessage}</p>
                     </div>
                 </form>
+            </div>
+            <div className='loader'>
+                <ClipLoader
+                    color='blue'
+                    loading={loading}
+                    size={50}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                />
             </div>
         </div>);
 }

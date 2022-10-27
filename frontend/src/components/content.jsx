@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './content.css';
 import Button from 'react-bootstrap/Button';
+import ClipLoader from "react-spinners/ClipLoader";
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
 import { ReportPostPopup } from './report';
@@ -11,6 +12,7 @@ import star from '../media/star.png';
 
 function Content(props){
     const [content, setContent] = useState({});
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         let isMounted = true;
         const fetchData = async() => {
@@ -25,6 +27,8 @@ function Content(props){
                 }
             } catch (e) {
                 console.log(e);
+            } finally{
+                setLoading(false);
             }
         }
         if(props.ctid && props.ctid!==content.id) fetchData();
@@ -45,7 +49,7 @@ function Content(props){
                     console.log(e);
                 });
             }
-            else props.handleSetUser(null);
+            else alert("Please login again");
         })
         .catch((e) => {
             console.log(e);
@@ -82,10 +86,9 @@ function Content(props){
                     // Comment button for activated user
                     <CommentPostPopup
                         key='CommentPostPopup'
+                        user={props.user}
                         ctid={content.id}
                         name={content.name}
-                        user={props.user}
-                        handleSetUser={props.handleSetUser}
                         buttonName='Write comment'
                     />
                 )}
@@ -98,29 +101,26 @@ function Content(props){
                 {props.user && props.user.is_verified &&
                 <ImagePostPopup
                     key='ImagePostPopup'
+                    user={props.user}
                     ctid={content.id}
                     name={content.name}
-                    user={props.user}
-                    handleSetUser={props.handleSetUser}
                     buttonName='Upload photo'
                 />}
                 {props.user && props.user.is_verified &&
                 <ReportPostPopup
                     key='ReportPostPopup'
+                    user={props.user}
                     ctid={content.id}
                     name={content.name}
-                    user={props.user}
-                    handleSetUser={props.handleSetUser}
                     buttonName='Report content'
                 />}
                 {props.user && (props.user.is_staff) &&
                 <DesPostPopup
                     key='DesPostPopup'
+                    user={props.user}
                     ctid={content.id}
                     name={content.name}
-                    user={props.user}
                     description={content.description}
-                    handleSetUser={props.handleSetUser}
                     buttonName='Modify description'
                 />}
                 {props.user && (props.user.is_staff) &&
@@ -130,6 +130,15 @@ function Content(props){
             </div>
             <div className='contentDescription'>
                 {content.description}
+            </div>
+            <div className='loader'>
+                <ClipLoader
+                    color='blue'
+                    loading={loading}
+                    size={50}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                />
             </div>
         </div>
     );
