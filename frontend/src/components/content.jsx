@@ -18,7 +18,7 @@ function Content(props){
         const fetchData = async() => {
             try{
                 // GET content
-                const res_ct = await axios().get('/map/contents/'+props.ctid);
+                const res_ct = await axios().get('/map/contents/'+props.ctid+'/');
                 const ct = await res_ct.data;
                 // Set state
                 if(isMounted){
