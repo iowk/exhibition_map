@@ -12,41 +12,53 @@ function AddLandmark(props) {
     const lngRef = useRef(props.addedMarker.lng());
     const [image, setImage] = useState(null);
     function handleSubmit(){
-        jwtVerify()
-        .then((is_valid) => {
-            if(is_valid){
-                let form_data = new FormData();
-                if(image) form_data.append('coverImageSrc', image, image.name);
-                form_data.append('name', nameRef.current.value);
-                form_data.append('link', linkRef.current.value);
-                form_data.append('lat', latRef.current.value);
-                form_data.append('lng', lngRef.current.value);
-                axios(getToken()).post('/map/landmarks/', form_data,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    },
-                })
-                .then(() => {
-                    alert("Your request will be validated soon.\nThank you for your contribution.");
-                    props.handleSetCenter({
-                        lat: latRef.current.value,
-                        lng: lngRef.current.value
+        if(!latRef.current.value || !lngRef.current.value){
+            alert("Please enter landmark coordinates");
+        }
+        else if(latRef.current.value > 90 || latRef.current.value < -90){
+            alert("Latitude should be between -90 and 90");
+        }
+        else if(lngRef.current.value > 180 || lngRef.current.value < -180){
+            alert("Longitude should be between -180 and 180");
+        }
+        else{
+            jwtVerify()
+            .then((is_valid) => {
+                if(is_valid){
+                    let form_data = new FormData();
+                    if(image) form_data.append('coverImageSrc', image, image.name);
+                    form_data.append('name', nameRef.current.value);
+                    form_data.append('link', linkRef.current.value);
+                    form_data.append('lat', parseFloat(latRef.current.value));
+                    form_data.append('lng', parseFloat(lngRef.current.value));
+                    axios(getToken()).post('/map/landmarks/', form_data,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                    })
+                    .then(() => {
+                        alert("Your request will be validated soon.\nThank you for your contribution.");
+                        console.log()
+                        props.handleSetCenter({
+                            lat: parseFloat(latRef.current.value),
+                            lng: parseFloat(lngRef.current.value)
+                        });
+                    })
+                    .catch((e) =>{
+                        console.log(e);
+                        alert(JSON.stringify(e.response.data));
                     });
-                })
-                .catch((e) =>{
-                    console.log(e);
-                    alert(JSON.stringify(e.response.data));
-                });
-            }
-            else{
-                props.handleSetUser(null);
-                <Navigate to = '/login/'/>;
-            }
-        })
-        .catch(e => {
-            console.log(e);
-        })
+                }
+                else{
+                    props.handleSetUser(null);
+                    <Navigate to = '/login/'/>;
+                }
+            })
+            .catch(e => {
+                console.log(e);
+            })
+        }
     }
     if(props.addedMarker && props.user && props.user.is_verified){
         return(
@@ -54,10 +66,12 @@ function AddLandmark(props) {
                 <div className='dtop'>
                     <span>Suggest a new landmark at: <br/></span>
                     (<input
+                        type="number"
                         defaultValue={props.addedMarker.lat()}
                         ref={latRef}
                     />,
                     <input
+                        type="number"
                         defaultValue={props.addedMarker.lng()}
                         ref={lngRef}
                     />)

@@ -20,6 +20,7 @@ idna==3.4
 jmespath==1.0.1
 kappa==0.6.0
 MarkupSafe==2.1.1
+mysqlclient==2.1.1
 Pillow==9.2.0
 placebo==0.9.0
 pycparser==2.21
