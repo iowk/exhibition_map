@@ -40,7 +40,7 @@ export function logout(){
 export function getLSItem(key1, key2){
     const dict = localStorage.getItem(key1);
     if(dict === null) return null;
-    if(!key2) return dict;
+    if(!key2) return JSON.parse(dict);
     return JSON.parse(dict)[key2];
 }
 export function getToken(){

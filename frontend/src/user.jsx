@@ -1,61 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Navigate, Link } from "react-router-dom";
 import {jwtVerify, logout, getLSItem, getToken} from './auth';
 import axios from './axios';
-import NavBar from './components/navbar'
 import './user.css';
-import './general.css';
 
 function User(props){
-    const [user, setUser] = useState({});
-    const [verifyDone, setVerifyDone] = useState(false);
-    useEffect(() =>{
-        let isMounted = true;
-        const fetchUser = async() => {
-            try{
-                const is_valid = await jwtVerify();
-                if(isMounted){
-                    if(is_valid){
-                        setUser(JSON.parse(getLSItem('user')));
-                    }
-                    else{
-                        setUser(null);
-                    }
-                }
-            }
-            catch (e) {
-                console.log(e);
-                if(isMounted) setUser(null);
-            }
-        };
-        fetchUser().then(() => {
-            setVerifyDone(true);
-        });
-        return () => { isMounted = false };
-    }, [props])
     function logoutOnClick() {
         logout();
-        setUser(null);
+        window.location.reload();
     }
     function activateOnClick() {
         jwtVerify()
         .then(() => {
             axios(getToken()).get('/map/users/send_acc_email/')
             .then(() => {
-                alert("Email sent");
+                //alert("Activation mail will be sent after verification by the administartor.");
+                alert("Activation mail sent.");
             })
             .catch((e) => {
                 alert(e);
             })
         })
     }
-    if(!verifyDone){
-        return(<></>);
-    }
-    else if(user) {
+    if(getLSItem('user')) {
+        const user = getLSItem('user');
         return(
             <div className='userPage'>
-                <NavBar user = {user}/>
                 <div className='userInfo'>
                     <div className='username'>
                         <span className='title'>User</span>
@@ -75,24 +45,24 @@ function User(props){
                     <div className='status'>
                         <span className='title'>Status</span>
                         <span>Unactivated</span>
-                        <button className='activationButton' onClick={activateOnClick}>
+                        <button  className="btn btn-primary ms-2 userInfo-button" onClick={activateOnClick}>
                             Send activation mail
                         </button>
                     </div>
                     }
-                    <div><Link to="/user/comments/"><button className='toCommentButton'>
+                    <div><Link className="btn btn-primary userInfo-button" role="button" to="/user/comments/">
                         Your comments
-                    </button></Link></div>
+                    </Link></div>
                     {user.is_staff &&
                     <div>
-                        <Link to="/admin/landmarks/"><button className='toLandmarkRequestButton'>
+                        <Link className="btn btn-primary userInfo-button" role="button" to="/admin/landmarks/">
                             Manage landmark suggestions
-                        </button></Link>
-                        <Link to="/admin/contents/"><button className='toContentRequestButton'>
+                        </Link>
+                        <Link className="btn btn-primary ms-2 userInfo-button" role="button" to="/admin/contents/">
                             Manage content suggestions
-                        </button></Link>
+                        </Link>
                     </div>}
-                    <div><button onClick={logoutOnClick} className='logoutButton'>
+                    <div><button className="btn btn-primary userInfo-button" onClick={logoutOnClick}>
                         Logout
                     </button></div>
                 </div>
@@ -101,7 +71,7 @@ function User(props){
     }
     else{
         return(
-            <Navigate to="/login/" replace={true} />
+            <Navigate to="/login" replace={true} />
         );
     }
 }

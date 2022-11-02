@@ -1,0 +1,15 @@
+.about{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.about-card{
+    height: 30vh;
+    width: 60vw;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+.about-card .card-body .card-text{
+    text-indent: 2em;
+}

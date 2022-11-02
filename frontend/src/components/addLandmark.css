@@ -3,7 +3,7 @@
     width: calc(100% - 30px);
 }
 .addLandmark > div > textarea{
-    width: calc(100% - 10px);
+    width: 100%;
     padding: 5px;
     font-size: 16px;
     resize: none;
@@ -18,7 +18,7 @@
     width: 40%;
 }
 .addLandmark > div .nameBox{
-    height: 20px;
+    height: 40px;
 }
 .addLandmark > div .linkBox{
     height: 40px;

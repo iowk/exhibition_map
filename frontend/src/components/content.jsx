@@ -1,105 +1,146 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './content.css';
+import Button from 'react-bootstrap/Button';
+import ClipLoader from "react-spinners/ClipLoader";
 import { CommentListPopup, CommentPostPopup} from './comment';
 import { ImageListPopup, ImagePostPopup } from './image';
+import { ReportPostPopup } from './report';
 import { DesPostPopup } from './description';
 import { jwtVerify, getToken } from '../auth';
 import axios from '../axios';
-import star from '../media/star.png'
-import '../general.css';
+import star from '../media/star.png';
 
 function Content(props){
+    const [content, setContent] = useState({});
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        let isMounted = true;
+        const fetchData = async() => {
+            try{
+                // GET content
+                const res_ct = await axios().get('/map/contents/'+props.ctid+'/');
+                const ct = await res_ct.data;
+                // Set state
+                if(isMounted){
+                    setContent(ct);
+                    props.handleSetCenter({lat: ct.lat, lng: ct.lng});
+                }
+            } catch (e) {
+                console.log(e);
+            } finally{
+                setLoading(false);
+            }
+        }
+        if(props.ctid && props.ctid!==content.id) fetchData();
+        return () => {
+            isMounted = false;
+        };
+    }, [props, content.id])
     function handleDeleteContent(){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
-                axios(getToken()).delete('/map/contents/'+props.content.id+'/')
+                axios(getToken()).delete('/map/contents/'+content.id+'/')
                 .then(() => {
                     alert("Content deleted");
-                    props.handleToLandmark(props.landmark);
+                    props.handleToLandmark(props.lmid);
                 })
                 .catch((e) => {
                     console.log(e);
                 });
             }
-            else props.handleSetUser(null);
+            else alert("Please login again");
         })
         .catch((e) => {
             console.log(e);
-        });       
+        });
     }
     function handleBack(){
-        props.handleToLandmark(props.landmark);
+        props.handleToLandmark(props.lmid);
     }
     return(
-        <div className='contentDetail'>            
-            <button onClick={handleBack} className='backButton'>
-                {props.landmark.name}
-            </button>
-            <h1>{props.content.name}</h1>
-            <img src={props.content.coverImageSrc} alt="Not found"></img>    
-            <p className='date'>{props.content.startDate} ~ {props.content.endDate}</p>
+        <div className='contentDetail'>
+            <Button variant="secondary" onClick={handleBack} className='backButton'>
+                {content.landmark_name}
+            </Button>
+            <h1>{content.name}</h1>
+            <img src={content.coverImageSrc} alt="Not found"></img>
+            <p className='date'>{content.startDate} ~ {content.endDate}</p>
             <div className='link-rating'>
-                <a href={props.content.link}>
-                    <div className="link">Website</div>
-                </a>
-                {props.content.avgRating &&
+                {content.link &&<a className="link" href={content.link}>
+                    <div>Source</div>
+                </a>}
+                {content.avgRating &&
                     <div className='rating'>
                     <img className='starImage' src={star} alt='Rating:'></img>
-                    <span className='ratingNum'>{props.content.avgRating.toFixed(1)}</span></div>}
+                    <span className='ratingNum'>{content.avgRating.toFixed(1)}</span></div>}
             </div>
             <div className='contentButtons'>
                 <CommentListPopup
                     key='CommentListPopup'
-                    ctid={props.content.id}
-                    name={props.content.name}
+                    ctid={content.id}
+                    name={content.name}
                     buttonName='Show comments'
                 />
                 {props.user && props.user.is_verified && (
-                    // Comment button for activated user                         
+                    // Comment button for activated user
                     <CommentPostPopup
                         key='CommentPostPopup'
-                        ctid={props.content.id}
-                        name={props.content.name}
                         user={props.user}
-                        handleSetUser={props.handleSetUser}
+                        ctid={content.id}
+                        name={content.name}
                         buttonName='Write comment'
                     />
                 )}
                 <ImageListPopup
                     key='ImageListPopup'
-                    ctid={props.content.id}
+                    ctid={content.id}
+                    name={content.name}
                     buttonName='Show photos'
                 />
-                {props.user && props.user.is_verified &&      
+                {props.user && props.user.is_verified &&
                 <ImagePostPopup
                     key='ImagePostPopup'
-                    ctid={props.content.id}
                     user={props.user}
-                    handleSetUser={props.handleSetUser}
+                    ctid={content.id}
+                    name={content.name}
                     buttonName='Upload photo'
                 />}
-                {props.user && (props.user.is_staff) && 
+                {props.user && props.user.is_verified &&
+                <ReportPostPopup
+                    key='ReportPostPopup'
+                    user={props.user}
+                    ctid={content.id}
+                    name={content.name}
+                    buttonName='Report content'
+                />}
+                {props.user && (props.user.is_staff) &&
                 <DesPostPopup
                     key='DesPostPopup'
-                    ctid={props.content.id}
-                    name={props.content.name}
                     user={props.user}
-                    description={props.content.description}
-                    handleSetUser={props.handleSetUser}
+                    ctid={content.id}
+                    name={content.name}
+                    description={content.description}
                     buttonName='Modify description'
-                />}  
+                />}
                 {props.user && (props.user.is_staff) &&
-                <div className='contentDelete'>
-                    <button className='contentDeleteButton' onClick={handleDeleteContent}>
-                        Delete content
-                    </button>
-                </div>} 
+                <Button variant="primary" onClick={handleDeleteContent}>
+                    Delete content
+                </Button>}
             </div>
             <div className='contentDescription'>
-                {props.content.description}
+                {content.description}
             </div>
-        </div>                
+            <div className='loader'>
+                <ClipLoader
+                    color='blue'
+                    loading={loading}
+                    size={50}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                />
+            </div>
+        </div>
     );
 }
 

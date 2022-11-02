@@ -1,41 +1,59 @@
 .userComment{
     position: absolute;
-    top: 100px;
-    left: 100px;
-    right: 100px;
+    top: 10vh;
+    left: 10vw;
+    right: 10vw;
     padding: 40px;
 }
+.userPage .loader{
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .each-user-comment{
-    height: 300px;    
-    margin-bottom: 5px;
+    height: 30vh;
+    margin-top: 20px;
+    margin-bottom: 20px;
     border: solid black;
+    border-radius: 10px;
 }
 .each-user-comment .title{
+    font-size: 20px;
+    height: 50px;
+    padding-left: 15px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 40px;
-    padding: 15px;
-    border-bottom: solid grey;
+    background-color: rgb(245, 245, 245);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: 1px solid lightgrey;
 }
 .each-user-comment .title .name{
-    font-size: 24px;
     width: 40%;
+    display : inline-block;
+    overflow : hidden;
+    text-overflow : ellipsis;
+    white-space : nowrap;
 }
 .each-user-comment .title .rating{
     display: flex;
     flex-direction: row;
     align-items: center;
     height: 30px;
-    width: 10%;
+    width: 30%;
 }
-.each-user-comment .title #commentPost{
-    width: 50%;
+.each-user-comment .title > button{
+    position: absolute;
+    right: 50px;
 }
-.each-user-comment .title #commentPost > button{
-    float: right;
-}
-.each-user-comment .text{    
+.each-user-comment .text{
+    height: calc(100% - 65px);
+    width: calc(100% - 30px);
     font-size: 20px;
     margin: 15px;
+    display : inline-block;
+    overflow: auto;
 }

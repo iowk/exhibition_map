@@ -1,12 +1,13 @@
-import React, { useState ,useEffect, useRef } from 'react';
-import Popup from 'reactjs-popup';
+import React, { useState, useRef } from 'react';
 import { Navigate } from "react-router-dom";
 import './comment.css';
-import '../general.css';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
-import star from '../media/star.png'
-import star_empty from '../media/star_empty.png'
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import ClipLoader from "react-spinners/ClipLoader";
+import star from '../media/star.png';
+import star_empty from '../media/star_empty.png';
 
 function WriteRatingBlock(props) {
     // Inside PopupBlock
@@ -32,77 +33,96 @@ function WriteRatingBlock(props) {
     }
     return(
         setRatingBox()
-    );    
+    );
 }
 function CommentListPopup(props){
     const [comments, setComments] = useState([]);
-    useEffect(() => {
-        let isMounted = true;
-        var apiPath = '';
+    const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => {
+        let apiPath = '';
         if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/comments/';
         else apiPath = '/map/landmarks/'+props.lmid+'/comments/';
-        const fetchData = async () => {            
+        const fetchData = async () => {
+            setLoading(true);
             try{
                 const res = await axios().get(apiPath);
                 const res_comments = await res.data;
-                if(isMounted) setComments(res_comments);
+                setComments(res_comments);
             }
             catch(e){
                 console.log(e);
             }
+            finally{
+                setLoading(false);
+            }
         }
         if(props.ctid || props.lmid) fetchData();
-        return () => {
-            isMounted = false;
-        };
-    }, [props.lmid, props.ctid])
+        setShow(true);
+    }
     return(
-        <div id='commentList'><Popup trigger={<button className='defaultButton'>{props.buttonName}</button>}
-        position="right center"
-        modal>
-            {close => (
-            <div className="modal">
-                <button className="close" onClick={close}> 
-                    &times; 
-                </button>
-                <div className='name'> {props.name} </div>
-                {comments.map((comment, index)=>(
-                    <div className="each-comment" key={index}>
-                        <div className='title'>
-                            <div className='owner'>{comment.owner}</div>
-                            <div className='rating'>
-                                <img className='starImage' src={star} alt='Rating:'></img>
-                                <div className='ratingNum'>{comment.rating}</div>
-                            </div>
-                        </div>
-                        <div className='text'>{comment.text}</div>
+        <>
+            <Button variant="primary" onClick={handleShow}>
+                {props.buttonName}
+            </Button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{props.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className='loader'>
+                        <ClipLoader
+                            color='blue'
+                            loading={loading}
+                            size={50}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
                     </div>
-                ))}
-            </div>)}
-        </Popup></div>
+                    {comments.map((comment, index)=>(
+                        <div className="each-comment" key={index}>
+                            <div className='title'>
+                                <div className='owner'>{comment.owner}</div>
+                                <div className='rating'>
+                                    <img className='starImage' src={star} alt='Rating:'></img>
+                                    <div className='ratingNum'>{comment.rating}</div>
+                                </div>
+                            </div>
+                            <div className='text'>{comment.text}</div>
+                        </div>
+                    ))}
+                </Modal.Body>
+            </Modal>
+        </>
     );
 }
 function CommentPostPopup(props){
     // Pop up when user clicks the comment button for landmark or content
     const maxRating = 5;
-    const [open, setOpen] = useState(false);
     const [isPatch, setIsPatch] = useState(false);
     const [rating, setRating] = useState(maxRating);
     const [oldComment, setOldComment] = useState('');
     const commentRef = useRef();
+    const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     let apiPath = '';
     if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/comments/';
     else apiPath = '/map/landmarks/'+props.lmid+'/comments/';
 
-    function handleOpen(){
-        setOpen(true);
-        fetchComment();
-    }
+    const handleClose = () => setShow(false);
+    const handleShow = () => {
+        if(props.ctid || props.lmid) fetchComment();
+        setShow(true);
+    };
+
     function fetchComment(){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
+                setLoading(true);
                 axios(getToken()).get(apiPath+props.user.id+'/')
                 .then(res => {
                     // This user already had a comment
@@ -115,16 +135,18 @@ function CommentPostPopup(props){
                     console.log("No comment exists for this user");
                     setIsPatch(false);
                 })
+                .finally(() => {
+                    setLoading(false);
+                });
             }
             else{
                 alert("Please login again");
-                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
         .catch((e) => {
             console.log(e);
-        });
+        })
     }
     function handleClickRating(rating){
         setRating(rating);
@@ -133,6 +155,7 @@ function CommentPostPopup(props){
         jwtVerify()
         .then((is_valid) =>{
             if(is_valid){
+                setLoading(true);
                 if(isPatch){
                     axios(getToken()).patch(apiPath+props.user.id+'/', JSON.stringify({
                         rating: rating,
@@ -149,6 +172,9 @@ function CommentPostPopup(props){
                     .catch((e) =>{
                         console.log(e);
                         alert(e);
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
                 }
                 else{
@@ -167,12 +193,14 @@ function CommentPostPopup(props){
                     .catch((e) =>{
                         console.log(e);
                         alert(e);
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
                 }
             }
             else{
                 alert("Please login again");
-                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
@@ -184,6 +212,7 @@ function CommentPostPopup(props){
         jwtVerify()
         .then((is_valid) =>{
             if(is_valid){
+                setLoading(true);
                 if(isPatch){
                     axios(getToken()).delete(apiPath+props.user.id+'/')
                     .then(() => {
@@ -192,12 +221,14 @@ function CommentPostPopup(props){
                     .catch((e) =>{
                         console.log(e);
                         alert(e);
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
                 }
             }
             else{
                 alert("Please login again");
-                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
@@ -205,24 +236,26 @@ function CommentPostPopup(props){
             console.log(e);
         })
     }
-    const closeModal = () => setOpen(false);
     return(
-        <div id='commentPost'>
-            <button className='addCommentButton' onClick={handleOpen}>{props.buttonName}</button>
-            <Popup
-            open={open}
-            position="right center"
-            closeOnDocumentClick
-            onClose={closeModal}
-            modal>
-                <div className="modal">
-                    <button className="close" onClick={closeModal}>                    
-                        &times; 
-                    </button>
-                    <div className="name">
-                        {props.name}
-                    </div>
+        <>
+            <Button variant="primary" onClick={handleShow}>
+                {props.buttonName}
+            </Button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{props.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                     <div className='popupForm'>
+                        <div className='loader'>
+                            <ClipLoader
+                                color='blue'
+                                loading={loading}
+                                size={50}
+                                aria-label="Loading Spinner"
+                                data-testid="loader"
+                            />
+                        </div>
                         <WriteRatingBlock
                             rating={rating}
                             maxRating={maxRating}
@@ -235,17 +268,17 @@ function CommentPostPopup(props){
                             className='commentBox'
                         />
                         <div className='buttonDiv'>
-                            <button onClick={handleSubmit} className='popupSubmitButton'>
+                            <Button onClick={handleSubmit} className='primary'>
                                 Submit
-                            </button>
-                            {isPatch && <button onClick={handleDelete} className='popupDeleteButton'>
+                            </Button>
+                            {isPatch && <Button onClick={handleDelete} className='primary'>
                                 Delete
-                            </button>}
+                            </Button>}
                         </div>
                     </div>
-                </div>
-            </Popup>
-        </div>
+                </Modal.Body>
+            </Modal>
+        </>
     );
 }
 

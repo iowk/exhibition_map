@@ -3,10 +3,11 @@ import { Navigate } from "react-router-dom";
 import DatePicker from 'react-date-picker';
 import './content.css';
 import { jwtVerify, getToken } from '../auth';
+import Button from 'react-bootstrap/Button';
+import ClipLoader from "react-spinners/ClipLoader";
 import { formatDate } from '../utils';
 import { UploadImage } from './image'
 import axios from '../axios';
-import '../general.css';
 import './addContent.css';
 
 function AddContent(props){
@@ -16,13 +17,15 @@ function AddContent(props){
     const [image, setImage] = useState(null);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [loading, setLoading] = useState(false);
     function handleBack(){
-        props.handleToLandmark(props.landmark);
+        props.handleToLandmark(props.lmid);
     }
     function handleSubmit(){
         jwtVerify()
         .then((is_valid) => {
             if(is_valid){
+                setLoading(true);
                 let form_data = new FormData();
                 if(image) form_data.append('coverImageSrc', image, image.name);
                 form_data.append('name', nameRef.current.value);
@@ -30,7 +33,7 @@ function AddContent(props){
                 form_data.append('description', descriptionRef.current.value);
                 form_data.append('startDate', formatDate(startDate));
                 form_data.append('endDate', formatDate(endDate));
-                axios(getToken()).post('/map/landmarks/'+props.landmark.id+'/contents/', form_data,
+                axios(getToken()).post('/map/landmarks/'+props.lmid+'/contents/', form_data,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -43,10 +46,13 @@ function AddContent(props){
                 .catch((e) =>{
                     console.log(e);
                     alert(JSON.stringify(e.response.data));
+                })
+                .finally(() => {
+                    setLoading(false);
                 });
             }
             else{
-                props.handleSetUser(null);
+                alert("Please login again");
                 <Navigate to = '/login/'/>;
             }
         })
@@ -87,9 +93,9 @@ function AddContent(props){
                     <UploadImage handleSetImage={setImage}/>
                 </div>
                 <div className='buttonDiv'>
-                    <button onClick={handleSubmit} className='submitButton'>
+                    <Button onClick={handleSubmit} variant="primary">
                         Upload
-                    </button>
+                    </Button>
                 </div>
             </div>;
     }
@@ -98,10 +104,19 @@ function AddContent(props){
     }
     return(
     <div className='addContentParent'>
-        <button onClick={handleBack} className='backButton'>
-            {props.landmark.name}
-        </button>
+        <Button onClick={handleBack} variant="secondary">
+            Back
+        </Button>
         {child}
+        <div className='loader'>
+            <ClipLoader
+                color='blue'
+                loading={loading}
+                size={50}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+            />
+        </div>
      </div>);
 }
 

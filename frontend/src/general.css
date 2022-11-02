@@ -1,20 +1,15 @@
-button{
-    border-radius: 10px;
-    width: 100px;
-    height: 30px;
-    font-size: 16px;
-    background-color: rgb(235, 235, 235);
-    border: solid 2px grey;
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap");
+*{
+    font-family: 'Noto Sans TC',sans-serif !important;
 }
-button:hover{
-    background-color: rgb(245, 245, 245);
-    cursor: pointer;
+.navbar{
+    height: 56px;
 }
 .starImage{
     height: 80%;
     background-color: transparent;
 }
-.searchImage{    
+.searchImage{
     background-color: transparent;
 }
 .ratingNum{
@@ -22,4 +17,26 @@ button:hover{
     padding-top: 2px;
     font-size: 20px;
     vertical-align: middle;
+}
+.modal-content{
+    position: absolute;
+    top: 10vh;
+    left: 10vw;
+    height: 80vh;
+    width: 80vw;
+}
+.modal-header{
+    height: 49px;
+}
+.modal-body{
+    height: calc(100% - 49px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.modal-dialog{
+    float: left;
+}
+textarea{
+    resize: none;
 }

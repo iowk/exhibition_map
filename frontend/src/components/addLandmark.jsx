@@ -3,34 +3,32 @@ import { Navigate } from "react-router-dom";
 import './addLandmark.css';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
+import Button from 'react-bootstrap/Button';
+import ClipLoader from "react-spinners/ClipLoader";
 import { UploadImage } from './image'
 
 function AddLandmark(props) {
     const nameRef = useRef();
     const linkRef = useRef();
-    const latRef = useRef(props.addedMarker.lat());
-    const lngRef = useRef(props.addedMarker.lng());
+    const [lat, setLat] = useState(props.addedMarker.lat());
+    const [lng, setLng] = useState(props.addedMarker.lng());
     const [image, setImage] = useState(null);
+    const [loading, setLoading] = useState(false);
     function handleSubmit(){
-        if(!latRef.current.value || !lngRef.current.value){
-            alert("Please enter landmark coordinates");
-        }
-        else if(latRef.current.value > 90 || latRef.current.value < -90){
-            alert("Latitude should be between -90 and 90");
-        }
-        else if(lngRef.current.value > 180 || lngRef.current.value < -180){
-            alert("Longitude should be between -180 and 180");
-        }
+        if(!lat || !lng) alert("Please specify the coordinates of the landmark");
+        else if(lat<-90 || lat>90) alert("Latitude should be between -90 and 90");
+        else if(lng<-180 || lng>180) alert("Longitude should be between -90 and 90");
         else{
             jwtVerify()
             .then((is_valid) => {
                 if(is_valid){
+                    setLoading(true);
                     let form_data = new FormData();
                     if(image) form_data.append('coverImageSrc', image, image.name);
                     form_data.append('name', nameRef.current.value);
                     form_data.append('link', linkRef.current.value);
-                    form_data.append('lat', parseFloat(latRef.current.value));
-                    form_data.append('lng', parseFloat(lngRef.current.value));
+                    form_data.append('lat', parseFloat(lat));
+                    form_data.append('lng', parseFloat(lng));
                     axios(getToken()).post('/map/landmarks/', form_data,
                     {
                         headers: {
@@ -39,19 +37,23 @@ function AddLandmark(props) {
                     })
                     .then(() => {
                         alert("Your request will be validated soon.\nThank you for your contribution.");
-                        console.log()
                         props.handleSetCenter({
-                            lat: parseFloat(latRef.current.value),
-                            lng: parseFloat(lngRef.current.value)
+                            lat: parseFloat(lat),
+                            lng: parseFloat(lng)
                         });
+                        props.handleToInitial();
+
                     })
                     .catch((e) =>{
                         console.log(e);
                         alert(JSON.stringify(e.response.data));
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
                 }
                 else{
-                    props.handleSetUser(null);
+                    alert("Please login again");
                     <Navigate to = '/login/'/>;
                 }
             })
@@ -66,14 +68,14 @@ function AddLandmark(props) {
                 <div className='dtop'>
                     <span>Suggest a new landmark at: <br/></span>
                     (<input
-                        type="number"
-                        defaultValue={props.addedMarker.lat()}
-                        ref={latRef}
+                        type='number'
+                        value={lat}
+                        onChange={(e)=>(setLat(e.target.value))}
                     />,
                     <input
-                        type="number"
-                        defaultValue={props.addedMarker.lng()}
-                        ref={lngRef}
+                        type='number'
+                        value={lng}
+                        onChange={(e)=>(setLng(e.target.value))}
                     />)
                 </div>
                 <div>
@@ -94,9 +96,18 @@ function AddLandmark(props) {
                     <UploadImage handleSetImage={setImage}/>
                 </div>
                 <div className='buttonDiv'>
-                    <button onClick={handleSubmit} className='submitButton'>
+                    <Button onClick={handleSubmit} variant="primary">
                         Upload
-                    </button>
+                    </Button>
+                </div>
+                <div className='loader'>
+                    <ClipLoader
+                        color='blue'
+                        loading={loading}
+                        size={50}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                    />
                 </div>
             </div>
         );

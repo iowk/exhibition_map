@@ -1,26 +1,20 @@
-.image-list-popup-content {
-    height: 600px;
-    width: 800px;
+.carousel {
+    width:100%;
+    height:100%;
 }
-.slide-container{
-    height: 600px;
-    width: 800px;
-    background-color: black;
+.carousel-inner{
+    width:100%;
+    height:100%;
 }
-.each-slide{
-    height: 600px;
-    width: 800px;
+.carousel-item{
+    width:100%;
+    height:100%;
 }
-.image-container{
-    height: 100%;
-    width: 100%;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: black;
-}
-.image-name{
-    background-color: white;
+.carousel-image-center{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 .uploadImage{
     height: calc(100% - 60px);
@@ -36,7 +30,7 @@
     height: calc(100%);
     width: calc(100%);
     border: dashed 2px grey;
-    background-color: rgb(245, 245, 245);    
+    background-color: rgb(245, 245, 245);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -45,56 +39,11 @@
     align-items: center;
     justify-content: center;
 }
-.post-container{
-    height: 100%;
+.imagePreviewBox{
+    height: calc(100% - 100px);
     width: 100%;
-    background-color: white;
-    border-radius: 15px;
-    border: solid #cfcece;
 }
-.post-container #uploadImageBox{
-    height: calc(100% - 180px);
-    width: calc(100% - 60px);
-}
-.post-container > div{
-    margin: 30px;    
-}
-.post-container .titleBox{
-    font-size: 16px;    
-    padding: 5px;
-    width: calc(100% - 10px);
-    height: 20px;
-}
-.post-container .buttonDiv{
-    margin-top: 15px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-.close {  
-    cursor: pointer;  
-    position: absolute;  
-    display: block;  
-    padding: 2px 5px;  
-    line-height: 20px;  
-    right: -10px;  
-    top: -10px;  
-    font-size: 24px;  
-    background: #ffffff;
-    border-radius: 18px;  
-    border: 1px solid #cfcece;
-    z-index: 1;
-}
-#imageList > button{
-    width: 150px;
-    margin: 5px;
-    margin-left: 25px;
-    margin-right: 25px;
-}
-#imagePost > button{
-    width: 150px;
-    margin: 5px;
-    margin-left: 25px;
-    margin-right: 25px;
+.modal-body .buttonDiv{
+    position: absolute;
+    bottom: 20px;
 }

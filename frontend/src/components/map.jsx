@@ -1,5 +1,5 @@
 import React from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker, MarkerClusterer } from '@react-google-maps/api';
 import './map.css';
 import { GOOGLE_MAP_API_KEY } from '../settings';
 
@@ -7,8 +7,8 @@ const zoom = 15;
 
 const containerStyle = {
     // Map container style
-    width: '98vw',
-    height: '98vh'
+    width: '100%',
+    height: '100%'
 };
 
 const mapOptions = {
@@ -32,40 +32,28 @@ const mapOptions = {
     streetViewControl: false,
 }
 
+function ClusterCalculator(markers, numStyles){
+    let count = 0;
+    markers.forEach((marker) => {
+        if('label' in marker) count += parseInt(marker.label.text);
+    })
+    const numberOfDigits = count.toString().length;
+
+    let index = 1;
+    if(count > 0) index = Math.min(numberOfDigits+1, numStyles)
+
+    return {
+        text: count.toString(),
+        index,
+        title: '',
+    }
+  }
+const markerClusterOptions = {
+    imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m', // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
+    calculator: ClusterCalculator
+}
+
 function Map(props) {
-    function setAddedMarker(latlng) {
-        return <Marker
-            key='-1'
-            position={{lat: latlng.lat(), lng:latlng.lng()}}
-        />;
-    }
-    function setMarker(landmark) {
-        const onClickMarker = (e) => {
-            props.handleClickLandmark(landmark['id']);
-        };
-        return <Marker
-            key={landmark['id']}
-            position={{lat: landmark['lat'], lng: landmark['lng']}}
-            title={landmark['name']}
-            zIndex={landmark['zIndex']}
-            label={
-                {text: landmark['contentCount'].toString(), color: "white", fontWeight: 'bold'}
-            }
-            onClick={onClickMarker}
-        />;
-    }
-    function handleClick(e){
-        props.handleAddLandmark(e.latLng);
-    }
-    var children = [];
-    if(props.phase==='addLandmark' && props.addedMarker) {
-        children.push(setAddedMarker(props.addedMarker));
-    }
-    for(var key in props.landmarks) {
-        if(props.landmarks[key]['is_visible']){
-            children.push(setMarker(props.landmarks[key]));
-        }
-    }
     return (
         <LoadScript
             googleMapsApiKey={GOOGLE_MAP_API_KEY}//{process.env.REACT_APP_GOOGLE_MAP_API_KEY}
@@ -75,10 +63,27 @@ function Map(props) {
                 center={props.center}
                 zoom={zoom}
                 options={mapOptions}
-                addChild={props.landmarks.length}
-                onClick={(e)=>{handleClick(e)}}
+                onClick={(e)=>{props.handleAddLandmark(e.latLng)}}
             >
-                {children}
+                {props.phase==='addLandmark' && props.addedMarker && <Marker
+                    key='-1'
+                    position={{lat: props.addedMarker.lat(), lng:props.addedMarker.lng()}}
+                />}
+                <MarkerClusterer options={markerClusterOptions}>
+                {(clusterer) =>
+                    props.markers.map((marker) => (
+                    <Marker key={marker['id']}
+                        position={{lat: marker['lat'], lng: marker['lng']}}
+                        title={marker['name']}
+                        zIndex={marker['zIndex']}
+                        label={
+                            {text: marker['contentCount'].toString(), color: "white", fontWeight: 'bold'}
+                        }
+                        onClick={() => {props.handleClickLandmark(marker['id'])}}
+                        clusterer={clusterer} />
+                    ))
+                }
+                </MarkerClusterer>
             </GoogleMap>
         </LoadScript>
     );

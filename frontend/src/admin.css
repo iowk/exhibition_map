@@ -1,28 +1,39 @@
-.adminLandmark{
+.admin{
     position: absolute;
     top: 50px;
-    width: calc(100% - 40px);
+    width: 100%;
     padding: 20px;
 }
-.adminLandmark .landmarkBox{
-    height: 110px;
+.admin .adminBox{
+    height: 135px;
     width: 100%;
-    margin-bottom: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     border: solid black;
 }
-.adminLandmark .landmarkBox > div{
-    display: flex;
-    flex-direction: column;
+.admin .adminBox > div{
     overflow: auto;
     padding: 12px;
 }
-.adminLandmark .landmarkBox > div > *{
-    padding: 2px;
+.admin .adminBox > div > *{
+    margin: 2px;
 }
-.adminLandmark .landmarkBox .imageDiv{
+.admin .adminBox > div > div{
+    float: left;
+    clear: left;
+}
+.admin .adminBox > div > input{
+    float: left;
+}
+.admin .adminBox > div > textarea{
+    float: left;
+    width: calc(100% - 140px);
+    height: calc(100% - 10px);
+}
+.admin .adminBox .imageDiv{
     width: 160px;
     padding: 5px;
     background-color: rgb(245, 245, 245);
@@ -30,16 +41,22 @@
     align-items: center;
     overflow: hidden;
 }
-.adminLandmark .landmarkBox .imageDiv > img{
+.admin .adminBox .imageDiv > img{
     max-height: 100%;
     max-width: 100%;
 }
-.adminLandmark .landmarkBox .titleDiv{
-    width: calc(30% - 160px);
+.admin .adminBox .titleDiv{
+    width: calc(30% - 60px);
     margin-left: 5px;
     margin-right: 5px;
 }
-.adminLandmark .landmarkBox .titleDiv .landmarkName{
+.admin .adminBox .titleDiv > div{
+    width: 130px;
+}
+.admin .adminBox .titleDiv > input{
+    width: calc(100% - 140px);
+}
+.admin .adminBox .titleDiv .landmarkName{
     margin-top: 4px;
     margin-bottom: 4px;
     height: 60px;
@@ -49,85 +66,34 @@
     flex-direction: column;
     justify-content: center;
 }
-.adminLandmark .landmarkBox .infoDiv{
-    width: calc(70% - 160px);
+.admin .adminBox .infoDiv{
+    width: calc(30% - 50px);
 }
-.adminLandmark .landmarkBox .infoDiv > a .link{
-    overflow-wrap: break-word;
+.admin .adminBox .infoDiv > div{
+    width: 100px;
 }
-.adminLandmark .landmarkBox .buttonDiv{
+.admin .adminBox .infoDiv > input{
+    width: calc(100% - 110px);
+}
+.admin .adminBox .desDiv{
+    width: calc(40% - 50px);
+}
+.admin .adminBox .desDiv > div{
+    width:100px;
+}
+.admin .adminBox .desDiv > input{
+    width: calc(100% - 110px);
+}
+.admin .adminBox .buttonDiv{
     width: 160px;
     margin-top: 4px;
     margin-bottom: 4px;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.adminContent{
-    position: absolute;
-    top: 50px;
-    width: calc(100% - 40px);
-    padding: 20px;
-}
-.adminContent .contentBox{
-    height: 110px;
-    width: 100%;
-    margin-bottom: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    border: solid black;
-}
-.adminContent .contentBox > div{
     display: flex;
     flex-direction: column;
-    overflow: auto;
-    padding: 12px;
-}
-.adminContent .contentBox > div > *{
-    padding: 2px;
-}
-.adminContent .contentBox .imageDiv{
-    width: 160px;
-    padding: 5px;
-    background-color: rgb(245, 245, 245);
-    justify-content: center;
     align-items: center;
-    overflow: hidden;
-}
-.adminContent .contentBox .imageDiv > img{
-    max-height: 100%;
-    max-width: 100%;
-}
-.adminContent .contentBox .titleDiv{
-    width: calc(30% - 160px);
-    margin-left: 5px;
-    margin-right: 5px;
-}
-.adminContent .contentBox .titleDiv .contentName{
-    margin-top: 4px;
-    margin-bottom: 4px;
-    height: 60px;
-    font-size: 20px;
-    font-weight: bold;
-    color: darkred;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-.adminContent .contentBox .infoDiv{
-    width: calc(35% - 80px);
-}
-.adminContent .contentBox .infoDiv > a .link{
-    overflow-wrap: break-word;
-}
-.adminContent .contentBox .desDiv{
-    width: calc(35% - 80px);
-}
-.adminContent .contentBox .buttonDiv{
-    width: 160px;
-    margin-top: 4px;
-    margin-bottom: 4px;
     justify-content: space-between;
     align-items: center;
+}
+.admin .adminBox .buttonDiv .btn{
+    width: 80px;
 }

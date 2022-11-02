@@ -16,8 +16,8 @@
 .searchBar .searchImage{
     z-index: 1;
     position: absolute;
-    height: 28px;
-    right: 17px;
-    top: 19px;
+    height: 26px;
+    right: 35px;
+    top: 18px;
     cursor: pointer;
 }

@@ -14,7 +14,7 @@ class CustomUser(AbstractUser):
 
 class Image(models.Model): # Landmark and content images
     created = models.DateTimeField(editable=False)
-    name = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=1000, blank=True)
     src = models.ImageField(upload_to='images/', default='images/empty.jpg')
     class Meta:
         abstract = True
@@ -38,13 +38,24 @@ class Comment(models.Model): # Landmark and content comments
         self.modified = timezone.now()
         return super(Comment, self).save(*args, **kwargs)
 
+class Report(models.Model): # Landmark and content reports
+    created = models.DateTimeField(editable=False)
+    text = models.CharField(max_length=500, blank=True)
+    class Meta:
+        abstract = True
+    def save(self, *args, **kwargs):
+        self.created = timezone.now()
+        return super(Report, self).save(*args, **kwargs)
+
 class Landmark(models.Model):
     owner = models.ForeignKey(CustomUser, related_name='landmark', on_delete=models.SET_NULL, null=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=1000)
+    name_eng = models.CharField(max_length=1000, blank=True)
+    price = models.CharField(max_length=3000, blank=True)
     lat = models.FloatField(default = 0.0)
     lng = models.FloatField(default = 0.0)
     zIndex = models.IntegerField(default = 1)
-    link = models.CharField(max_length=200, blank=True)
+    link = models.CharField(max_length=1000, blank=True)
     coverImageSrc = models.ImageField(upload_to='images/', default='images/empty.jpg')
     is_visible = models.BooleanField(default=False)
     def __str__(self):
@@ -69,13 +80,22 @@ class LandmarkComment(Comment):
         constraints = [
             models.UniqueConstraint(fields=["owner", "landmark"], name='unique_owner_landmark_comment')]
 
+class LandmarkReport(Report):
+    owner = models.ForeignKey(CustomUser, related_name='landmarkReports', on_delete=models.CASCADE)
+    landmark = models.ForeignKey(Landmark, related_name='reports', on_delete=models.CASCADE)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["owner", "landmark"], name='unique_owner_landmark_report')]
+
 class Content(models.Model):
     owner = models.ForeignKey(CustomUser, related_name='content', on_delete=models.SET_NULL, null=True)
     landmark = models.ForeignKey(Landmark, related_name='contents', on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=1000)
+    name_eng = models.CharField(max_length=1000, blank=True)
+    price = models.CharField(max_length=3000, blank=True)
     startDate = models.DateField(blank=True)
     endDate = models.DateField(blank=True)
-    link = models.CharField(max_length=200, blank=True)
+    link = models.CharField(max_length=1000, blank=True)
     description = models.CharField(max_length=3000, blank=True)
     coverImageSrc = models.ImageField(upload_to='images/', default='images/empty.jpg')
     is_visible = models.BooleanField(default=False)
@@ -103,3 +123,10 @@ class ContentComment(Comment):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=["owner", "content"], name='unique_owner_content_comment')]
+
+class ContentReport(Report):
+    owner = models.ForeignKey(CustomUser, related_name='contentReports', on_delete=models.CASCADE)
+    content = models.ForeignKey(Content, related_name='reports', on_delete=models.CASCADE)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["owner", "content"], name='unique_owner_content_report')]

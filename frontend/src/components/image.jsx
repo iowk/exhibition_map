@@ -1,61 +1,78 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Navigate } from "react-router-dom";
-import Popup from 'reactjs-popup';
-import { Slide } from 'react-slideshow-image';
 import axios from '../axios';
 import { jwtVerify, getToken } from '../auth';
-
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Carousel from 'react-bootstrap/Carousel';
+import ClipLoader from "react-spinners/ClipLoader";
 import 'react-slideshow-image/dist/styles.css';
-import './image.css'
-import '../general.css';
+import './image.css';
 
 function ImageListPopup(props){
     const [images, setImages] = useState([]);
-    useEffect(() => {
-        let isMounted = true;
+    const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => {
         var apiPath = '';
         if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/images/';
         else apiPath = '/map/landmarks/'+props.lmid+'/images/';
-        const fetchData = async () => {            
+        const fetchData = async () => {
+            setLoading(true);
             try{
                 const res = await axios().get(apiPath);
                 const res_images = await res.data;
-                if(isMounted) setImages(res_images);
+                setImages(res_images);
             }
             catch(e){
                 console.log(e);
             }
+            finally{
+                setLoading(false);
+            }
         }
         if(props.ctid || props.lmid) fetchData();
-        return () => {
-            isMounted = false;
-        };
-    }, [props.lmid, props.ctid])
+        setShow(true);
+    }
     return(
-        <div id='imageList'><Popup trigger={<button className='defaultButton'>{props.buttonName}</button>}
-        position="right center"
-        modal        
-        className='image-list-popup'>
-            {close => (
-            <div className="slide-container">
-                <button className="close" onClick={close}> 
-                    &times; 
-                </button>
-                <Slide>
-                {images.map((slideImage, index)=>(
-                    <div className="each-slide" key={index}>
-                    <div className="image-container" style={{'backgroundImage': `url(${slideImage.src})`}}>
-                        <span className='image-name'>{slideImage.name}</span>
+        <>
+            <Button variant="primary" onClick={handleShow}>
+                {props.buttonName}
+            </Button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{props.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className='loader'>
+                        <ClipLoader
+                            color='blue'
+                            loading={loading}
+                            size={50}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
                     </div>
-                    </div>
-                ))}
-                </Slide>
-            </div>)}
-        </Popup></div>
+                    <Carousel className="carousel-dark">
+                        {images.map((slideImage, key)=>
+                            <Carousel.Item key={key}>
+                                <img src={slideImage.src} className="d-flex mw-100 mh-100 carousel-image-center" alt="..."/>
+                                <Carousel.Caption>
+                                    <p>{slideImage.name}</p>
+                                </Carousel.Caption>
+                            </Carousel.Item>
+                        )}
+                    </Carousel>
+                </Modal.Body>
+            </Modal>
+        </>
     );
 }
 function UploadImage(props){
     const [imagePreviewSrc, setImagePreviewSrc] = useState(null);
+
     function onImageChange(e) {
         const file_size = e.target.files[0].size;
         console.log("Image size:", file_size);
@@ -71,11 +88,16 @@ function UploadImage(props){
         <div className='inputDiv'>
             <input type="file" name="image_url"
                 accept="image/jpeg,image/png,image/gif" onChange={onImageChange} />
-        </div>        
-    </div>);    
+        </div>
+    </div>);
 }
 function ImagePostPopup(props) {
     const [image, setImage] = useState(null);
+    const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     const imageTitleRef = useRef();
     let apiPath = '';
     if(props.ctid) apiPath = '/map/contents/'+props.ctid+'/images/';
@@ -84,6 +106,7 @@ function ImagePostPopup(props) {
         jwtVerify()
         .then(is_valid => {
             if(is_valid){
+                setLoading(true);
                 let form_data = new FormData();
                 form_data.append('src', image, image.name);
                 form_data.append('name', imageTitleRef.current.value);
@@ -98,46 +121,58 @@ function ImagePostPopup(props) {
                 })
                 .catch((e) => {
                     alert(e)
-                });                            
+                })
+                .finally(()=>{
+                    setLoading(false);
+                });
             }
             else{
                 alert("Please login again");
-                props.handleSetUser(null);
                 <Navigate to = '/login/'/>;
             }
         })
         .catch(e => {
             console.log(e);
-        })       
+        })
     }
     return(
-        <div id='imagePost'><Popup trigger={<button className='defaultButton'>{props.buttonName}</button>}
-        position="right center"
-        modal>
-            {close => (
-            <div className="post-container">
-                <button className="close" onClick={close}> 
-                    &times; 
-                </button>                
-                <div>
-                    <input
-                        placeholder='Title'
-                        ref={imageTitleRef}
-                        className='titleBox'
-                    />
-                </div>
-                <div id='uploadImageBox'>
-                    <UploadImage handleSetImage={setImage}/>
-                </div>
-                <div className='buttonDiv'>
-                    <button onClick={handleSubmit} className='popupSubmitButton'>
-                        Upload
-                    </button>
-                </div>
-            </div>
-            )}
-        </Popup></div>
-    );    
+        <>
+            <Button variant="primary" onClick={handleShow}>
+                {props.buttonName}
+            </Button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{props.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className='loader'>
+                        <ClipLoader
+                            color='blue'
+                            loading={loading}
+                            size={50}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
+                    </div>
+                    <div className='w-100'>
+                        <input
+                            placeholder='Title'
+                            ref={imageTitleRef}
+                            className='w-100'
+                        />
+                    </div>
+                    <div className='mt-3 imagePreviewBox'>
+                        <UploadImage handleSetImage={setImage}/>
+                    </div>
+                    <div className='buttonDiv'>
+                        <Button variant="primary" onClick={handleSubmit} className='mt-2'>
+                            Upload
+                        </Button>
+                    </div>
+                </Modal.Body>
+            </Modal>
+        </>
+    );
 }
 
 export { ImageListPopup, ImagePostPopup, UploadImage };

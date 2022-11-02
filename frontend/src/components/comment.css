@@ -1,123 +1,45 @@
-.popup-content {
-    height: 80%;
-    width: 60%;
-}
-.modal {
-    font-size: 12px;
-    height: 100%;
-    width: 100%;
-    background-color: white;
-    border-radius: 15px;
-    border: solid #cfcece;
-}
-.modal > div{
-    margin: 30px;    
-}
-.modal > .close {  
-    cursor: pointer;  
-    position: absolute;  
-    display: block;  
-    padding: 2px 5px;  
-    line-height: 20px;  
-    right: -10px;  
-    top: -10px;  
-    font-size: 24px;  
-    background: #ffffff;
-    border-radius: 18px;  
-    border: 1px solid #cfcece;
-}
-.modal .name{
-    height: 60px;
-    margin-bottom: 0px;
-    font-size: 36px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-}
-.modal .popupForm {
-    margin-top: 15px;
-    height: calc(100% - 135px);
-}
-.modal .popupForm .ratingBox {
-    height: 50px;
-    margin-left: 20px;
-}
-.modal .popupForm .ratingBox .starImage {
-    height: 30px;
-    width: 30px;
-    margin-right: 20px;
-    background-color: transparent;
-    float: left;
-}
-.modal .popupForm .ratingBox .starImage:hover {
-    cursor: pointer;
-}
-.modal .popupForm .commentBox {
-    font-size: 16px;
-    padding: 10px;
-    height: calc(100% - 130px);
-    width: calc(100% - 20px);
-    border: solid 2px black;
-    border-radius: 5px;
-    resize: none;
-}
-.modal .popupForm .buttonDiv{
-    margin-top: 15px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-.modal .popupForm .buttonDiv > button{
-    margin-left: 30px;
-}
-#commentList > button{
-    width: 150px;
-    margin: 5px;
-    margin-left: 25px;
-    margin-right: 25px;
-}
-#commentPost > button{
-    width: 150px;
-    margin: 5px;
-    margin-left: 25px;
-    margin-right: 25px;
-}
-.modal .each-comment{
+.modal-body .each-comment{
+    height: calc(33% - 33px);
     width: calc(100% - 66px);
     border: solid black;
-    border-radius: 5px;
+    border-radius: 10px;
+    margin-top: 20px;
 }
-.modal .each-comment > .title{
+.modal-body .each-comment > .title{
     font-size: 20px;
-    height: 25px;
+    height: 30px;
     padding: 2px;
     display: flex;
+    flex-direction: row;
     align-items: center;
+    background-color: rgb(245, 245, 245);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     border-bottom: 1px solid lightgrey;
 }
-.modal .each-comment > .title > .owner{
-    height: 25px;
-    width: 200px;
+.modal-body .each-comment > .title > .owner{
+    height: 100%;
+    width: 40%;
     float: left;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     margin-left: 10px;
 }
-.modal .each-comment > .title > .rating{
-    height: 25px;
+.modal-body .each-comment > .title > .rating{
     height: 100%;
     margin-left: 20px;
     display: flex;
     align-items: center;
 }
-.modal .each-comment > .title > .rating > .starImage{
+.modal-body .each-comment > .title > .rating > .starImage{
     display: flex;
     align-items: center;
     float: left;
     height: 80%;
     background-color: transparent;
 }
-.modal .each-comment > .title > .rating > .ratingNum{
+.modal-body .each-comment > .title > .rating > .ratingNum{
     display: flex;
     align-items: center;
     float: left;
@@ -125,8 +47,48 @@
     padding-top: 2px;
     height: 80%;
 }
-.modal .each-comment > .text{
+.modal-body .each-comment > .text{
     padding: 10px;
     font-size: 20px;
     height: 100px;
+}
+.modal-body .popupForm {
+    margin-top: 15px;
+    height: calc(100% - 80px);
+    width: 100%;
+}
+.modal-body .popupForm .ratingBox {
+    height: 50px;
+    margin-left: 20px;
+}
+.modal-body .popupForm .ratingBox .starImage {
+    height: 30px;
+    width: 30px;
+    margin-right: 20px;
+    background-color: transparent;
+    float: left;
+}
+.modal-body .popupForm .ratingBox .starImage:hover {
+    cursor: pointer;
+}
+.modal-body .popupForm .commentBox {
+    font-size: 16px;
+    padding: 10px;
+    height: calc(100% - 50px);
+    width: 100%;
+    border: solid 2px black;
+    border-radius: 5px;
+    resize: none;
+}
+.modal-body .popupForm .buttonDiv{
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.modal-body .popupForm .buttonDiv > button{
+    margin-left: 30px;
 }
