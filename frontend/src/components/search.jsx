@@ -11,7 +11,7 @@ function SearchResultList(props){
     useEffect(() => {
         let isMounted = true;
         setLoading(true);
-        axios().post('/map/search/', JSON.stringify({
+        axios().post('/map/search_fast/', JSON.stringify({
             lat: props.center['lat'],
             lng: props.center['lng'],
             pattern: props.searchPattern,
@@ -25,6 +25,25 @@ function SearchResultList(props){
         })
         .then(res => {
             if(isMounted) setSearchResult(res.data);
+            axios().post('/map/search/', JSON.stringify({
+                lat: props.center['lat'],
+                lng: props.center['lng'],
+                pattern: props.searchPattern,
+                count: props.count,
+                thres: props.thres
+            }),
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(res => {
+                if(isMounted) setSearchResult(res.data);
+
+            })
+            .catch(e => {
+                console.log(e);
+            })
         })
         .catch(e => {
             console.log(e);

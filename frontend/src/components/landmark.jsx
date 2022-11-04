@@ -11,11 +11,12 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 function Landmark(props){
     const [landmark, setLandmark] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [contentsOverview, setContentsOverview] = useState(null); // Contents of the currently clicked landmark
     useEffect(() => {
         let isMounted = true;
         const fetchData = async() => {
+            setLoading(true)
             try{
                 // GET landmarks
                 const res_lm = await axios().get('/map/landmarks/'+props.lmid);
@@ -39,7 +40,7 @@ function Landmark(props){
         return () => {
             isMounted = false;
         };
-    }, [props, landmark.id])
+    }, [props.handleSetCenter, props.lmid, landmark.id])
     function handleDeleteLandmark(){
         jwtVerify()
         .then((is_valid) => {

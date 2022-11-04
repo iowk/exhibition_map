@@ -42,6 +42,7 @@ urlpatterns = format_suffix_patterns([
     path('contents/<int:pk_ct>/reports/', views.ContentReportCreate.as_view(), name='content_report_create'),
     path('contents/<int:pk_ct>/reports/<int:pk_user>/', views.ContentReportDetail.as_view(), name='content_report_detail'),
     path('contents_reports/', views.ContentsReportList.as_view(), name='contents_report_list'),
+    path('search_fast/', views.SearchFast.as_view(), name='search_fast'),
     path('search/', views.Search.as_view(), name='search'),
     path('find_nearest_landmark/', views.FindNearestLandmark.as_view(), name='find_nearest_landmark'),
 ])

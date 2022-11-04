@@ -41,14 +41,13 @@ function AddLandmark(props) {
                             lat: parseFloat(lat),
                             lng: parseFloat(lng)
                         });
+                        setLoading(false);
                         props.handleToInitial();
 
                     })
                     .catch((e) =>{
                         console.log(e);
                         alert(JSON.stringify(e.response.data));
-                    })
-                    .finally(() => {
                         setLoading(false);
                     });
                 }

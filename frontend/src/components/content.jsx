@@ -12,10 +12,11 @@ import star from '../media/star.png';
 
 function Content(props){
     const [content, setContent] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         let isMounted = true;
         const fetchData = async() => {
+            setLoading(true);
             try{
                 // GET content
                 const res_ct = await axios().get('/map/contents/'+props.ctid+'/');
@@ -35,7 +36,7 @@ function Content(props){
         return () => {
             isMounted = false;
         };
-    }, [props, content.id])
+    }, [props.handleSetCenter, props.ctid, content.id])
     function handleDeleteContent(){
         jwtVerify()
         .then((is_valid) => {

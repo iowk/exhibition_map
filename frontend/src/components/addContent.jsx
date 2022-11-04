@@ -41,13 +41,12 @@ function AddContent(props){
                 })
                 .then(() => {
                     alert("Your request will be validated soon.\nThank you for your contribution.");
-                    props.handleToLandmark(props.landmark);
+                    setLoading(false);
+                    props.handleToLandmark(props.lmid);
                 })
                 .catch((e) =>{
                     console.log(e);
                     alert(JSON.stringify(e.response.data));
-                })
-                .finally(() => {
                     setLoading(false);
                 });
             }
