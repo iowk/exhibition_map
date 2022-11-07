@@ -72,7 +72,7 @@ function CommentListPopup(props){
                     <Modal.Title>{props.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className='loader'>
+                    <div className='popup-loader'>
                         <ClipLoader
                             color='blue'
                             loading={loading}
@@ -247,7 +247,7 @@ function CommentPostPopup(props){
                 </Modal.Header>
                 <Modal.Body>
                     <div className='popupForm'>
-                        <div className='loader'>
+                        <div className='popup-loader'>
                             <ClipLoader
                                 color='blue'
                                 loading={loading}

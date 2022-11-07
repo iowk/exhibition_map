@@ -61,7 +61,7 @@ function DesPostPopup(props){
                     <Modal.Title>{props.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className='loader'>
+                    <div className='popup-loader'>
                         <ClipLoader
                             color='blue'
                             loading={loading}

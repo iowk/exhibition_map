@@ -1,12 +1,11 @@
 .userComment{
     position: absolute;
-    top: 10vh;
     left: 10vw;
     right: 10vw;
     padding: 40px;
 }
-.userPage .loader{
-    margin-top: 50px;
+.userPage .userComment-loader{
+    margin-top: 20px;
     width: 100%;
     display: flex;
     align-items: center;

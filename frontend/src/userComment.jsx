@@ -135,7 +135,7 @@ function UserComment(props){
                 <div className='userComment'>
                     {children}
                 </div>
-                <div className='loader'>
+                <div className='userComment-loader'>
                     <ClipLoader
                         color='blue'
                         loading={loading}
