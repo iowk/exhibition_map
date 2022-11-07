@@ -19,7 +19,7 @@ export async function login(username, password){
             axios(res.data.access).get('/map/current_user/')
             .then(res => {
                 localStorage.setItem('user', JSON.stringify(res.data));
-                resolve();
+                resolve(res.data);
             })
             .catch(e => {
                 alert(e);
@@ -29,7 +29,7 @@ export async function login(username, password){
         .catch (e => {
             reject();
         });
-    });    
+    });
 }
 
 export function logout(){
@@ -46,9 +46,9 @@ export function getLSItem(key1, key2){
 export function getToken(){
     return localStorage.getItem('jwt_access');
 }
-export async function jwtRefresh(){    
-    return new Promise((resolve, reject) => {  
-        console.log("Refresh");      
+export async function jwtRefresh(){
+    return new Promise((resolve, reject) => {
+        console.log("Refresh");
         let r_jwt = localStorage.getItem('jwt_refresh');
         if(!r_jwt){
             logout();
@@ -66,15 +66,15 @@ export async function jwtRefresh(){
             })
             .then(res => {
                 console.log("Refresh success");
-                localStorage.setItem('jwt_access', res.data.access);        
+                localStorage.setItem('jwt_access', res.data.access);
                 resolve(true);
             })
             .catch (e => {
-                console.log("Refresh fail");                
+                console.log("Refresh fail");
                 logout();
                 resolve(false);
             })
-        }        
+        }
     });
 }
 export async function jwtVerify(){
@@ -98,8 +98,8 @@ export async function jwtVerify(){
                 resolve(true);
             })
             .catch (() => {
-                resolve(jwtRefresh());                
+                resolve(jwtRefresh());
             });
-        }        
-    });    
+        }
+    });
 }

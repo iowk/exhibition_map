@@ -31,13 +31,6 @@
     overflow: auto;
     border-radius: 15px;
 }
-#infoBlock .loader{
-    margin-top: 20px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 #map {
     float: right;
     height: calc(100vh - 60px);

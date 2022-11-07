@@ -71,20 +71,25 @@ function Register(props){
             .then(() => {
                 clearErr();
                 login(usernameRef.current.value, password)
-                .then(() => {
-                    while(!getToken());
-                    axios(getToken()).get('/map/users/send_acc_email/')
-                    .then(() => {
-                        setBottomMessage("Registration success. Activation mail is sent to " + emailRef.current.value);
-                        //setBottomMessage("Registration success. Activation mail will be sent after verification by the administartor.");
-                    })
-                    .catch(e => {
-                        console.log(e);
-                        setBottomMessage("Registration success. Activation mail is not sent due to server error.");
-                    })
-                    .finally(() => {
-                        clearInput();
-                    })
+                .then((res) => {
+                    if(res.is_verified){
+                        setBottomMessage("Registration success. User activated without email verification (e-mail server not deployed).");
+                    }
+                    else{
+                        while(!getToken());
+                        axios(getToken()).get('/map/users/send_acc_email/')
+                        .then(() => {
+                            setBottomMessage("Registration success. Activation mail is sent to " + emailRef.current.value);
+                            //setBottomMessage("Registration success. Activation mail will be sent after verification by the administartor.");
+                        })
+                        .catch(e => {
+                            console.log(e);
+                            setBottomMessage("Registration success. Activation mail is not sent due to server error.");
+                        })
+                        .finally(() => {
+                            clearInput();
+                        })
+                    }
                 })
                 .catch(e => {
                     console.log(e);

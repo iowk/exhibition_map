@@ -129,6 +129,10 @@ class UserRegister(generics.CreateAPIView):
                 serializer.data['email'],
                 serializer.data['password']
             )
+            if settings.ACTIVATE_ON_REGISTER:
+                user.is_verified = True
+                serializer.data['is_verified'] = True
+                user.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
