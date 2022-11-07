@@ -9,7 +9,7 @@ import axios from './../axios';
 import star from '../media/star.png';
 import ClipLoader from "react-spinners/ClipLoader";
 
-function Landmark(props){
+function Landmark({user, lmid, handleToInitial, handleToContent, handleToAddContent, handleSetCenter}){
     const [landmark, setLandmark] = useState({});
     const [loading, setLoading] = useState(false);
     const [contentsOverview, setContentsOverview] = useState(null); // Contents of the currently clicked landmark
@@ -19,16 +19,16 @@ function Landmark(props){
             setLoading(true)
             try{
                 // GET landmarks
-                const res_lm = await axios().get('/map/landmarks/'+props.lmid);
+                const res_lm = await axios().get('/map/landmarks/'+lmid);
                 const lm = await res_lm.data;
                 // GET contents
-                const res_cts = await axios().get('/map/landmarks/'+props.lmid+'/contents_overview/');
+                const res_cts = await axios().get('/map/landmarks/'+lmid+'/contents_overview/');
                 const cts = await res_cts.data;
                 // Set state
                 if(isMounted){
                     setLandmark(lm);
                     setContentsOverview(cts);
-                    props.handleSetCenter({lat: lm.lat, lng: lm.lng});
+                    handleSetCenter({lat: lm.lat, lng: lm.lng});
                 }
             } catch (e) {
                 console.log(e);
@@ -36,11 +36,11 @@ function Landmark(props){
                 setLoading(false);
             }
         }
-        if(props.lmid && props.lmid!==landmark.id) fetchData();
+        if(lmid && lmid!==landmark.id) fetchData();
         return () => {
             isMounted = false;
         };
-    }, [props.handleSetCenter, props.lmid, landmark.id])
+    }, [handleSetCenter, lmid, landmark.id])
     function handleDeleteLandmark(){
         jwtVerify()
         .then((is_valid) => {
@@ -48,7 +48,7 @@ function Landmark(props){
                 axios(getToken()).delete('/map/landmarks/'+landmark.id+'/')
                 .then(() => {
                     alert("Landmark deleted");
-                    props.handleToInitial();
+                    handleToInitial();
                 })
                 .catch((e) => {
                     console.log(e);
@@ -87,12 +87,12 @@ function Landmark(props){
             name={landmark.name}
             buttonName='Show comments'
         />)
-        if(props.user && props.user.is_verified){
+        if(user && user.is_verified){
             buttons.push(<CommentPostPopup
                 key='commentPostPopup'
                 lmid={landmark.id}
                 name={landmark.name}
-                user={props.user}
+                user={user}
                 buttonName='Write comment'
             />)
         }
@@ -102,31 +102,31 @@ function Landmark(props){
             name={landmark.name}
             buttonName='Show photos'
         />)
-        if(props.user && props.user.is_verified){
+        if(user && user.is_verified){
             buttons.push(<ImagePostPopup
                 key='ImagePostPopup'
                 lmid={landmark.id}
                 name={landmark.name}
-                user={props.user}
+                user={user}
                 buttonName='Upload photo'
             />)
         }
-        if(props.user && props.user.is_verified){
+        if(user && user.is_verified){
             buttons.push(<ReportPostPopup
                 key='ReportPostPopup'
                 lmid={landmark.id}
                 name={landmark.name}
-                user={props.user}
+                user={user}
                 buttonName='Report landmark'
             />)
         }
-        if(props.user && props.user.is_verified){
+        if(user && user.is_verified){
             buttons.push(
-                <button className="btn btn-primary" key='AddContentButton' onClick={props.handleToAddContent}>
+                <button className="btn btn-primary" key='AddContentButton' onClick={handleToAddContent}>
                     Suggest content
                 </button>)
         }
-        if(props.user && (props.user.is_staff)){
+        if(user && (user.is_staff)){
             buttons.push(
                 <button className="btn btn-primary" key='DeleteLandmarkButton' onClick={handleDeleteLandmark}>
                     Delete landmark
@@ -143,7 +143,7 @@ function Landmark(props){
                 children.push(<ContentOverview
                     key={contentsOverview[key].id}
                     contentOverview={contentsOverview[key]}
-                    handleToContent={() => props.handleToContent(contentsOverview[key].id)}
+                    handleToContent={() => handleToContent(contentsOverview[key].id)}
                     showLandmarkName={false}/>);
             }
         }

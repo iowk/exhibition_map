@@ -10,7 +10,7 @@ import { jwtVerify, getToken } from '../auth';
 import axios from '../axios';
 import star from '../media/star.png';
 
-function Content(props){
+function Content({user, lmid, ctid, handleToLandmark, handleSetCenter}){
     const [content, setContent] = useState({});
     const [loading, setLoading] = useState(false);
     useEffect(() => {
@@ -19,12 +19,12 @@ function Content(props){
             setLoading(true);
             try{
                 // GET content
-                const res_ct = await axios().get('/map/contents/'+props.ctid+'/');
+                const res_ct = await axios().get('/map/contents/'+ctid+'/');
                 const ct = await res_ct.data;
                 // Set state
                 if(isMounted){
                     setContent(ct);
-                    props.handleSetCenter({lat: ct.lat, lng: ct.lng});
+                    handleSetCenter({lat: ct.lat, lng: ct.lng});
                 }
             } catch (e) {
                 console.log(e);
@@ -32,11 +32,11 @@ function Content(props){
                 setLoading(false);
             }
         }
-        if(props.ctid && props.ctid!==content.id) fetchData();
+        if(ctid && ctid!==content.id) fetchData();
         return () => {
             isMounted = false;
         };
-    }, [props.handleSetCenter, props.ctid, content.id])
+    }, [handleSetCenter, ctid, content.id])
     function handleDeleteContent(){
         jwtVerify()
         .then((is_valid) => {
@@ -44,7 +44,7 @@ function Content(props){
                 axios(getToken()).delete('/map/contents/'+content.id+'/')
                 .then(() => {
                     alert("Content deleted");
-                    props.handleToLandmark(props.lmid);
+                    handleToLandmark(lmid);
                 })
                 .catch((e) => {
                     console.log(e);
@@ -57,7 +57,7 @@ function Content(props){
         });
     }
     function handleBack(){
-        props.handleToLandmark(props.lmid);
+        handleToLandmark(lmid);
     }
     return(
         <div className='contentDetail'>
@@ -83,11 +83,11 @@ function Content(props){
                     name={content.name}
                     buttonName='Show comments'
                 />
-                {props.user && props.user.is_verified && (
+                {user && user.is_verified && (
                     // Comment button for activated user
                     <CommentPostPopup
                         key='CommentPostPopup'
-                        user={props.user}
+                        user={user}
                         ctid={content.id}
                         name={content.name}
                         buttonName='Write comment'
@@ -99,32 +99,32 @@ function Content(props){
                     name={content.name}
                     buttonName='Show photos'
                 />
-                {props.user && props.user.is_verified &&
+                {user && user.is_verified &&
                 <ImagePostPopup
                     key='ImagePostPopup'
-                    user={props.user}
+                    user={user}
                     ctid={content.id}
                     name={content.name}
                     buttonName='Upload photo'
                 />}
-                {props.user && props.user.is_verified &&
+                {user && user.is_verified &&
                 <ReportPostPopup
                     key='ReportPostPopup'
-                    user={props.user}
+                    user={user}
                     ctid={content.id}
                     name={content.name}
                     buttonName='Report content'
                 />}
-                {props.user && (props.user.is_staff) &&
+                {user && (user.is_staff) &&
                 <DesPostPopup
                     key='DesPostPopup'
-                    user={props.user}
+                    user={user}
                     ctid={content.id}
                     name={content.name}
                     description={content.description}
                     buttonName='Modify description'
                 />}
-                {props.user && (props.user.is_staff) &&
+                {user && (user.is_staff) &&
                 <Button variant="primary" onClick={handleDeleteContent}>
                     Delete content
                 </Button>}
