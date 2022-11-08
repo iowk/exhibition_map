@@ -2,7 +2,7 @@
 http://exmap.org </br>
 ## About
 EXmap is a collaboration-based map that displays museum and exhibition information. Authenticated users are allowed to suggest contents to the map, which will be shown publicly upon verification by the staffs. </br>
-To try the utilities for authenticated users, you can login with the shared guest account: </br>
+To try the utilities for authenticated users, feel free to login with the shared guest account: </br>
 &nbsp;&nbsp;&nbsp;&nbsp;Username: guest</br>
 &nbsp;&nbsp;&nbsp;&nbsp;Password: exmapguest</br>
 
@@ -11,6 +11,7 @@ To try the utilities for authenticated users, you can login with the shared gues
 <ul>
     <li>Django restful framework (DRF) + JWT authentication, deployed on AWS EC2 + AWS lambda</li>
     <li>MySQL database deployed on AWS RDS</li>
+    <li>Redis caching with AWS ElastiCache</li>
     <li>Media files stored at AWS S3</li>
 </ul>
 
@@ -49,6 +50,6 @@ To try the utilities for authenticated users, you can login with the shared gues
     <li>User change password, recover password</li>
     <li>OAuth2 authentication for logging in with Google, Facebook, etc.</li>
     <li>Multilanguage support</li>
-    <li>Caching</li>
     <li>Improved search utility with more information considered</li>
+    <li>Mobile support</li>
 </ul>

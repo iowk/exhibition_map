@@ -10,7 +10,10 @@ function About(props){
                 <Card.Body>
                     <Card.Title>About EXmap</Card.Title>
                         <Card.Text>
-                            <p>EXmap is a non-profit website that organizes museum and exhibition information on a map.</p>
+                            <p>EXmap is a non-profit website that organizes museum and exhibition information on a map.
+                                To try the utilities for authenticated users, feel free to login with the shared guest account: </p>
+                            <p>Username: guest</p>
+                            <p>Password: exmapguest</p>
                         </Card.Text>
                 </Card.Body>
             </Card>
