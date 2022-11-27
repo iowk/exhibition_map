@@ -11,7 +11,7 @@ function User(props){
     }
     function activateOnClick() {
         jwtVerify()
-        .then(() => {
+        .then((is_valid) => {
             if(is_valid){
                 axios(getToken()).get('/map/users/send_acc_email/')
                 .then(() => {
