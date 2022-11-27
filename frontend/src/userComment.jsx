@@ -103,6 +103,10 @@ function UserComment(props){
                         setContentComments(comments.contentComments);
                         setLoading(false);
                     }
+                    else{
+                        alert("Please login again");
+                        <Navigate to = '/login/'/>;
+                    }
                 }
             }
             catch (e) {

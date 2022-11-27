@@ -12,14 +12,20 @@ function User(props){
     function activateOnClick() {
         jwtVerify()
         .then(() => {
-            axios(getToken()).get('/map/users/send_acc_email/')
-            .then(() => {
-                //alert("Activation mail will be sent after verification by the administartor.");
-                alert("Activation mail sent.");
-            })
-            .catch((e) => {
-                alert(e);
-            })
+            if(is_valid){
+                axios(getToken()).get('/map/users/send_acc_email/')
+                .then(() => {
+                    //alert("Activation mail will be sent after verification by the administartor.");
+                    alert("Activation mail sent.");
+                })
+                .catch((e) => {
+                    alert(e);
+                })
+            }
+            else{
+                alert("Please login again");
+                <Navigate to = '/login/'/>;
+            }
         })
     }
     if(getLSItem('user')) {
